@@ -19,3 +19,4 @@ include: "/views/cdp-ususarios-prod/*.view.lkml"                # include all vi
 #   }
 # }
 explore: cdp_soriana_usuario_iden_compra_ga_sfcc {}
+explore: cdp_soriana_usuario_tres_fuentes_ga_sfcc_synapes_prub1 {}
