@@ -18,6 +18,8 @@ include: "/views/cdp-soriana-tipos-usuario/*.view.lkml"                # include
 #     sql_on: ${users.id} = ${orders.user_id} ;;
 #   }
 # }
+
+
 explore: cdp_soriana_tipos_usuarios {}
 explore: cdp_soriana_tipo_cliente_premium {}
 explore: cdp_soriana_tipo_cliente_valioso {}
