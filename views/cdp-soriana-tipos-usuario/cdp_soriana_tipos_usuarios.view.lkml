@@ -33,11 +33,11 @@ view: cdp_soriana_tipos_usuarios {
       select
       --info cliente
        distinct cast(clientes as STRING) as idCliente,
-      cp.Nombre as nombre,
-      cp.ApellidoPaterno as apellido,
-      format_date('%Y-%m-%d',cp.FechaNacimiento) as fechaNacimiento,
-      cp.Sexo as sexo,
-      cp.Correo as correo,
+      cp.nombre as nombre,
+      cp.apellidoPaterno as apellido,
+      format_date('%Y-%m-%d',cp.fechaNacimiento) as fechaNacimiento,
+      cp.sexo as sexo,
+      cp.correo as correo,
 
       --info compras
       format_date('%U', parse_date("%Y%m%d",fecha)) as semana,
@@ -61,8 +61,8 @@ view: cdp_soriana_tipos_usuarios {
 
 
       from prep
-      left join `costumer-data-proyect.customer_data_platform.clientes_productivos`as cp on (clientes=cp.IdClienteSk)
-      --where cp.Correo is not null
+      left join `costumer-data-proyect.cdp_soriana_synapse.ClienteValidacionesUnicos` as cp on (clientes=cp.IdClienteSk)
+      where cp.correo is not null
       group by 1,2,3,4,5,6,7
       order by semana asc, idCliente asc
       ;;
