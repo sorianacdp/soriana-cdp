@@ -31,11 +31,20 @@ view: cdp_soriana_tipos_usuarios {
       )
 
       select
-      distinct format_date('%U', parse_date("%Y%m%d",fecha)) as semana,
-      cast(clientes as STRING) as idCliente,
+      --info cliente
+       distinct cast(clientes as STRING) as idCliente,
+      cp.Nombre as nombre,
+      cp.ApellidoPaterno as apellido,
+      format_date('%Y-%m-%d',cp.FechaNacimiento) as fechaNacimiento,
+      cp.Sexo as sexo,
+      cp.Correo as correo,
+
+      --info compras
+      format_date('%U', parse_date("%Y%m%d",fecha)) as semana,
       sum(ticket) as tickeTotal,
       sum(conteoCompras) as conteoCompras,
       sum(ticket)/sum(conteoCompras) as ticketPromedio,
+      --tipo de cliente
       case
       when (sum(conteoCompras)>= 4) and (sum(ticket)/sum(conteoCompras) > 570) then 'CLIENTE PREMIUM'
       when (sum(conteoCompras)>= 2 and sum(conteoCompras)<= 3) and (sum(ticket)/sum(conteoCompras) > 570) then 'CLIENTE VALIOSO'
@@ -52,7 +61,9 @@ view: cdp_soriana_tipos_usuarios {
 
 
       from prep
-      group by semana,clientes
+      left join `costumer-data-proyect.customer_data_platform.clientes_productivos`as cp on (clientes=cp.IdClienteSk)
+      --where cp.Correo is not null
+      group by 1,2,3,4,5,6,7
       order by semana asc, idCliente asc
       ;;
   }
@@ -62,14 +73,40 @@ view: cdp_soriana_tipos_usuarios {
     drill_fields: [detail*]
   }
 
-  dimension: semana {
-    type: string
-    sql: ${TABLE}.semana ;;
-  }
-
   dimension: id_cliente {
     type: string
     sql: ${TABLE}.idCliente ;;
+  }
+
+  dimension: nombre {
+    type: string
+    sql: ${TABLE}.nombre ;;
+  }
+
+  dimension: apellido {
+    type: string
+    sql: ${TABLE}.apellido ;;
+  }
+
+  dimension: fecha_nacimiento {
+    type: string
+    sql: ${TABLE}.fechaNacimiento ;;
+  }
+
+  dimension: sexo {
+    type: string
+    sql: ${TABLE}.sexo ;;
+  }
+
+  dimension: correo {
+    type: string
+    sql: ${TABLE}.correo ;;
+  }
+
+
+  dimension: semana {
+    type: string
+    sql: ${TABLE}.semana ;;
   }
 
   dimension: ticke_total {
@@ -94,8 +131,13 @@ view: cdp_soriana_tipos_usuarios {
 
   set: detail {
     fields: [
-      semana,
       id_cliente,
+      nombre,
+      apellido,
+      fecha_nacimiento,
+      sexo,
+      correo,
+      semana,
       ticke_total,
       conteo_compras,
       ticket_promedio,
