@@ -12,7 +12,7 @@ view: cdp_soriana_tipo_cliente_premium {
       prep as (
       select
       distinct format_date('%Y%m%d',FechaHoraTicket) as fecha,
-      IdCliente as clientes,
+      IdClienteSk as clientes,
       count (distinct IdCliente) as conteoCompras,
       ImporteVentaNeta as ticket,
       from `costumer-data-proyect.customer_data_platform.TicketsProductivos`,rango_fecha
