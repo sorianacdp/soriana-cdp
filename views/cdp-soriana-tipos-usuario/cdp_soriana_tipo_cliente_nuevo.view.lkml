@@ -1,12 +1,22 @@
 view: cdp_soriana_tipo_cliente_nuevo {
   derived_table: {
-    sql: with rango_fecha as (
+    sql:/**with rango_fecha as (
       select
           --format_date('%Y%m%d',date_sub(current_date(), interval 1 day)) as fecha_inicio,
           --format_date('%Y%m%d',date_sub(current_date(), interval 1 day)) as fecha_final),
           '20220630' as fecha_inicio,
           '20220508' as fecha_final),
-          --'20220601' as fecha_final),
+          --'20220601' as fecha_final),**/
+
+                    with rango_fecha as (
+            select
+            --fecha inicio
+            max(format_date('%Y%m%d',FechaHoraTicket)) as  fecha_inicio,
+            --semana maxima del rango
+            cast( format_date('%U', parse_date("%Y%m%d",max(format_date('%Y%m%d',FechaHoraTicket)))) as INT) as max_semana,
+            --fecha final 8 semanas antes, o 56 dias--- 10 semanas 70 dias
+              format_date('%Y%m%d',DATE_SUB(DATE(max(FechaHoraTicket)), INTERVAL 90 DAY)) as fecha_final,
+          from `costumer-data-proyect.customer_data_platform.TicketsProductivos`),
       ------------------------------
       --------------------------------
       prep as (
