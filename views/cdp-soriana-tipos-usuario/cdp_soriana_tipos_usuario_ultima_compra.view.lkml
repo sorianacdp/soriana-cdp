@@ -50,7 +50,7 @@ view: cdp_soriana_tipos_usuario_ultima_compra {
 
       from ultimaCompraCliente as uc
       left join `costumer-data-proyect.cdp_soriana_synapse.ClienteValidacionesUnicos`as cp on (uc.clientes=cp.IdClienteSk)
-      where cp.correo is not null
+      --where cp.correo is not null
       group by 1,2,3,4,5,6,7,8
       order by clientes asc
       ;;
