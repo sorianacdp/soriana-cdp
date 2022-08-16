@@ -62,7 +62,7 @@ view: cdp_soriana_tipos_usuario_ultima_compra {
   }
 
   dimension: id_cliente {
-    type: number
+    type: string
     sql: ${TABLE}.idCliente ;;
   }
 
