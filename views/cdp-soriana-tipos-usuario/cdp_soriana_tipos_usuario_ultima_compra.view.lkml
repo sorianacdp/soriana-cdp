@@ -15,10 +15,10 @@ view: cdp_soriana_tipos_usuario_ultima_compra {
       select
       distinct format_date('%Y%m%d',FechaHoraTicket) as fecha,
       IdClienteSk as clientes,
-      count (distinct IdCliente) as conteoCompras,
+      count (distinct IdClienteSk) as conteoCompras,
       ImporteVentaNeta as ticket,
       from `costumer-data-proyect.customer_data_platform.TicketsProductivos`,rango_fecha
-      where  format_date('%Y%m%d',FechaHoraTicket) <= rango_fecha.fecha_inicio and  format_date('%Y%m%d',FechaHoraTicket) >=rango_fecha.fecha_final and IdCliente is not null
+      where  format_date('%Y%m%d',FechaHoraTicket) <= rango_fecha.fecha_inicio and  format_date('%Y%m%d',FechaHoraTicket) >=rango_fecha.fecha_final and IdClienteSk is not null
       group by 1,2,4
       ),
 
@@ -34,7 +34,7 @@ view: cdp_soriana_tipos_usuario_ultima_compra {
 
       select
       --Info Clientes:
-      distinct clientes as idCliente,
+      distinct cast(clientes as string) as idCliente,
       cp.nombre as nombre,
       cp.apellidoPaterno as apellido,
       format_date('%Y-%m-%d',cp.fechaNacimiento) as fechaNacimiento,
@@ -52,7 +52,7 @@ view: cdp_soriana_tipos_usuario_ultima_compra {
       left join `costumer-data-proyect.cdp_soriana_synapse.ClienteValidacionesUnicos`as cp on (uc.clientes=cp.IdClienteSk)
       --where cp.correo is not null
       group by 1,2,3,4,5,6,7,8
-      order by clientes asc
+      order by semanaUltimaCompra desc
       ;;
   }
 
