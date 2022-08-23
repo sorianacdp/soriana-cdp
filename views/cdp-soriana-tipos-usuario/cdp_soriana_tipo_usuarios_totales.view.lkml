@@ -15,7 +15,7 @@ view: cdp_soriana_tipo_usuarios_totales {
             --semana maxima del rango
             cast( format_date('%U', parse_date("%Y%m%d",max(format_date('%Y%m%d',FechaHoraTicket)))) as INT) as max_semana,
             --fecha final 8 semanas antes, o 56 dias--- 10 semanas 70 dias
-              format_date('%Y%m%d',DATE_SUB(DATE(max(FechaHoraTicket)), INTERVAL 90 DAY)) as fecha_final,
+              format_date('%Y%m%d',DATE_SUB(DATE(max(FechaHoraTicket)), INTERVAL 55 DAY)) as fecha_final,
           from `costumer-data-proyect.customer_data_platform.TicketsProductivos`),
       ------------------------------
       --------------------------------
