@@ -61,7 +61,7 @@ view: cdp_soriana_tipos_usuarios {
 
 
       from prep
-      left join `costumer-data-proyect.cdp_soriana_synapse.ClienteValidacionesUnicos` as cp on (clientes=cp.IdClienteSk)
+      left join `costumer-data-proyect.customer_data_platform.cdp_synapse_clientes_productivos` as cp on (clientes=cp.IdClienteSk)
       where cp.correo is not null
       group by 1,2,3,4,5,6,7
       order by semana asc, idCliente asc
