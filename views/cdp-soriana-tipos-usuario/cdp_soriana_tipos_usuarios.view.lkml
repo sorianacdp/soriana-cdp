@@ -19,16 +19,16 @@ view: cdp_soriana_tipos_usuarios {
           from `costumer-data-proyect.customer_data_platform.TicketsProductivos`),
       ------------------------------
       --------------------------------
-      prep as (
-      select
-      distinct format_date('%Y%m%d',FechaHoraTicket) as fecha,
-      IdClienteSk as clientes,
-      count (distinct IdCliente) as conteoCompras,
-      ImporteVentaNeta as ticket,
-      from `costumer-data-proyect.customer_data_platform.TicketsProductivos`,rango_fecha
-      where  format_date('%Y%m%d',FechaHoraTicket) <= rango_fecha.fecha_inicio and  format_date('%Y%m%d',FechaHoraTicket) >=rango_fecha.fecha_final and IdCliente is not null
-      group by 1,2,4
-      )
+        prep as (
+  select
+  distinct format_date('%Y%m%d',FechaHoraTicket) as fecha,
+  IdClienteSk as clientes,
+  count (distinct IdClienteSk) as conteoCompras,
+  ImporteVentaNeta as ticket,
+  from `costumer-data-proyect.customer_data_platform.TicketsProductivos`,rango_fecha
+  where  format_date('%Y%m%d',FechaHoraTicket) <= rango_fecha.fecha_inicio and  format_date('%Y%m%d',FechaHoraTicket) >=rango_fecha.fecha_final and IdClienteSk is not null
+  group by 1,2,4
+  )
 
       select
       --info cliente
