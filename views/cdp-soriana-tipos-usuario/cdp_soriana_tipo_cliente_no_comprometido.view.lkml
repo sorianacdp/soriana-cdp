@@ -16,7 +16,7 @@ view: cdp_soriana_tipo_cliente_no_comprometido {
             cast( format_date('%U', parse_date("%Y%m%d",max(format_date('%Y%m%d',FechaHoraTicket)))) as INT) as max_semana,
             --fecha final 8 semanas antes, o 56 dias--- 10 semanas 70 dias
               format_date('%Y%m%d',DATE_SUB(DATE(max(FechaHoraTicket)), INTERVAL 90 DAY)) as fecha_final,
-          from `costumer-data-proyect.customer_data_platform.TicketsProductivos`),
+          from `costumer-data-proyect.customer_data_platform.TicketsProductivosP`),
       ------------------------------
       --------------------------------
       prep as (
@@ -25,7 +25,7 @@ view: cdp_soriana_tipo_cliente_no_comprometido {
       IdClienteSk as clientes,
       count (distinct IdCliente) as conteoCompras,
       ImporteVentaNeta as ticket,
-      from `costumer-data-proyect.customer_data_platform.TicketsProductivos`,rango_fecha
+      from `costumer-data-proyect.customer_data_platform.TicketsProductivosP`,rango_fecha
       where  format_date('%Y%m%d',FechaHoraTicket) <= rango_fecha.fecha_inicio and  format_date('%Y%m%d',FechaHoraTicket) >=rango_fecha.fecha_final and IdCliente is not null
       group by 1,2,4
       ),
