@@ -79,7 +79,7 @@ view: cdp_soriana_tipos_usuarios {
     sql: ${TABLE}.idCliente ;;
   }
 
-  dimension: grIdCliente {
+  dimension: GRClienteId {
     type: string
     sql: ${TABLE}.GRClienteId ;;
   }
@@ -138,7 +138,7 @@ view: cdp_soriana_tipos_usuarios {
   set: detail {
     fields: [
       id_cliente,
-      grIdCliente,
+      GRClienteId,
       nombre,
       apellido,
       fecha_nacimiento,
