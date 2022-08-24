@@ -35,6 +35,7 @@ view: cdp_soriana_tipos_usuario_ultima_compra {
       select
       --Info Clientes:
       distinct cast(clientes as string) as idCliente,
+      cp.GRClienteId as GRClienteId,
       cp.nombre as nombre,
       cp.apellidoPaterno as apellido,
       format_date('%Y-%m-%d',cp.fechaNacimiento) as fechaNacimiento,
@@ -51,7 +52,7 @@ view: cdp_soriana_tipos_usuario_ultima_compra {
       from ultimaCompraCliente as uc
       left join `costumer-data-proyect.customer_data_platform.cdp_synapse_clientes_productivos` as cp on (uc.clientes=cp.IdClienteSk)
       --where cp.correo is not null
-      group by 1,2,3,4,5,6,7,8
+      group by 1,2,3,4,5,6,7,8,9
       order by semanaUltimaCompra desc
       ;;
   }
@@ -64,6 +65,11 @@ view: cdp_soriana_tipos_usuario_ultima_compra {
   dimension: id_cliente {
     type: string
     sql: ${TABLE}.idCliente ;;
+  }
+
+  dimension: GRClienteId {
+    type: string
+    sql: ${TABLE}.GRClienteId ;;
   }
 
   dimension: nombre {
@@ -104,6 +110,7 @@ view: cdp_soriana_tipos_usuario_ultima_compra {
   set: detail {
     fields: [
       id_cliente,
+      GRClienteId,
       nombre,
       apellido,
       fecha_nacimiento,
