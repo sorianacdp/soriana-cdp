@@ -1,14 +1,6 @@
 view: cdp_soriana_tipos_usuarios {
   derived_table: {
-    sql: /**with rango_fecha as (
-      select
-          --format_date('%Y%m%d',date_sub(current_date(), interval 1 day)) as fecha_inicio,
-          --format_date('%Y%m%d',date_sub(current_date(), interval 1 day)) as fecha_final),
-          '20220630' as fecha_inicio,
-          '20220508' as fecha_final),
-          --'20220601' as fecha_final),**/
-
-                     with rango_fecha as (
+    sql:  with rango_fecha as (
             select
             --fecha inicio
             max(format_date('%Y%m%d',FechaHoraTicket)) as  fecha_inicio,
@@ -60,7 +52,12 @@ view: cdp_soriana_tipos_usuarios {
       when (sum(p.conteoCompras)>= 1 and sum(p.conteoCompras)<= 2) and (sum(p.ticket)/sum(p.conteoCompras) > 150 and sum(p.ticket)/sum(p.conteoCompras) < 570) then 'NO COMPROMETIDO'
       when (sum(p.conteoCompras)>= 4) and (sum(p.ticket)/sum(p.conteoCompras) < 150) then 'CLIENTE POTENCIAL'
       when (sum(p.conteoCompras)>= 1 and sum(p.conteoCompras)<= 3) and (sum(p.ticket)/sum(p.conteoCompras) < 150) then 'NO COMPROMETIDO'
-      else '(NOT SET)'
+      when (sum(p.conteoCompras)>= 2 and sum(p.conteoCompras)<= 3) and (sum(p.ticket)/sum(p.conteoCompras) < 150) then 'NO COMPROMETIDO'
+      when (sum(p.conteoCompras)>= 1 and sum(p.conteoCompras)<= 2) and (sum(p.ticket)/sum(p.conteoCompras) < 150) then 'NO COMPROMETIDO'
+      when (sum(p.conteoCompras)>= 1 and sum(p.conteoCompras)<= 2) and (sum(p.ticket)/sum(p.conteoCompras) > 150 and sum(p.ticket)/sum(p.conteoCompras) < 570) then 'NO COMPROMETIDO'
+      when (sum(p.conteoCompras)>= 1 and sum(p.conteoCompras)<= 3) and (sum(p.ticket)/sum(p.conteoCompras) > 150 and sum(p.ticket)/sum(p.conteoCompras) < 570) then 'NO COMPROMETIDO'
+      when (sum(p.conteoCompras)>= 1 and sum(p.conteoCompras)<= 3) and (sum(p.ticket)/sum(p.conteoCompras) > 570) then 'NO COMPROMETIDO'
+      else 'PROSPECTO'
       end as tipoCliente
 
 
