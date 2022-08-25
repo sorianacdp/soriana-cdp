@@ -80,7 +80,7 @@ view: cdp_soriana_tipo_usuario_ultima_compra_no_regresa {
   }
 
   dimension: semana_ultima_compra {
-    type: number
+    type: string
     sql: ${TABLE}.semanaUltimaCompra ;;
   }
 
