@@ -18,5 +18,8 @@ include: "/Dashboards/principal_soriana.dashboard.lookml"
 #     sql_on: ${users.id} = ${orders.user_id} ;;
 #   }
 # }
-explore: cdp_soriana_usuario_iden_compra_ga_sfcc {}
-explore: cdp_soriana_usuario_tres_fuentes_ga_sfcc_synapes_prub1 {}
+explore: cdp_soriana_tipos_usuario_ultima_compra {}
+explore: cdp_soriana_tipo_usuario_ultima_compra_totales {}
+explore: cdp_soriana_tipo_usuario_ultima_compra_actual {}
+explore: cdp_soriana_tipo_usuario_ultima_compra_recuperable {}
+explore: cdp_soriana_tipo_usuario_ultima_compra_no_regresa {}
