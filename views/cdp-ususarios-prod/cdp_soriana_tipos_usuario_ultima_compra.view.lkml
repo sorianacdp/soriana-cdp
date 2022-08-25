@@ -125,7 +125,7 @@ view: cdp_soriana_tipos_usuario_ultima_compra {
   }
 
   dimension: semana_ultima_compra {
-    type: string
+    type: number
     sql: ${TABLE}.semanaUltimaCompra ;;
   }
 
