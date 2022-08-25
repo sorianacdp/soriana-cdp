@@ -8,7 +8,7 @@ view: cdp_soriana_tipos_usuarios {
           '20220508' as fecha_final),
           --'20220601' as fecha_final),**/
 
-                    with rango_fecha as (
+                     with rango_fecha as (
             select
             --fecha inicio
             max(format_date('%Y%m%d',FechaHoraTicket)) as  fecha_inicio,
@@ -23,17 +23,19 @@ view: cdp_soriana_tipos_usuarios {
   select
   distinct format_date('%Y%m%d',FechaHoraTicket) as fecha,
   IdClienteSk as clientes,
+  IdTienda as tienda,
   count (distinct IdClienteSk) as conteoCompras,
   ImporteVentaNeta as ticket,
   from `costumer-data-proyect.customer_data_platform.TicketsProductivosP`,rango_fecha
   where  format_date('%Y%m%d',FechaHoraTicket) <= rango_fecha.fecha_inicio and  format_date('%Y%m%d',FechaHoraTicket) >=rango_fecha.fecha_final and IdClienteSk is not null
-  group by 1,2,4
+  group by 1,2,3,5
   )
 
       select
       --info cliente
-       distinct cast(clientes as STRING) as idCliente,
+       distinct cast(p.clientes as STRING) as idCliente,
       cp.GRClienteId as GRClienteId,
+      p.tienda as idTienda,
       cp.nombre as nombre,
       cp.apellidoPaterno as apellido,
       format_date('%Y-%m-%d',cp.fechaNacimiento) as fechaNacimiento,
@@ -42,29 +44,30 @@ view: cdp_soriana_tipos_usuarios {
 
       --info compras
       format_date('%U', parse_date("%Y%m%d",fecha)) as semana,
-      sum(ticket) as tickeTotal,
-      sum(conteoCompras) as conteoCompras,
-      sum(ticket)/sum(conteoCompras) as ticketPromedio,
+      sum(p.ticket) as tickeTotal,
+      sum(p.conteoCompras) as conteoCompras,
+      sum(p.ticket)/sum(p.conteoCompras) as ticketPromedio,
       --tipo de cliente
+--tipo de cliente
       case
-      when (sum(conteoCompras)>= 4) and (sum(ticket)/sum(conteoCompras) > 570) then 'CLIENTE PREMIUM'
-      when (sum(conteoCompras)>= 2 and sum(conteoCompras)<= 3) and (sum(ticket)/sum(conteoCompras) > 570) then 'CLIENTE VALIOSO'
-      when (sum(conteoCompras)>= 1 and sum(conteoCompras)<= 2) and (sum(ticket)/sum(conteoCompras) > 570) then 'CLIENTE POTENCIAL'
-      when (sum(conteoCompras)= 1) then 'CLIENTE NUEVO'
-      when (sum(conteoCompras)= 0) then 'CLIENTE PROSPECTO'
-      when (sum(conteoCompras)>= 4) and (sum(ticket)/sum(conteoCompras) > 150 and sum(ticket)/sum(conteoCompras) < 570) then 'CLIENTE VALIOSO'
-      when (sum(conteoCompras)>= 2 and sum(conteoCompras)<= 3) and (sum(ticket)/sum(conteoCompras) > 150 and sum(ticket)/sum(conteoCompras) < 570) then 'CLIENTE POTENCIAL'
-      when (sum(conteoCompras)>= 1 and sum(conteoCompras)<= 2) and (sum(ticket)/sum(conteoCompras) > 150 and sum(ticket)/sum(conteoCompras) < 570) then 'NO COMPROMETIDO'
-      when (sum(conteoCompras)>= 4) and (sum(ticket)/sum(conteoCompras) < 150) then 'CLIENTE POTENCIAL'
-      when (sum(conteoCompras)>= 1 and sum(conteoCompras)<= 3) and (sum(ticket)/sum(conteoCompras) < 150) then 'NO COMPROMETIDO'
+      when (sum(p.conteoCompras)>= 4) and (sum(p.ticket)/sum(p.conteoCompras) > 570) then 'CLIENTE PREMIUM'
+      when (sum(p.conteoCompras)>= 2 and sum(p.conteoCompras)<= 3) and (sum(p.ticket)/sum(p.conteoCompras) > 570) then 'CLIENTE VALIOSO'
+      when (sum(p.conteoCompras)>= 1 and sum(p.conteoCompras)<= 2) and (sum(p.ticket)/sum(p.conteoCompras) > 570) then 'CLIENTE POTENCIAL'
+      when (sum(p.conteoCompras)= 1) then 'CLIENTE NUEVO'
+      when (sum(p.conteoCompras)= 0) then 'CLIENTE PROSPECTO'
+      when (sum(p.conteoCompras)>= 4) and (sum(p.ticket)/sum(p.conteoCompras) > 150 and sum(p.ticket)/sum(p.conteoCompras) < 570) then 'CLIENTE VALIOSO'
+      when (sum(p.conteoCompras)>= 2 and sum(p.conteoCompras)<= 3) and (sum(p.ticket)/sum(p.conteoCompras) > 150 and sum(p.ticket)/sum(p.conteoCompras) < 570) then 'CLIENTE POTENCIAL'
+      when (sum(p.conteoCompras)>= 1 and sum(p.conteoCompras)<= 2) and (sum(p.ticket)/sum(p.conteoCompras) > 150 and sum(p.ticket)/sum(p.conteoCompras) < 570) then 'NO COMPROMETIDO'
+      when (sum(p.conteoCompras)>= 4) and (sum(p.ticket)/sum(p.conteoCompras) < 150) then 'CLIENTE POTENCIAL'
+      when (sum(p.conteoCompras)>= 1 and sum(p.conteoCompras)<= 3) and (sum(p.ticket)/sum(p.conteoCompras) < 150) then 'NO COMPROMETIDO'
       else '(NOT SET)'
       end as tipoCliente
 
 
-      from prep
+      from prep as p
       left join `costumer-data-proyect.customer_data_platform.cdp_synapse_clientes_productivos` as cp on (clientes=cp.IdClienteSk)
       --where cp.correo is not null
-      group by 1,2,3,4,5,6,7,8
+      group by 1,2,3,4,5,6,7,8,9
       order by semana asc, idCliente asc
       ;;
   }
@@ -83,6 +86,12 @@ view: cdp_soriana_tipos_usuarios {
     type: string
     sql: ${TABLE}.GRClienteId ;;
   }
+
+  dimension: idTienda {
+    type: string
+    sql: ${TABLE}.idTienda ;;
+  }
+
 
   dimension: nombre {
     type: string
@@ -139,6 +148,7 @@ view: cdp_soriana_tipos_usuarios {
     fields: [
       id_cliente,
       GRClienteId,
+      idTienda,
       nombre,
       apellido,
       fecha_nacimiento,
