@@ -82,12 +82,11 @@ view: cdp_soriana_totales_pie {
 
   dimension: tipo_cliente {
     type: string
-    sql: ${TABLE}.tipoCliente
+    sql: ${TABLE}.tipoCliente ;;
     link: {
     label: "inicio"
     url: "https://lookercdp2022.cloud.looker.com/dashboards/1"
-    --icon_url : "url_of_an_image_file"
-  };;
+  }
   }
 
   dimension: clientes {
