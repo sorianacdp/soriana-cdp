@@ -40,7 +40,7 @@ view: cdp_soriana_tipo_usuario_ultima_compra_recuperable {
       format_date('%Y-%m-%d',cp.fechaNacimiento) as fechaNacimiento,
       cp.sexo as sexo,
       cp.correo as correo,
-      semanaUltimaCompra,
+      cast(semanaUltimaCompra as string) as semanaUltimaCompra as semanaUltimaCompra,
       --tipos se clientes
       case
       when (semanaUltimaCompra >= max_semana-7) and (semanaUltimaCompra <= max_semana-6) then 'CLIENTE RECUPERABLE'
@@ -80,7 +80,7 @@ view: cdp_soriana_tipo_usuario_ultima_compra_recuperable {
   }
 
   dimension: semana_ultima_compra {
-    type: number
+    type: string
     sql: ${TABLE}.semanaUltimaCompra ;;
   }
 
