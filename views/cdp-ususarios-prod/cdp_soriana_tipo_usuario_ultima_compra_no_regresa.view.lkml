@@ -40,7 +40,7 @@ view: cdp_soriana_tipo_usuario_ultima_compra_no_regresa {
       format_date('%Y-%m-%d',cp.fechaNacimiento) as fechaNacimiento,
       cp.sexo as sexo,
       cp.correo as correo,
-      cast(semanaUltimaCompra as string) as semanaUltimaCompra as semanaUltimaCompra,
+      cast(semanaUltimaCompra as string) as semanaUltimaCompra,
       --tipos se clientes
       case
       when (semanaUltimaCompra >= max_semana-7) and (semanaUltimaCompra <= max_semana-6) then 'CLIENTE RECUPERABLE'
