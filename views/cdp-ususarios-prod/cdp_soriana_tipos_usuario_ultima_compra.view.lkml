@@ -15,20 +15,22 @@ view: cdp_soriana_tipos_usuario_ultima_compra {
       select
       distinct format_date('%Y%m%d',FechaHoraTicket) as fecha,
       IdClienteSk as clientes,
+      IdTienda as tienda,
       count (distinct IdClienteSk) as conteoCompras,
       ImporteVentaNeta as ticket,
       from `costumer-data-proyect.customer_data_platform.TicketsProductivosP`,rango_fecha
       where  format_date('%Y%m%d',FechaHoraTicket) <= rango_fecha.fecha_inicio and  format_date('%Y%m%d',FechaHoraTicket) >=rango_fecha.fecha_final and IdClienteSk is not null
-      group by 1,2,4
+      group by 1,2,3,5
       ),
 
       ultimaCompraCliente as (
       select
       distinct clientes,
       max_semana,
+      tienda,
       cast( format_date('%U', parse_date("%Y%m%d",max(fecha))) as INT) as semanaUltimaCompra
       from prep,rango_fecha
-      group by 1,2
+      group by 1,2,3
       order by semanaUltimaCompra)
 
 
@@ -36,6 +38,7 @@ view: cdp_soriana_tipos_usuario_ultima_compra {
       --Info Clientes:
       distinct cast(clientes as string) as idCliente,
       cp.GRClienteId as GRClienteId,
+      uc.tienda as idTienda,
       cp.nombre as nombre,
       cp.apellidoPaterno as apellido,
       format_date('%Y-%m-%d',cp.fechaNacimiento) as fechaNacimiento,
@@ -52,7 +55,7 @@ view: cdp_soriana_tipos_usuario_ultima_compra {
       from ultimaCompraCliente as uc
       left join `costumer-data-proyect.customer_data_platform.cdp_synapse_clientes_productivos` as cp on (uc.clientes=cp.IdClienteSk)
       --where cp.correo is not null
-      group by 1,2,3,4,5,6,7,8,9
+      group by 1,2,3,4,5,6,7,8,9,10
       order by semanaUltimaCompra desc
       ;;
   }
@@ -70,6 +73,11 @@ view: cdp_soriana_tipos_usuario_ultima_compra {
   dimension: GRClienteId {
     type: string
     sql: ${TABLE}.GRClienteId ;;
+  }
+
+  dimension: idTienda {
+    type: string
+    sql: ${TABLE}.idTienda ;;
   }
 
   dimension: nombre {
@@ -111,6 +119,7 @@ view: cdp_soriana_tipos_usuario_ultima_compra {
     fields: [
       id_cliente,
       GRClienteId,
+      idTienda,
       nombre,
       apellido,
       fecha_nacimiento,
