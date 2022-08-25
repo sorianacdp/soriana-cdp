@@ -21,13 +21,26 @@ view: cdp_soriana_tipos_usuarios {
   from `costumer-data-proyect.customer_data_platform.TicketsProductivosP`,rango_fecha
   where  format_date('%Y%m%d',FechaHoraTicket) <= rango_fecha.fecha_inicio and  format_date('%Y%m%d',FechaHoraTicket) >=rango_fecha.fecha_final and IdClienteSk is not null
   group by 1,2,3,5
-  )
+  ),
+
+nacimientoSoriana as (
+select
+distinct IdClienteSk as idclientes,
+DATE_DIFF(CURRENT_DATE(), parse_date("%Y%m%d",min(format_date('%Y%m%d',FechaHoraTicket))), DAY)  as diasDeVida,
+min(format_date('%Y-%m-%d',FechaHoraTicket)) as fechaNacimientoSoriana,
+
+from `costumer-data-proyect.customer_data_platform.TicketsProductivosP`
+where  format_date('%Y%m%d',FechaHoraTicket) between '20210101' and format_date('%Y%m%d',date_sub(current_date(), interval 1 day)) and IdClienteSk is not null
+group by 1
+)
+
 
       select
       --info cliente
        distinct cast(p.clientes as STRING) as idCliente,
       cp.GRClienteId as GRClienteId,
       p.tienda as idTienda,
+      ns.fechaNacimientoSoriana as fechaNacimientoSoriana,
       cp.nombre as nombre,
       cp.apellidoPaterno as apellido,
       format_date('%Y-%m-%d',cp.fechaNacimiento) as fechaNacimiento,
@@ -62,9 +75,10 @@ view: cdp_soriana_tipos_usuarios {
 
 
       from prep as p
-      left join `costumer-data-proyect.customer_data_platform.cdp_synapse_clientes_productivos` as cp on (clientes=cp.IdClienteSk)
+      left join `costumer-data-proyect.customer_data_platform.cdp_synapse_clientes_productivos` as cp on (p.clientes=cp.IdClienteSk)
+      left join nacimientoSoriana as ns on ( p.clientes= ns.idclientes)
       --where cp.correo is not null
-      group by 1,2,3,4,5,6,7,8,9
+      group by 1,2,3,4,5,6,7,8,9,10
       order by semana asc, idCliente asc
       ;;
   }
@@ -89,6 +103,10 @@ view: cdp_soriana_tipos_usuarios {
     sql: ${TABLE}.idTienda ;;
   }
 
+  dimension: fechaNacimientoSoriana {
+    type: string
+    sql: ${TABLE}.fechaNacimientoSoriana ;;
+  }
 
   dimension: nombre {
     type: string
@@ -146,6 +164,7 @@ view: cdp_soriana_tipos_usuarios {
       id_cliente,
       GRClienteId,
       idTienda,
+      fechaNacimientoSoriana,
       nombre,
       apellido,
       fecha_nacimiento,

@@ -26,5 +26,4 @@ explore: cdp_soriana_tipo_cliente_valioso {}
 explore: cdp_soriana_tipo_cliente_potencial {}
 explore: cdp_soriana_tipo_cliente_nuevo {}
 explore: cdp_soriana_tipo_cliente_no_comprometido {}
-explore: cdp_soriana_tipo_usuarios_totales {}
 explore: cdp_soriana_totales_pie {}
