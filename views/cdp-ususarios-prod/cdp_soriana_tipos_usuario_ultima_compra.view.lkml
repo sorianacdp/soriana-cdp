@@ -31,14 +31,25 @@ view: cdp_soriana_tipos_usuario_ultima_compra {
       cast( format_date('%U', parse_date("%Y%m%d",max(fecha))) as INT) as semanaUltimaCompra
       from prep,rango_fecha
       group by 1,2,3
-      order by semanaUltimaCompra)
+      order by semanaUltimaCompra),
 
+      nacimientoSoriana as (
+      select
+      distinct IdClienteSk as idclientes,
+      DATE_DIFF(CURRENT_DATE(), parse_date("%Y%m%d",min(format_date('%Y%m%d',FechaHoraTicket))), DAY)  as diasDeVida,
+      min(format_date('%Y-%m-%d',FechaHoraTicket)) as fechaNacimientoSoriana,
+
+      from `costumer-data-proyect.customer_data_platform.TicketsProductivosP`
+      where  format_date('%Y%m%d',FechaHoraTicket) between '20210101' and format_date('%Y%m%d',date_sub(current_date(), interval 1 day)) and IdClienteSk is not null
+      group by 1
+      )
 
       select
       --Info Clientes:
       distinct cast(clientes as string) as idCliente,
       cp.GRClienteId as GRClienteId,
       uc.tienda as idTienda,
+      ns.fechaNacimientoSoriana as fechaNacimientoSoriana,
       cp.nombre as nombre,
       cp.apellidoPaterno as apellido,
       format_date('%Y-%m-%d',cp.fechaNacimiento) as fechaNacimiento,
@@ -54,8 +65,10 @@ view: cdp_soriana_tipos_usuario_ultima_compra {
 
       from ultimaCompraCliente as uc
       left join `costumer-data-proyect.customer_data_platform.cdp_synapse_clientes_productivos` as cp on (uc.clientes=cp.IdClienteSk)
+      left join nacimientoSoriana as ns on ( uc.clientes= ns.idclientes)
+
       --where cp.correo is not null
-      group by 1,2,3,4,5,6,7,8,9,10
+      group by 1,2,3,4,5,6,7,8,9,10,11
       order by semanaUltimaCompra desc
       ;;
   }
