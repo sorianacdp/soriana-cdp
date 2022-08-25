@@ -93,6 +93,12 @@ view: cdp_soriana_tipos_usuario_ultima_compra {
     sql: ${TABLE}.idTienda ;;
   }
 
+
+  dimension: fechaNacimientoSoriana {
+    type: string
+    sql: ${TABLE}.fechaNacimientoSoriana ;;
+  }
+
   dimension: nombre {
     type: string
     sql: ${TABLE}.nombre ;;
@@ -133,6 +139,7 @@ view: cdp_soriana_tipos_usuario_ultima_compra {
       id_cliente,
       GRClienteId,
       idTienda,
+      fechaNacimientoSoriana,
       nombre,
       apellido,
       fecha_nacimiento,
