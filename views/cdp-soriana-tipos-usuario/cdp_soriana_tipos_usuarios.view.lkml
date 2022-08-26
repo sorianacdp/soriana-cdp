@@ -137,10 +137,40 @@ order by semana asc, idCliente desc
     drill_fields: [detail*]
   }
 
-  measure: percen {
+  measure: clientePremium {
     type: count_distinct
     sql: ${TABLE}.idCliente ;;
     filters: [tipo_cliente: "CLIENTE PREMIUM"]
+  }
+
+  measure: clienteValioso {
+    type: count_distinct
+    sql: ${TABLE}.idCliente ;;
+    filters: [tipo_cliente: "CLIENTE VALIOSO"]
+  }
+
+  measure: clientePotencial {
+    type: count_distinct
+    sql: ${TABLE}.idCliente ;;
+    filters: [tipo_cliente: "CLIENTE POTENCIAL"]
+  }
+
+  measure: clienteNoComprometido {
+    type: count_distinct
+    sql: ${TABLE}.idCliente ;;
+    filters: [tipo_cliente: "NO COMPROMETIDO"]
+  }
+
+  measure: clienteNuevo {
+    type: count_distinct
+    sql: ${TABLE}.idCliente ;;
+    filters: [tipo_cliente: "CLIENTE NUEVO"]
+  }
+
+  measure: clienteProspecto {
+    type: count_distinct
+    sql: ${TABLE}.idCliente ;;
+    filters: [tipo_cliente: "CLIENTE PROSPECTO"]
   }
 
   dimension: id_cliente {
