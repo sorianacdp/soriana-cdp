@@ -19,17 +19,10 @@ include: "/views/cdp-soriana-tipos-usuario/*.view.lkml"                # include
 #   }
 # }
 
-
 explore: cdp_soriana_tipos_usuarios {}
 explore: cdp_soriana_tipo_cliente_premium {}
 explore: cdp_soriana_tipo_cliente_valioso {}
 explore: cdp_soriana_tipo_cliente_potencial {}
 explore: cdp_soriana_tipo_cliente_nuevo {}
 explore: cdp_soriana_tipo_cliente_no_comprometido {}
-explore: cdp_soriana_tipo_usuarios_totales {}
 explore: cdp_soriana_totales_pie {}
-explore: cdp_soriana_tipos_usuario_ultima_compra {}
-explore: cdp_soriana_tipo_usuario_ultima_compra_totales {}
-explore: cdp_soriana_tipo_usuario_ultima_compra_actual {}
-explore: cdp_soriana_tipo_usuario_ultima_compra_recuperable {}
-explore: cdp_soriana_tipo_usuario_ultima_compra_no_regresa {}

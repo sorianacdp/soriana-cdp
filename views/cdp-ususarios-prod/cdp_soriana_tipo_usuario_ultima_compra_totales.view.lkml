@@ -1,4 +1,4 @@
-view: cdp_soriana_tipo_usuario_ultima_compra_no_regresa {
+view: cdp_soriana_tipo_usuario_ultima_compra_totales {
   derived_table: {
     sql: with rango_fecha as (
         select
@@ -8,7 +8,7 @@ view: cdp_soriana_tipo_usuario_ultima_compra_no_regresa {
         cast( format_date('%U', parse_date("%Y%m%d",max(format_date('%Y%m%d',FechaHoraTicket)))) as INT) as max_semana,
         --fecha final 8 semanas antes, o 56 dias--- 10 semanas 70 dias
           format_date('%Y%m%d',DATE_SUB(DATE(max(FechaHoraTicket)), INTERVAL 90 DAY)) as fecha_final,
-      from `costumer-data-proyect.customer_data_platform.TicketsProductivos`),
+      from `costumer-data-proyect.customer_data_platform.cdp_synapse_tickets_productivos`),
       ------------------------------
       --------------------------------
       prep as (
@@ -17,7 +17,7 @@ view: cdp_soriana_tipo_usuario_ultima_compra_no_regresa {
       IdClienteSk as clientes,
       count (distinct IdCliente) as conteoCompras,
       ImporteVentaNeta as ticket,
-      from `costumer-data-proyect.customer_data_platform.TicketsProductivos`,rango_fecha
+      from `costumer-data-proyect.customer_data_platform.cdp_synapse_tickets_productivos`,rango_fecha
       where  format_date('%Y%m%d',FechaHoraTicket) <= rango_fecha.fecha_inicio and  format_date('%Y%m%d',FechaHoraTicket) >=rango_fecha.fecha_final and IdCliente is not null
       group by 1,2,4
       ),
@@ -40,7 +40,7 @@ view: cdp_soriana_tipo_usuario_ultima_compra_no_regresa {
       format_date('%Y-%m-%d',cp.fechaNacimiento) as fechaNacimiento,
       cp.sexo as sexo,
       cp.correo as correo,
-      semanaUltimaCompra,
+      cast(semanaUltimaCompra as string)  as semanaUltimaCompra,
       --tipos se clientes
       case
       when (semanaUltimaCompra >= max_semana-7) and (semanaUltimaCompra <= max_semana-6) then 'CLIENTE RECUPERABLE'
@@ -49,24 +49,27 @@ view: cdp_soriana_tipo_usuario_ultima_compra_no_regresa {
       end as tipoCliente
 
       from ultimaCompraCliente as uc
-      left join `costumer-data-proyect.cdp_soriana_synapse.ClienteValidacionesUnicos`as cp on (uc.clientes=cp.IdClienteSk)
+      left join `costumer-data-proyect.customer_data_platform.cdp_synapse_clientes_productivos` as cp on (uc.clientes=cp.IdClienteSk)
       --where cp.correo is not null
       group by 1,2,3,4,5,6,7,8
       order by clientes asc)
 
       select
       count(distinct idCliente) as clientes,
-      tipoCliente,
-      semanaUltimaCompra
+      tipoCliente
       from ulti_comp
-      where tipoCliente='CLIENTE NO REGRESA'
-      group by 2,3
+      group by tipoCliente
       ;;
   }
 
   measure: count {
     type: count
     drill_fields: [detail*]
+  }
+
+  measure: cuetaus {
+    type: sum
+    sql: ${TABLE}.clientes ;;
   }
 
   dimension: clientes {
@@ -79,12 +82,7 @@ view: cdp_soriana_tipo_usuario_ultima_compra_no_regresa {
     sql: ${TABLE}.tipoCliente ;;
   }
 
-  dimension: semana_ultima_compra {
-    type: number
-    sql: ${TABLE}.semanaUltimaCompra ;;
-  }
-
   set: detail {
-    fields: [clientes, tipo_cliente, semana_ultima_compra]
+    fields: [clientes, tipo_cliente]
   }
 }

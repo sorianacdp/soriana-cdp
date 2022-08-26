@@ -1,14 +1,6 @@
 view: cdp_soriana_tipos_usuarios {
   derived_table: {
-    sql: /**with rango_fecha as (
-      select
-          --format_date('%Y%m%d',date_sub(current_date(), interval 1 day)) as fecha_inicio,
-          --format_date('%Y%m%d',date_sub(current_date(), interval 1 day)) as fecha_final),
-          '20220630' as fecha_inicio,
-          '20220508' as fecha_final),
-          --'20220601' as fecha_final),**/
-
-                    with rango_fecha as (
+    sql:  with rango_fecha as (
             select
             --fecha inicio
             max(format_date('%Y%m%d',FechaHoraTicket)) as  fecha_inicio,
@@ -16,23 +8,39 @@ view: cdp_soriana_tipos_usuarios {
             cast( format_date('%U', parse_date("%Y%m%d",max(format_date('%Y%m%d',FechaHoraTicket)))) as INT) as max_semana,
             --fecha final 8 semanas antes, o 56 dias--- 10 semanas 70 dias
               format_date('%Y%m%d',DATE_SUB(DATE(max(FechaHoraTicket)), INTERVAL 90 DAY)) as fecha_final,
-          from `costumer-data-proyect.customer_data_platform.TicketsProductivos`),
+          from `costumer-data-proyect.customer_data_platform.cdp_synapse_tickets_productivos`),
       ------------------------------
       --------------------------------
-      prep as (
-      select
-      distinct format_date('%Y%m%d',FechaHoraTicket) as fecha,
-      IdClienteSk as clientes,
-      count (distinct IdCliente) as conteoCompras,
-      ImporteVentaNeta as ticket,
-      from `costumer-data-proyect.customer_data_platform.TicketsProductivos`,rango_fecha
-      where  format_date('%Y%m%d',FechaHoraTicket) <= rango_fecha.fecha_inicio and  format_date('%Y%m%d',FechaHoraTicket) >=rango_fecha.fecha_final and IdCliente is not null
-      group by 1,2,4
-      )
+        prep as (
+  select
+  distinct format_date('%Y%m%d',FechaHoraTicket) as fecha,
+  IdClienteSk as clientes,
+  IdTienda as tienda,
+  count (distinct IdClienteSk) as conteoCompras,
+  ImporteVentaNeta as ticket,
+  from `costumer-data-proyect.customer_data_platform.cdp_synapse_tickets_productivos`,rango_fecha
+  where  format_date('%Y%m%d',FechaHoraTicket) <= rango_fecha.fecha_inicio and  format_date('%Y%m%d',FechaHoraTicket) >=rango_fecha.fecha_final and IdClienteSk is not null
+  group by 1,2,3,5
+  ),
+
+nacimientoSoriana as (
+select
+distinct IdClienteSk as idclientes,
+DATE_DIFF(CURRENT_DATE(), parse_date("%Y%m%d",min(format_date('%Y%m%d',FechaHoraTicket))), DAY)  as diasDeVida,
+min(format_date('%Y-%m-%d',FechaHoraTicket)) as fechaNacimientoSoriana,
+
+from `costumer-data-proyect.customer_data_platform.cdp_synapse_tickets_productivos`
+where  format_date('%Y%m%d',FechaHoraTicket) between '20210101' and format_date('%Y%m%d',date_sub(current_date(), interval 1 day)) and IdClienteSk is not null
+group by 1
+)
+
 
       select
       --info cliente
-       distinct cast(clientes as STRING) as idCliente,
+       distinct cast(p.clientes as STRING) as idCliente,
+      cp.GRClienteId as GRClienteId,
+      p.tienda as idTienda,
+      ns.fechaNacimientoSoriana as fechaNacimientoSoriana,
       cp.nombre as nombre,
       cp.apellidoPaterno as apellido,
       format_date('%Y-%m-%d',cp.fechaNacimiento) as fechaNacimiento,
@@ -41,29 +49,36 @@ view: cdp_soriana_tipos_usuarios {
 
       --info compras
       format_date('%U', parse_date("%Y%m%d",fecha)) as semana,
-      sum(ticket) as tickeTotal,
-      sum(conteoCompras) as conteoCompras,
-      sum(ticket)/sum(conteoCompras) as ticketPromedio,
+      sum(p.ticket) as tickeTotal,
+      sum(p.conteoCompras) as conteoCompras,
+      sum(p.ticket)/sum(p.conteoCompras) as ticketPromedio,
       --tipo de cliente
+--tipo de cliente
       case
-      when (sum(conteoCompras)>= 4) and (sum(ticket)/sum(conteoCompras) > 570) then 'CLIENTE PREMIUM'
-      when (sum(conteoCompras)>= 2 and sum(conteoCompras)<= 3) and (sum(ticket)/sum(conteoCompras) > 570) then 'CLIENTE VALIOSO'
-      when (sum(conteoCompras)>= 1 and sum(conteoCompras)<= 2) and (sum(ticket)/sum(conteoCompras) > 570) then 'CLIENTE POTENCIAL'
-      when (sum(conteoCompras)= 1) then 'CLIENTE NUEVO'
-      when (sum(conteoCompras)= 0) then 'CLIENTE PROSPECTO'
-      when (sum(conteoCompras)>= 4) and (sum(ticket)/sum(conteoCompras) > 150 and sum(ticket)/sum(conteoCompras) < 570) then 'CLIENTE VALIOSO'
-      when (sum(conteoCompras)>= 2 and sum(conteoCompras)<= 3) and (sum(ticket)/sum(conteoCompras) > 150 and sum(ticket)/sum(conteoCompras) < 570) then 'CLIENTE POTENCIAL'
-      when (sum(conteoCompras)>= 1 and sum(conteoCompras)<= 2) and (sum(ticket)/sum(conteoCompras) > 150 and sum(ticket)/sum(conteoCompras) < 570) then 'NO COMPROMETIDO'
-      when (sum(conteoCompras)>= 4) and (sum(ticket)/sum(conteoCompras) < 150) then 'CLIENTE POTENCIAL'
-      when (sum(conteoCompras)>= 1 and sum(conteoCompras)<= 3) and (sum(ticket)/sum(conteoCompras) < 150) then 'NO COMPROMETIDO'
-      else '(NOT SET)'
+      when (sum(p.conteoCompras)>= 4) and (sum(p.ticket)/sum(p.conteoCompras) > 570) then 'CLIENTE PREMIUM'
+      when (sum(p.conteoCompras)>= 2 and sum(p.conteoCompras)<= 3) and (sum(p.ticket)/sum(p.conteoCompras) > 570) then 'CLIENTE VALIOSO'
+      when (sum(p.conteoCompras)>= 1 and sum(p.conteoCompras)<= 2) and (sum(p.ticket)/sum(p.conteoCompras) > 570) then 'CLIENTE POTENCIAL'
+      when (sum(p.conteoCompras)= 1) then 'CLIENTE NUEVO'
+      when (sum(p.conteoCompras)= 0) then 'CLIENTE PROSPECTO'
+      when (sum(p.conteoCompras)>= 4) and (sum(p.ticket)/sum(p.conteoCompras) >= 150 and sum(p.ticket)/sum(p.conteoCompras) <= 570) then 'CLIENTE VALIOSO'
+      when (sum(p.conteoCompras)>= 2 and sum(p.conteoCompras)<= 3) and (sum(p.ticket)/sum(p.conteoCompras) >=150 and sum(p.ticket)/sum(p.conteoCompras) <= 570) then 'CLIENTE POTENCIAL'
+      when (sum(p.conteoCompras)>= 1 and sum(p.conteoCompras)<= 2) and (sum(p.ticket)/sum(p.conteoCompras) >= 150 and sum(p.ticket)/sum(p.conteoCompras) <= 570) then 'NO COMPROMETIDO'
+      when (sum(p.conteoCompras)>= 4) and (sum(p.ticket)/sum(p.conteoCompras) < 150) then 'CLIENTE POTENCIAL'
+      when (sum(p.conteoCompras)>= 1 and sum(p.conteoCompras)<= 3) and (sum(p.ticket)/sum(p.conteoCompras) < 150) then 'NO COMPROMETIDO'
+      when (sum(p.conteoCompras)>= 2 and sum(p.conteoCompras)<= 3) and (sum(p.ticket)/sum(p.conteoCompras) < 150) then 'NO COMPROMETIDO'
+      when (sum(p.conteoCompras)>= 1 and sum(p.conteoCompras)<= 2) and (sum(p.ticket)/sum(p.conteoCompras) < 150) then 'NO COMPROMETIDO'
+      when (sum(p.conteoCompras)>= 1 and sum(p.conteoCompras)<= 2) and (sum(p.ticket)/sum(p.conteoCompras) >= 150 and sum(p.ticket)/sum(p.conteoCompras) <= 570) then 'NO COMPROMETIDO'
+      when (sum(p.conteoCompras)>= 1 and sum(p.conteoCompras)<= 3) and (sum(p.ticket)/sum(p.conteoCompras) >= 150 and sum(p.ticket)/sum(p.conteoCompras) <= 570) then 'NO COMPROMETIDO'
+      when (sum(p.conteoCompras)>= 1 and sum(p.conteoCompras)<= 3) and (sum(p.ticket)/sum(p.conteoCompras) > 570) then 'NO COMPROMETIDO'
+      else '(not set )'
       end as tipoCliente
 
 
-      from prep
-      left join `costumer-data-proyect.cdp_soriana_synapse.ClienteValidacionesUnicos` as cp on (clientes=cp.IdClienteSk)
-      where cp.correo is not null
-      group by 1,2,3,4,5,6,7
+      from prep as p
+      left join `costumer-data-proyect.customer_data_platform.cdp_synapse_clientes_productivos` as cp on (p.clientes=cp.IdClienteSk)
+      left join nacimientoSoriana as ns on ( p.clientes= ns.idclientes)
+      --where cp.correo is not null
+      group by 1,2,3,4,5,6,7,8,9,10
       order by semana asc, idCliente asc
       ;;
   }
@@ -76,6 +91,21 @@ view: cdp_soriana_tipos_usuarios {
   dimension: id_cliente {
     type: string
     sql: ${TABLE}.idCliente ;;
+  }
+
+  dimension: GRClienteId {
+    type: string
+    sql: ${TABLE}.GRClienteId ;;
+  }
+
+  dimension: idTienda {
+    type: string
+    sql: ${TABLE}.idTienda ;;
+  }
+
+  dimension: fechaNacimientoSoriana {
+    type: string
+    sql: ${TABLE}.fechaNacimientoSoriana ;;
   }
 
   dimension: nombre {
@@ -132,6 +162,9 @@ view: cdp_soriana_tipos_usuarios {
   set: detail {
     fields: [
       id_cliente,
+      GRClienteId,
+      idTienda,
+      fechaNacimientoSoriana,
       nombre,
       apellido,
       fecha_nacimiento,
