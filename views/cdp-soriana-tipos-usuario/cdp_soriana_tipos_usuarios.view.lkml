@@ -140,7 +140,7 @@ order by semana asc, idCliente desc
   measure: percen {
     type: count_distinct
     sql: ${TABLE}.idCliente
-    filters: [tipoCliente: "CLIENTE PREMIUM";;
+    filters: [tipoCliente: "CLIENTE PREMIUM"];;
   }
 
   dimension: id_cliente {
