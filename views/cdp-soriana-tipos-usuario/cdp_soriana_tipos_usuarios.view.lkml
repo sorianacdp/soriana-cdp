@@ -137,6 +137,11 @@ order by semana asc, idCliente desc
     drill_fields: [detail*]
   }
 
+  measure: percen {
+    type: sum
+    sql: ${TABLE}.semana ;;
+  }
+
   dimension: id_cliente {
     type: string
     sql: ${TABLE}.idCliente ;;
