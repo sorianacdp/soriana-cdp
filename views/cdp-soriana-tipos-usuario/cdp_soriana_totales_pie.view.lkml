@@ -8,7 +8,7 @@ view: cdp_soriana_totales_pie {
             cast( format_date('%U', parse_date("%Y%m%d",max(format_date('%Y%m%d',FechaHoraTicket)))) as INT) as max_semana,
             --fecha final 8 semanas antes, o 56 dias--- 10 semanas 70 dias
               format_date('%Y%m%d',DATE_SUB(DATE(max(FechaHoraTicket)), INTERVAL 90 DAY)) as fecha_final,
-          from `costumer-data-proyect.customer_data_platform.TicketsProductivosP`),
+          from `costumer-data-proyect.customer_data_platform.cdp_synapse_tickets_productivos`),
       ------------------------------
       --------------------------------
         prep as (
@@ -18,7 +18,7 @@ view: cdp_soriana_totales_pie {
   IdTienda as tienda,
   count (distinct IdClienteSk) as conteoCompras,
   ImporteVentaNeta as ticket,
-  from `costumer-data-proyect.customer_data_platform.TicketsProductivosP`,rango_fecha
+  from `costumer-data-proyect.customer_data_platform.cdp_synapse_tickets_productivos`,rango_fecha
   where  format_date('%Y%m%d',FechaHoraTicket) <= rango_fecha.fecha_inicio and  format_date('%Y%m%d',FechaHoraTicket) >=rango_fecha.fecha_final and IdClienteSk is not null
   group by 1,2,3,5
   ),
