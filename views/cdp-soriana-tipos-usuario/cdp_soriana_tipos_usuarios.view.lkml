@@ -139,7 +139,7 @@ order by semana asc, idCliente desc
 
   measure: percen {
     type: sum
-    sql: ${TABLE}.semana ;;
+    sql: ${TABLE}.tipoCliente ;;
   }
 
   dimension: id_cliente {
