@@ -138,7 +138,7 @@ order by semana asc, idCliente desc
   }
 
   measure: percen {
-    type: sum
+    type: count_distinct
     sql: ${TABLE}.idCliente ;;
   }
 
