@@ -119,7 +119,7 @@ order by clienteOmni)
       left join canaltotal as ct on ( uc.clientes=ct.clienteOmni)
 
       --where cp.correo is not null
-      group by 1,2,3,4,5,6,7,8,9,10,11
+      group by 1,2,3,4,5,6,7,8,9,10,11,12
       order by semanaUltimaCompra desc
       ;;
   }
