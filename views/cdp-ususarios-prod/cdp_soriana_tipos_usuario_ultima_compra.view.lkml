@@ -42,7 +42,56 @@ view: cdp_soriana_tipos_usuario_ultima_compra {
       from `costumer-data-proyect.customer_data_platform.cdp_synapse_tickets_productivos`
       where  format_date('%Y%m%d',FechaHoraTicket) between '20210101' and format_date('%Y%m%d',date_sub(current_date(), interval 1 day)) and IdClienteSk is not null
       group by 1
-      )
+      ),
+
+
+----------------------------
+----------------------------
+----canal del cliente
+ventaTienda as (
+SELECT
+distinct IdClienteSk as IdClienteSkvt,
+'OFFLINE' as canalCliente
+FROM `costumer-data-proyect.customer_data_platform.cdp_synapse_tickets_productivos`
+where EsVentaInternet = false and IdCanal= 7 ),
+
+ventaInternet as (
+SELECT
+distinct IdClienteSk as IdClienteSkvi,
+'ONLINE' as canalCliente
+FROM `costumer-data-proyect.customer_data_platform.cdp_synapse_tickets_productivos`
+where EsVentaInternet= true and IdCanal= 3 ),
+
+omni as (select
+distinct vt.IdClienteSkvt as clienteOmni,
+'OMNICANAL' as canalCliente
+from ventaTienda as vt
+inner join ventaInternet as vi on (vt.IdClienteSkvt = vi.IdClienteSkvi)),
+
+restavenTienda as (select
+vt.IdClienteSkvt as id, vt.canalCliente as canalCliente
+from ventaTienda as vt
+left join omni as om on (vt.IdClienteSkvt=om.clienteOmni)
+where om.clienteOmni is null),
+
+restavenInternet as (select
+vi.IdClienteSkvi as id, vi.canalCliente as canalCliente
+from ventaInternet as vi
+left join omni as om on (vi.IdClienteSkvi=om.clienteOmni)
+where om.clienteOmni is null),
+
+canaltotal as (
+select clienteOmni,canalCliente from omni
+union distinct
+select * from restavenTienda
+union distinct
+select * from restavenInternet
+order by clienteOmni)
+
+
+---------------------------------------
+
+
 
       select
       --Info Clientes:
@@ -50,6 +99,7 @@ view: cdp_soriana_tipos_usuario_ultima_compra {
       cp.GRClienteId as GRClienteId,
       uc.tienda as idTienda,
       ns.fechaNacimientoSoriana as fechaNacimientoSoriana,
+      ct.canalCliente as origenCliente,
       cp.nombre as nombre,
       cp.apellidoPaterno as apellido,
       format_date('%Y-%m-%d',cp.fechaNacimiento) as fechaNacimiento,
@@ -66,6 +116,7 @@ view: cdp_soriana_tipos_usuario_ultima_compra {
       from ultimaCompraCliente as uc
       left join `costumer-data-proyect.customer_data_platform.cdp_synapse_clientes_productivos` as cp on (uc.clientes=cp.IdClienteSk)
       left join nacimientoSoriana as ns on ( uc.clientes= ns.idclientes)
+      left join canaltotal as ct on ( uc.clientes=ct.clienteOmni)
 
       --where cp.correo is not null
       group by 1,2,3,4,5,6,7,8,9,10,11
@@ -117,6 +168,11 @@ view: cdp_soriana_tipos_usuario_ultima_compra {
     sql: ${TABLE}.fechaNacimientoSoriana ;;
   }
 
+  dimension: origenCliente {
+    type: string
+    sql: ${TABLE}.origenCliente ;;
+  }
+
   dimension: nombre {
     type: string
     sql: ${TABLE}.nombre ;;
@@ -158,6 +214,7 @@ view: cdp_soriana_tipos_usuario_ultima_compra {
       GRClienteId,
       idTienda,
       fechaNacimientoSoriana,
+      origenCliente,
       nombre,
       apellido,
       fecha_nacimiento,
