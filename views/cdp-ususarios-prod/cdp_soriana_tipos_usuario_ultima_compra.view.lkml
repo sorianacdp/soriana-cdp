@@ -78,6 +78,24 @@ view: cdp_soriana_tipos_usuario_ultima_compra {
     drill_fields: [detail*]
   }
 
+  measure: clientePremium {
+    type: count_distinct
+    sql: ${TABLE}.idCliente ;;
+    filters: [tipo_cliente: "CLIENTE ACTUAL"]
+  }
+
+  measure: clienteValioso {
+    type: count_distinct
+    sql: ${TABLE}.idCliente ;;
+    filters: [tipo_cliente: "CLIENTE NO REGRESA"]
+  }
+
+  measure: clientePotencial {
+    type: count_distinct
+    sql: ${TABLE}.idCliente ;;
+    filters: [tipo_cliente: "CLIENTE RECUPERABLE"]
+  }
+
   dimension: id_cliente {
     type: string
     sql: ${TABLE}.idCliente ;;
