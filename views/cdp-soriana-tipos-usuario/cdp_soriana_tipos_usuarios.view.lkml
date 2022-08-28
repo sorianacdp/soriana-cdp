@@ -98,7 +98,7 @@ cp.sexo as sexo,
 cp.correo as correo,
 
 --info compras
-cast(format_date('%U', parse_date("%Y%m%d",fecha)) as int ) as semana,
+format_date('%U', parse_date("%Y%m%d",fecha)) as semana,
 sum(p.ticket) as tickeTotal,
 sum(p.conteoCompras) as conteoCompras,
 sum(p.ticket)/sum(p.conteoCompras) as ticketPromedio,
