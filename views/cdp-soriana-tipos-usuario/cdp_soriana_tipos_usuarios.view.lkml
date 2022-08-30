@@ -86,7 +86,7 @@ left join omni as om on(un.idclienteun=om.clienteOmni))
 
 select
 --info cliente
-  distinct cast(p.clientes as STRING) as idCliente,
+distinct cast(p.clientes as STRING) as idCliente,
 cp.GRClienteId as GRClienteId,
 p.tienda as idTienda,
 ns.fechaNacimientoSoriana,
@@ -99,7 +99,7 @@ cp.sexo as sexo,
 cp.correo as correo,
 
 --info compras
-cast(format_date('%Y', parse_date("%Y%m%d",fecha))as int) as anio,
+format_date('%Y', parse_date("%Y%m%d",fecha))as anio,
 format_date('%U', parse_date("%Y%m%d",fecha))  as semana,
 DATE_DIFF(CURRENT_DATE(), parse_date("%Y%m%d",fecha), WEEK) as haceNSemanas,
 sum(p.ticket) as tickeTotal,
@@ -227,7 +227,7 @@ cp.sexo as sexo,
 cp.correo as correo,
 
 --info compras
-cast(format_date('%Y', parse_date("%Y%m%d",fecha)) as int)  as anio,
+format_date('%Y', parse_date("%Y%m%d",fecha))  as anio,
 format_date('%U', parse_date("%Y%m%d",fecha))  as semana,
 DATE_DIFF(CURRENT_DATE(), parse_date("%Y%m%d",fecha), WEEK) as haceNSemanas,
 sum(p.ticket) as tickeTotal,
@@ -375,7 +375,7 @@ select * from anio_anterior
   }
 
   dimension: anio {
-    type: number
+    type: string
     sql: ${TABLE}.anio ;;
   }
 
@@ -399,7 +399,10 @@ select * from anio_anterior
     sql: ${TABLE}.tipoCliente ;;
   }
 
-
+  filter: aniofilter {
+    type: yesno
+    sql: ${TABLE}.anio;;
+  }
 
   set: detail {
     fields: [
