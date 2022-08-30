@@ -1,7 +1,7 @@
 connection: "cdp-soriana-dataset-prod"
 
 include: "/views/cdp-soriana-tipos-usuario/*.view.lkml"                # include all views in the views/ folder in this project
-# include: "/**/*.view.lkml"                 # include all views in this project
+# include: "/maps/*.view.lkml"                 # include all views in this project
 # include: "my_dashboard.dashboard.lookml"   # include a LookML dashboard called my_dashboard
 
 # # Select the views that should be a part of this model,
@@ -26,3 +26,8 @@ explore: cdp_soriana_tipo_cliente_potencial {}
 explore: cdp_soriana_tipo_cliente_nuevo {}
 explore: cdp_soriana_tipo_cliente_no_comprometido {}
 explore: cdp_soriana_totales_pie {}
+explore: cdp_soriana_prueba_mapa {}
+
+map_layer: mexico {
+  file: "/maps/mexico.json"
+}

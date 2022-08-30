@@ -37,6 +37,7 @@ group by 1
 ----------------------------
 ----------------------------
 ----canal del cliente
+----canal del cliente
 ventaTienda as (
 SELECT
 distinct IdClienteSk as IdClienteSkvt,
@@ -57,25 +58,20 @@ distinct vt.IdClienteSkvt as clienteOmni,
 from ventaTienda as vt
 inner join ventaInternet as vi on (vt.IdClienteSkvt = vi.IdClienteSkvi)),
 
-restavenTienda as (select
-vt.IdClienteSkvt as id, vt.canalCliente as canalCliente
-from ventaTienda as vt
-left join omni as om on (vt.IdClienteSkvt=om.clienteOmni)
-where om.clienteOmni is null),
-
-restavenInternet as (select
-vi.IdClienteSkvi as id, vi.canalCliente as canalCliente
-from ventaInternet as vi
-left join omni as om on (vi.IdClienteSkvi=om.clienteOmni)
-where om.clienteOmni is null),
-
-canaltotal as (
-select clienteOmni,canalCliente from omni
+union_OFFON as (
+select IdClienteSkvt as idclienteun, canalCliente  from ventaTienda
 union distinct
-select * from restavenTienda
-union distinct
-select * from restavenInternet
-order by clienteOmni)
+select * from ventaInternet),
+
+canalorigen as (select
+distinct un.idclienteun as idclienteun,
+un.canalCliente as canalCliente,
+case
+when om.clienteOmni is not null then 'true'
+else 'false'
+end as omnicanal
+from union_OFFON as un
+left join omni as om on(un.idclienteun=om.clienteOmni))
 
 
 
@@ -91,6 +87,7 @@ cp.GRClienteId as GRClienteId,
 p.tienda as idTienda,
 ns.fechaNacimientoSoriana,
 ct.canalCliente as origenCliente,
+ct.omnicanal as omnicanal,
 cp.nombre as nombre,
 cp.apellidoPaterno as apellido,
 format_date('%Y-%m-%d',cp.fechaNacimiento) as fechaNacimiento,
@@ -126,8 +123,8 @@ end as tipoCliente
 from prep as p
 left join `costumer-data-proyect.customer_data_platform.cdp_synapse_clientes_productivos` as cp on (p.clientes=cp.IdClienteSk)
 left join nacimientoSoriana as ns on ( p.clientes= ns.idclientes)
-left join canaltotal as ct on ( p.clientes=ct.clienteOmni)
-group by 1,2,3,4,5,6,7,8,9,10,11
+left join canalorigen as ct on ( p.clientes=ct.idclienteun)
+group by 1,2,3,4,5,6,7,8,9,10,11,12
 order by semana asc, idCliente desc
       ;;
   }
@@ -193,6 +190,11 @@ order by semana asc, idCliente desc
     sql: ${TABLE}.origenCliente ;;
   }
 
+  dimension: omnicanal {
+    type: string
+    sql: ${TABLE}.omnicanal ;;
+  }
+
   dimension: fechaNacimientoSoriana {
     type: string
     sql: ${TABLE}.fechaNacimientoSoriana ;;
@@ -249,12 +251,15 @@ order by semana asc, idCliente desc
     sql: ${TABLE}.tipoCliente ;;
   }
 
+
+
   set: detail {
     fields: [
       id_cliente,
       GRClienteId,
       idTienda,
       origenCliente,
+      omnicanal,
       fechaNacimientoSoriana,
       nombre,
       apellido,

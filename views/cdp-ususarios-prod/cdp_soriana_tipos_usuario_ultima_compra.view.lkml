@@ -48,6 +48,7 @@ view: cdp_soriana_tipos_usuario_ultima_compra {
 ----------------------------
 ----------------------------
 ----canal del cliente
+----canal del cliente
 ventaTienda as (
 SELECT
 distinct IdClienteSk as IdClienteSkvt,
@@ -68,25 +69,21 @@ distinct vt.IdClienteSkvt as clienteOmni,
 from ventaTienda as vt
 inner join ventaInternet as vi on (vt.IdClienteSkvt = vi.IdClienteSkvi)),
 
-restavenTienda as (select
-vt.IdClienteSkvt as id, vt.canalCliente as canalCliente
-from ventaTienda as vt
-left join omni as om on (vt.IdClienteSkvt=om.clienteOmni)
-where om.clienteOmni is null),
-
-restavenInternet as (select
-vi.IdClienteSkvi as id, vi.canalCliente as canalCliente
-from ventaInternet as vi
-left join omni as om on (vi.IdClienteSkvi=om.clienteOmni)
-where om.clienteOmni is null),
-
-canaltotal as (
-select clienteOmni,canalCliente from omni
+union_OFFON as (
+select IdClienteSkvt as idclienteun, canalCliente  from ventaTienda
 union distinct
-select * from restavenTienda
-union distinct
-select * from restavenInternet
-order by clienteOmni)
+select * from ventaInternet),
+
+canalorigen as (select
+distinct un.idclienteun as idclienteun,
+un.canalCliente as canalCliente,
+case
+when om.clienteOmni is not null then 'true'
+else 'false'
+end as omnicanal
+from union_OFFON as un
+left join omni as om on(un.idclienteun=om.clienteOmni))
+
 
 
 ---------------------------------------
@@ -100,6 +97,7 @@ order by clienteOmni)
       uc.tienda as idTienda,
       ns.fechaNacimientoSoriana as fechaNacimientoSoriana,
       ct.canalCliente as origenCliente,
+      ct.omnicanal as omnicanal,
       cp.nombre as nombre,
       cp.apellidoPaterno as apellido,
       format_date('%Y-%m-%d',cp.fechaNacimiento) as fechaNacimiento,
@@ -116,10 +114,10 @@ order by clienteOmni)
       from ultimaCompraCliente as uc
       left join `costumer-data-proyect.customer_data_platform.cdp_synapse_clientes_productivos` as cp on (uc.clientes=cp.IdClienteSk)
       left join nacimientoSoriana as ns on ( uc.clientes= ns.idclientes)
-      left join canaltotal as ct on ( uc.clientes=ct.clienteOmni)
+      left join canalorigen as ct on ( uc.clientes=ct.idclienteun)
 
       --where cp.correo is not null
-      group by 1,2,3,4,5,6,7,8,9,10,11,12
+      group by 1,2,3,4,5,6,7,8,9,10,11,12,13
       order by semanaUltimaCompra desc
       ;;
   }
@@ -173,6 +171,11 @@ order by clienteOmni)
     sql: ${TABLE}.origenCliente ;;
   }
 
+  dimension: omnicanal {
+    type: string
+    sql: ${TABLE}.omnicanal ;;
+  }
+
   dimension: nombre {
     type: string
     sql: ${TABLE}.nombre ;;
@@ -215,6 +218,7 @@ order by clienteOmni)
       idTienda,
       fechaNacimientoSoriana,
       origenCliente,
+      omnicanal,
       nombre,
       apellido,
       fecha_nacimiento,
