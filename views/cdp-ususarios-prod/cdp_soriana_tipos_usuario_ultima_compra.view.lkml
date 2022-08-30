@@ -1,6 +1,6 @@
 view: cdp_soriana_tipos_usuario_ultima_compra {
   derived_table: {
-    sql: with rango_fecha as (
+    sql:with rango_fecha as (
         select
         --fecha inicio
         max(format_date('%Y%m%d',FechaHoraTicket)) as  fecha_inicio,
@@ -28,7 +28,9 @@ view: cdp_soriana_tipos_usuario_ultima_compra {
       distinct clientes,
       max_semana,
       tienda,
-      cast( format_date('%U', parse_date("%Y%m%d",max(fecha))) as INT) as semanaUltimaCompra
+      format_date('%Y', parse_date("%Y%m%d",max(fecha))) as anio,
+      cast( format_date('%U', parse_date("%Y%m%d",max(fecha))) as INT) as semanaUltimaCompra,
+      DATE_DIFF(CURRENT_DATE(), parse_date("%Y%m%d",max(fecha)), WEEK) as haceNSemanas,
       from prep,rango_fecha
       group by 1,2,3
       order by semanaUltimaCompra),
@@ -104,6 +106,8 @@ left join omni as om on(un.idclienteun=om.clienteOmni))
       cp.sexo as sexo,
       cp.correo as correo,
       cast(semanaUltimaCompra as string) as semanaUltimaCompra,
+      haceNSemanas as haceNSemanas,
+      anio,
       --tipos se clientes
       case
       when (semanaUltimaCompra >= max_semana-7) and (semanaUltimaCompra <= max_semana-6) then 'CLIENTE RECUPERABLE'
@@ -117,7 +121,7 @@ left join omni as om on(un.idclienteun=om.clienteOmni))
       left join canalorigen as ct on ( uc.clientes=ct.idclienteun)
 
       --where cp.correo is not null
-      group by 1,2,3,4,5,6,7,8,9,10,11,12,13
+      group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
       order by semanaUltimaCompra desc
       ;;
   }
@@ -206,6 +210,15 @@ left join omni as om on(un.idclienteun=om.clienteOmni))
     sql: ${TABLE}.semanaUltimaCompra ;;
   }
 
+  dimension: haceNSemanas {
+    type: number
+    sql: ${TABLE}.haceNSemanas ;;
+  }
+  dimension: anio {
+    type: number
+    sql: ${TABLE}.anio ;;
+  }
+
   dimension: tipo_cliente {
     type: string
     sql: ${TABLE}.tipoCliente ;;
@@ -225,6 +238,8 @@ left join omni as om on(un.idclienteun=om.clienteOmni))
       sexo,
       correo,
       semana_ultima_compra,
+      haceNSemanas,
+      anio,
       tipo_cliente
     ]
   }
