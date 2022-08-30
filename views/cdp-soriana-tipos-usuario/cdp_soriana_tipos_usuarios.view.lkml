@@ -97,7 +97,7 @@ cp.correo as correo,
 --info compras
 
 format_date('%U', parse_date("%Y%m%d",fecha))  as semana,
-DATE_DIFF(CURRENT_DATE(), parse_date("%Y%m%d",fecha), WEEK) as haceNSemanas,
+cast(DATE_DIFF(CURRENT_DATE(), parse_date("%Y%m%d",fecha), WEEK) as int) as haceNSemanas,
 sum(p.ticket) as tickeTotal,
 sum(p.conteoCompras) as conteoCompras,
 sum(p.ticket)/sum(p.conteoCompras) as ticketPromedio,
