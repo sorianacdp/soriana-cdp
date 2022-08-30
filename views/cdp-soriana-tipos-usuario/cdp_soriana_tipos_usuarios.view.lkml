@@ -234,7 +234,7 @@ order by semana desc, idCliente desc
   }
 
   dimension: haceNSemanas {
-    type: string
+    type: number
     sql: ${TABLE}.haceNSemanas ;;
   }
 
