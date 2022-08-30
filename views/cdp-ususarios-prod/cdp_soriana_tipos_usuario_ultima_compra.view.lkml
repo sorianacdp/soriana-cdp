@@ -215,7 +215,7 @@ left join omni as om on(un.idclienteun=om.clienteOmni))
     sql: ${TABLE}.haceNSemanas ;;
   }
   dimension: anio {
-    type: number
+    type: string
     sql: ${TABLE}.anio ;;
   }
 
