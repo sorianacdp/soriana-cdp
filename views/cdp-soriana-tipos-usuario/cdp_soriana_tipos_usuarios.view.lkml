@@ -95,7 +95,7 @@ cp.sexo as sexo,
 cp.correo as correo,
 
 --info compras
-
+format_date('%Y', parse_date("%Y%m%d",fecha))  as anio,
 format_date('%U', parse_date("%Y%m%d",fecha))  as semana,
 cast(DATE_DIFF(CURRENT_DATE(), parse_date("%Y%m%d",fecha), WEEK) as int) as haceNSemanas,
 sum(p.ticket) as tickeTotal,
@@ -126,7 +126,7 @@ from prep as p
 left join `costumer-data-proyect.customer_data_platform.cdp_synapse_clientes_productivos` as cp on (p.clientes=cp.IdClienteSk)
 left join nacimientoSoriana as ns on ( p.clientes= ns.idclientes)
 left join canalorigen as ct on ( p.clientes=ct.idclienteun)
-group by 1,2,3,4,5,6,7,8,9,10,11,12,13
+group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14
 order by semana desc, idCliente desc
       ;;
   }
@@ -238,6 +238,11 @@ order by semana desc, idCliente desc
     sql: ${TABLE}.haceNSemanas ;;
   }
 
+  dimension: anio {
+    type: string
+    sql: ${TABLE}.anio ;;
+  }
+
   dimension: ticke_total {
     type: number
     sql: ${TABLE}.tickeTotal ;;
@@ -275,6 +280,7 @@ order by semana desc, idCliente desc
       correo,
       semana,
       haceNSemanas,
+      anio,
       ticke_total,
       conteo_compras,
       ticket_promedio,
