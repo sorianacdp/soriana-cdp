@@ -1,4 +1,4 @@
-view: cdp_synapse_clientes_productivos {
+view: busquedasarticulos {
   derived_table: {
     sql: -- GA4 eventos usuarios: add cart
       with rango_fecha as (
@@ -30,61 +30,58 @@ view: cdp_synapse_clientes_productivos {
           TIMESTAMP_MICROS(event_timestamp) as tiempoEvento,
           --view item list
            ifnull((select value.string_value from unnest(event_params) where key = 'firebase_event_origin'),'(not set)') as origenEventoFirebase,
-           ifnull(items.item_id,'(not set)') as idArticulo,
-           ifnull(items.item_name,'(not set)')  as nombreArticulo,
-           ifnull(items.item_brand,'(not set)') as marcaArticulo,
-           ifnull(items.item_list_id,'(not set)') as listaArticuloId,
-           ifnull(items.item_list_name,'(not set)') as listaArticuloNombre,
-          --event cart
-          ifnull((select value.string_value from unnest(event_params) where key = 'transaction_id'),'(not set)') as idTransaccion
+
+      ifnull(items.item_id,'(not set)') as idArticulo,
+      ifnull(items.item_name,'(not set)')  as nombreArticulo,
+      ifnull(items.item_brand,'(not set)') as marcaArticulo,
+      ifnull(items.item_list_id,'(not set)') as listaArticuloId,
+      ifnull(items.item_list_name,'(not set)') as listaArticuloNombre,
+      --event cart
+      ifnull((select value.string_value from unnest(event_params) where key = 'transaction_id'),'(not set)') as idTransaccion
       from
-          `costumer-data-proyect.analytics_249184604.events_*`,rango_fecha, unnest(items) as items
+      `costumer-data-proyect.analytics_249184604.events_*`,rango_fecha, unnest(items) as items
       WHERE
-         _table_suffix between rango_fecha.fecha_inicio and rango_fecha.fecha_final and event_name IN ('view_item_list', 'view_item', 'add_to_wishlist', 'add_to_cart','list_add_to_cart','remove_from_cart','begin_checkout','purchase')
-         and platform in ('IOS', 'ANDROID','WEB')
+      _table_suffix between rango_fecha.fecha_inicio and rango_fecha.fecha_final and event_name IN ('view_item_list', 'view_item', 'add_to_wishlist', 'add_to_cart','list_add_to_cart','remove_from_cart','begin_checkout','purchase')
+      and platform in ('IOS', 'ANDROID','WEB')
       group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
       order by  fecha desc, nombreEvento
       ),sesionDuracion as (
       select
-          sessiones.usuarioLogueado,
-          sessiones.idSesion,
-          sessiones.idArticulo,
-          sessiones.numeroSesion,
-          sessiones.idTransaccion,
-          if(sessiones.idTransaccion = '(not set)', 1, 0) as busquedas,
-          if(sessiones.idTransaccion != '(not set)', 1, 0) as compras,
-          engagement.engagement_time_msec
+      sessiones.usuarioLogueado,
+      sessiones.idSesion,
+      sessiones.idArticulo,
+      sessiones.nombreArticulo,
+      sessiones.marcaArticulo,
+      sessiones.listaArticuloId,
+      sessiones.listaArticuloNombre,
+      sessiones.numeroSesion,
+      sessiones.idTransaccion,
+      if(sessiones.idTransaccion = '(not set)', 1, 0) as busquedas,
+      if(sessiones.idTransaccion != '(not set)', 1, 0) as compras,
+      engagement.engagement_time_msec
       from sessiones
       inner join engagement on engagement.session_id = sessiones.idSesion
       where engagement.engagement_time_msec is not null and sessiones.usuarioLogueado is not null and sessiones.usuarioLogueado !='(not set)'
       ),sesionPerUsuario as (
       SELECT
-          sesionDuracion.usuarioLogueado,
-          sesionDuracion.idSesion,
-          sum(sesionDuracion.busquedas) busquedas,
-          sum(sesionDuracion.compras) compras,
-          if(sum(sesionDuracion.compras) = 0, 1,0) as sesionIncompleta,
-          if(sum(sesionDuracion.compras) > 0, 1,0) as sesionConCompra,
-          max(sesionDuracion.engagement_time_msec)/1000 as DuracionMin
+      sesionDuracion.usuarioLogueado,
+      sesionDuracion.idSesion,
+      sesionDuracion.idArticulo,
+      sesionDuracion.nombreArticulo,
+      sesionDuracion.marcaArticulo,
+      sesionDuracion.listaArticuloId,
+      sesionDuracion.listaArticuloNombre,
+      sum(sesionDuracion.busquedas) busquedas,
+      sum(sesionDuracion.compras) compras,
+      if(sum(sesionDuracion.compras) = 0, 1,0) as sesionIncompleta,
+      if(sum(sesionDuracion.compras) > 0, 1,0) as sesionConCompra,
+      max(sesionDuracion.engagement_time_msec)/1000 as DuracionMin
       FROM sesionDuracion
-      GROUP BY sesionDuracion.usuarioLogueado, sesionDuracion.idSesion
+      GROUP BY 1,2,3,4,5,6,7
       ORDER BY sesionDuracion.usuarioLogueado
-      ),sessioneCompletas as (
-      select
-          sesionPerUsuario.usuarioLogueado,
-          count(sesionPerUsuario.idSesion) as TotalSesiones,
-          sum(sesionPerUsuario.busquedas) as ProductosBuscados,
-          sum(sesionPerUsuario.sesionConCompra) as SesionesConCompras,
-          sum(sesionPerUsuario.compras) as ProductosComprados,
-          if(sum(sesionPerUsuario.compras)> 0,sum(sesionPerUsuario.busquedas)/sum(sesionPerUsuario.compras),0) as BusquedasSobreCompras,
-          sum(sesionPerUsuario.sesionIncompleta) as SesionesSinCompras,
-          sum(sesionPerUsuario.DuracionMin) as TiempoTotal,
-          sum(sesionPerUsuario.DuracionMin)/count(sesionPerUsuario.idSesion) as promedioTiempoSesion
-      from sesionPerUsuario
-      group by sesionPerUsuario.usuarioLogueado
       )
-
-      SELECT * FROM `customer_data_platform.cdp_synapse_clientes_productivos` LEFT JOIN sessioneCompletas ON sessioneCompletas.usuarioLogueado=GAUserId ORDER BY sessioneCompletas.TotalSesiones desc
+      --SELECT * FROM sesionPerUsuario
+      SELECT * FROM `customer_data_platform.cdp_synapse_clientes_productivos` LEFT JOIN sesionPerUsuario ON sesionPerUsuario.usuarioLogueado=GAUserId ORDER BY sesionPerUsuario.DuracionMin desc
       ;;
   }
 
@@ -375,44 +372,59 @@ view: cdp_synapse_clientes_productivos {
     sql: ${TABLE}.usuarioLogueado ;;
   }
 
-  dimension: total_sesiones {
+  dimension: id_sesion {
     type: number
-    sql: ${TABLE}.TotalSesiones ;;
+    sql: ${TABLE}.idSesion ;;
   }
 
-  dimension: productos_buscados {
-    type: number
-    sql: ${TABLE}.ProductosBuscados ;;
+  dimension: id_articulo {
+    type: string
+    sql: ${TABLE}.idArticulo ;;
   }
 
-  dimension: sesiones_con_compras {
-    type: number
-    sql: ${TABLE}.SesionesConCompras ;;
+  dimension: nombre_articulo {
+    type: string
+    sql: ${TABLE}.nombreArticulo ;;
   }
 
-  dimension: productos_comprados {
-    type: number
-    sql: ${TABLE}.ProductosComprados ;;
+  dimension: marca_articulo {
+    type: string
+    sql: ${TABLE}.marcaArticulo ;;
   }
 
-  dimension: busquedas_sobre_compras {
-    type: number
-    sql: ${TABLE}.BusquedasSobreCompras ;;
+  dimension: lista_articulo_id {
+    type: string
+    sql: ${TABLE}.listaArticuloId ;;
   }
 
-  dimension: sesiones_sin_compras {
-    type: number
-    sql: ${TABLE}.SesionesSinCompras ;;
+  dimension: lista_articulo_nombre {
+    type: string
+    sql: ${TABLE}.listaArticuloNombre ;;
   }
 
-  dimension: tiempo_total {
+  dimension: busquedas {
     type: number
-    sql: ${TABLE}.TiempoTotal ;;
+    sql: ${TABLE}.busquedas ;;
   }
 
-  dimension: promedio_tiempo_sesion {
+  dimension: compras {
     type: number
-    sql: ${TABLE}.promedioTiempoSesion ;;
+    sql: ${TABLE}.compras ;;
+  }
+
+  dimension: sesion_incompleta {
+    type: number
+    sql: ${TABLE}.sesionIncompleta ;;
+  }
+
+  dimension: sesion_con_compra {
+    type: number
+    sql: ${TABLE}.sesionConCompra ;;
+  }
+
+  dimension: duracion_min {
+    type: number
+    sql: ${TABLE}.DuracionMin ;;
   }
 
   set: detail {
@@ -472,14 +484,17 @@ view: cdp_synapse_clientes_productivos {
       ultima_modificacion_cdp,
       coindicencia_sfccclientes_sfccinvitados,
       usuario_logueado,
-      total_sesiones,
-      productos_buscados,
-      sesiones_con_compras,
-      productos_comprados,
-      busquedas_sobre_compras,
-      sesiones_sin_compras,
-      tiempo_total,
-      promedio_tiempo_sesion
+      id_sesion,
+      id_articulo,
+      nombre_articulo,
+      marca_articulo,
+      lista_articulo_id,
+      lista_articulo_nombre,
+      busquedas,
+      compras,
+      sesion_incompleta,
+      sesion_con_compra,
+      duracion_min
     ]
   }
 }
