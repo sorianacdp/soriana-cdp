@@ -18,7 +18,3 @@ include: "/views/cdp-ususarios-prod/*.view.lkml"                # include all vi
 #   }
 # }
 explore: cdp_soriana_tipos_usuario_ultima_compra {}
-explore: cdp_soriana_tipo_usuario_ultima_compra_totales {}
-explore: cdp_soriana_tipo_usuario_ultima_compra_actual {}
-explore: cdp_soriana_tipo_usuario_ultima_compra_recuperable {}
-explore: cdp_soriana_tipo_usuario_ultima_compra_no_regresa {}
