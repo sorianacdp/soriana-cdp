@@ -19,4 +19,5 @@ include: "/views/cdp-soriana-vista-360/*.view.lkml"                # include all
 #   }
 # }
 explore: cdp_synapse_clientes_productivos {}
-explore: busquedasarticulos {}
+explore: cdp_soriana_tipos_usuarios {}
+explore: vista_360{}

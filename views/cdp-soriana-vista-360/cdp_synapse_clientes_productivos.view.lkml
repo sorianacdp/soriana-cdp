@@ -1,23 +1,22 @@
 view: cdp_synapse_clientes_productivos {
   derived_table: {
-    sql: -- GA4 eventos usuarios: add cart
-      with rango_fecha as (
+    sql: with rango_fecha as (
       select
-          '20220706' as fecha_inicio,
+          format_date('%Y%m%d',date_sub(current_date(), interval 3 month)) as fecha_inicio,
           format_date('%Y%m%d',date_sub(current_date(), interval 1 day)) as fecha_final
-      ),engagement as (
+),engagement as (
       select
-              (select distinct value.int_value from unnest(event_params) where key = 'ga_session_id') as session_id,
-              max((select value.int_value from unnest(event_params) where key = 'engagement_time_msec')) as engagement_time_msec,
-          from
+            (select distinct value.int_value from unnest(event_params) where key = 'ga_session_id') as session_id,
+            max((select value.int_value from unnest(event_params) where key = 'engagement_time_msec')) as engagement_time_msec,
+      from
               -- change this to your google analytics 4 export location in bigquery
-              `costumer-data-proyect.analytics_249184604.events_*`,
-              rango_fecha
-          where
-            _table_suffix between rango_fecha.fecha_inicio and rango_fecha.fecha_final
-         group by session_id
-      )
-      ,sessiones as (select
+          `costumer-data-proyect.analytics_249184604.events_*`,
+          rango_fecha
+      where
+            _table_suffix between rango_fecha.fecha_inicio and rango_fecha.fecha_final and event_name IN ('view_item_list', 'view_item', 'add_to_wishlist', 'add_to_cart','list_add_to_cart','remove_from_cart','begin_checkout','purchase','search','select_content','click')
+      group by session_id
+),sessiones as (
+      select
           distinct PARSE_DATE("%Y%m%d",event_date) as fecha,
           platform as plataforma,
           ifnull(user_id,'(not set)') as usuarioLogueado,
@@ -37,6 +36,7 @@ view: cdp_synapse_clientes_productivos {
            ifnull(items.item_list_name,'(not set)') as listaArticuloNombre,
           --event cart
           ifnull((select value.string_value from unnest(event_params) where key = 'transaction_id'),'(not set)') as idTransaccion
+
       from
           `costumer-data-proyect.analytics_249184604.events_*`,rango_fecha, unnest(items) as items
       WHERE
@@ -46,6 +46,7 @@ view: cdp_synapse_clientes_productivos {
       order by  fecha desc, nombreEvento
       ),sesionDuracion as (
       select
+          sessiones.fecha,
           sessiones.usuarioLogueado,
           sessiones.idSesion,
           sessiones.idArticulo,
@@ -57,20 +58,22 @@ view: cdp_synapse_clientes_productivos {
       from sessiones
       inner join engagement on engagement.session_id = sessiones.idSesion
       where engagement.engagement_time_msec is not null and sessiones.usuarioLogueado is not null and sessiones.usuarioLogueado !='(not set)'
-      ),sesionPerUsuario as (
+),sesionPerUsuario as (
       SELECT
+          sesionDuracion.fecha,
           sesionDuracion.usuarioLogueado,
           sesionDuracion.idSesion,
           sum(sesionDuracion.busquedas) busquedas,
           sum(sesionDuracion.compras) compras,
           if(sum(sesionDuracion.compras) = 0, 1,0) as sesionIncompleta,
           if(sum(sesionDuracion.compras) > 0, 1,0) as sesionConCompra,
-          max(sesionDuracion.engagement_time_msec)/1000 as DuracionMin
+          sesionDuracion.engagement_time_msec/1000 as DuracionMin,
       FROM sesionDuracion
-      GROUP BY sesionDuracion.usuarioLogueado, sesionDuracion.idSesion
+      GROUP BY sesionDuracion.fecha,sesionDuracion.usuarioLogueado, sesionDuracion.idSesion,sesionDuracion.engagement_time_msec
       ORDER BY sesionDuracion.usuarioLogueado
-      ),sessioneCompletas as (
+),sessioneCompletas as (
       select
+          sesionPerUsuario.fecha as fechaEventos,
           sesionPerUsuario.usuarioLogueado,
           count(sesionPerUsuario.idSesion) as TotalSesiones,
           sum(sesionPerUsuario.busquedas) as ProductosBuscados,
@@ -78,13 +81,13 @@ view: cdp_synapse_clientes_productivos {
           sum(sesionPerUsuario.compras) as ProductosComprados,
           if(sum(sesionPerUsuario.compras)> 0,sum(sesionPerUsuario.busquedas)/sum(sesionPerUsuario.compras),0) as BusquedasSobreCompras,
           sum(sesionPerUsuario.sesionIncompleta) as SesionesSinCompras,
-          sum(sesionPerUsuario.DuracionMin) as TiempoTotal,
-          sum(sesionPerUsuario.DuracionMin)/count(sesionPerUsuario.idSesion) as promedioTiempoSesion
+          sesionPerUsuario.DuracionMin as TiempoTotal,
+          sesionPerUsuario.DuracionMin/count(sesionPerUsuario.idSesion) as promedioTiempoSesion
       from sesionPerUsuario
-      group by sesionPerUsuario.usuarioLogueado
-      )
+      group by sesionPerUsuario.usuarioLogueado,sesionPerUsuario.fecha,sesionPerUsuario.DuracionMin
+)
 
-      SELECT * FROM `customer_data_platform.cdp_synapse_clientes_productivos` LEFT JOIN sessioneCompletas ON sessioneCompletas.usuarioLogueado=GAUserId ORDER BY sessioneCompletas.TotalSesiones desc
+      SELECT * FROM `customer_data_platform.cdp_synapse_clientes_productivos` LEFT JOIN sessioneCompletas ON sessioneCompletas.usuarioLogueado=GAUserId ORDER BY sessioneCompletas.  usuarioLogueado desc
       ;;
   }
 
@@ -370,6 +373,12 @@ view: cdp_synapse_clientes_productivos {
     sql: ${TABLE}.coindicenciaSFCCClientesSFCCInvitados ;;
   }
 
+  dimension: fecha_eventos {
+    type: date
+    datatype: date
+    sql: ${TABLE}.fechaEventos ;;
+  }
+
   dimension: usuario_logueado {
     type: string
     sql: ${TABLE}.usuarioLogueado ;;
@@ -471,6 +480,7 @@ view: cdp_synapse_clientes_productivos {
       fecha_creacion_cdp_time,
       ultima_modificacion_cdp,
       coindicencia_sfccclientes_sfccinvitados,
+      fecha_eventos,
       usuario_logueado,
       total_sesiones,
       productos_buscados,

@@ -1,88 +1,9 @@
-view: busquedasarticulos {
+view: vista_360 {
   derived_table: {
-    sql: -- GA4 eventos usuarios: add cart
-      with rango_fecha as (
-      select
-          '20220706' as fecha_inicio,
-          format_date('%Y%m%d',date_sub(current_date(), interval 1 day)) as fecha_final
-      ),engagement as (
-      select
-              (select distinct value.int_value from unnest(event_params) where key = 'ga_session_id') as session_id,
-              max((select value.int_value from unnest(event_params) where key = 'engagement_time_msec')) as engagement_time_msec,
-          from
-              -- change this to your google analytics 4 export location in bigquery
-              `costumer-data-proyect.analytics_249184604.events_*`,
-              rango_fecha
-          where
-            _table_suffix between rango_fecha.fecha_inicio and rango_fecha.fecha_final
-         group by session_id
-      )
-      ,sessiones as (select
-          distinct PARSE_DATE("%Y%m%d",event_date) as fecha,
-          platform as plataforma,
-          ifnull(user_id,'(not set)') as usuarioLogueado,
-          ifnull(user_pseudo_id,'(not set)') as usuarioNoLogueado,
-          #### eventos
-          event_name as nombreEvento,
-          --detalles generales
-          ifnull((select value.int_value from unnest(event_params) where key = 'ga_session_id'),0) as idSesion,
-          ifnull((select value.int_value from unnest(event_params) where key = 'ga_session_number'),0) as numeroSesion,
-          TIMESTAMP_MICROS(event_timestamp) as tiempoEvento,
-          --view item list
-           ifnull((select value.string_value from unnest(event_params) where key = 'firebase_event_origin'),'(not set)') as origenEventoFirebase,
-
-      ifnull(items.item_id,'(not set)') as idArticulo,
-      ifnull(items.item_name,'(not set)')  as nombreArticulo,
-      ifnull(items.item_brand,'(not set)') as marcaArticulo,
-      ifnull(items.item_list_id,'(not set)') as listaArticuloId,
-      ifnull(items.item_list_name,'(not set)') as listaArticuloNombre,
-      --event cart
-      ifnull((select value.string_value from unnest(event_params) where key = 'transaction_id'),'(not set)') as idTransaccion
-      from
-      `costumer-data-proyect.analytics_249184604.events_*`,rango_fecha, unnest(items) as items
-      WHERE
-      _table_suffix between rango_fecha.fecha_inicio and rango_fecha.fecha_final and event_name IN ('view_item_list', 'view_item', 'add_to_wishlist', 'add_to_cart','list_add_to_cart','remove_from_cart','begin_checkout','purchase')
-      and platform in ('IOS', 'ANDROID','WEB')
-      group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
-      order by  fecha desc, nombreEvento
-      ),sesionDuracion as (
-      select
-      sessiones.usuarioLogueado,
-      sessiones.idSesion,
-      sessiones.idArticulo,
-      sessiones.nombreArticulo,
-      sessiones.marcaArticulo,
-      sessiones.listaArticuloId,
-      sessiones.listaArticuloNombre,
-      sessiones.numeroSesion,
-      sessiones.idTransaccion,
-      if(sessiones.idTransaccion = '(not set)', 1, 0) as busquedas,
-      if(sessiones.idTransaccion != '(not set)', 1, 0) as compras,
-      engagement.engagement_time_msec
-      from sessiones
-      inner join engagement on engagement.session_id = sessiones.idSesion
-      where engagement.engagement_time_msec is not null and sessiones.usuarioLogueado is not null and sessiones.usuarioLogueado !='(not set)'
-      ),sesionPerUsuario as (
-      SELECT
-      sesionDuracion.usuarioLogueado,
-      sesionDuracion.idSesion,
-      sesionDuracion.idArticulo,
-      sesionDuracion.nombreArticulo,
-      sesionDuracion.marcaArticulo,
-      sesionDuracion.listaArticuloId,
-      sesionDuracion.listaArticuloNombre,
-      sum(sesionDuracion.busquedas) busquedas,
-      sum(sesionDuracion.compras) compras,
-      if(sum(sesionDuracion.compras) = 0, 1,0) as sesionIncompleta,
-      if(sum(sesionDuracion.compras) > 0, 1,0) as sesionConCompra,
-      max(sesionDuracion.engagement_time_msec)/1000 as DuracionMin
-      FROM sesionDuracion
-      GROUP BY 1,2,3,4,5,6,7
-      ORDER BY sesionDuracion.usuarioLogueado
-      )
-      --SELECT * FROM sesionPerUsuario
-      SELECT * FROM `customer_data_platform.cdp_synapse_clientes_productivos` LEFT JOIN sesionPerUsuario ON sesionPerUsuario.usuarioLogueado=GAUserId ORDER BY sesionPerUsuario.DuracionMin desc
-      ;;
+    sql: SELECT * FROM ${cdp_synapse_clientes_productivos.SQL_TABLE_NAME}
+      LEFT JOIN ${cdp_soriana_tipos_usuarios.SQL_TABLE_NAME}
+      ON cdp_soriana_tipos_usuarios.GRClienteId = cdp_synapse_clientes_productivos.GRClienteId
+       ;;
   }
 
   measure: count {
@@ -367,64 +288,110 @@ view: busquedasarticulos {
     sql: ${TABLE}.coindicenciaSFCCClientesSFCCInvitados ;;
   }
 
+  dimension: fecha_eventos {
+    type: date
+    datatype: date
+    sql: ${TABLE}.fechaEventos ;;
+  }
+
   dimension: usuario_logueado {
     type: string
     sql: ${TABLE}.usuarioLogueado ;;
   }
 
-  dimension: id_sesion {
+  dimension: total_sesiones {
     type: number
-    sql: ${TABLE}.idSesion ;;
+    sql: ${TABLE}.TotalSesiones ;;
   }
 
-  dimension: id_articulo {
+  dimension: productos_buscados {
+    type: number
+    sql: ${TABLE}.ProductosBuscados ;;
+  }
+
+  dimension: sesiones_con_compras {
+    type: number
+    sql: ${TABLE}.SesionesConCompras ;;
+  }
+
+  dimension: productos_comprados {
+    type: number
+    sql: ${TABLE}.ProductosComprados ;;
+  }
+
+  dimension: busquedas_sobre_compras {
+    type: number
+    sql: ${TABLE}.BusquedasSobreCompras ;;
+  }
+
+  dimension: sesiones_sin_compras {
+    type: number
+    sql: ${TABLE}.SesionesSinCompras ;;
+  }
+
+  dimension: tiempo_total {
+    type: number
+    sql: ${TABLE}.TiempoTotal ;;
+  }
+
+  dimension: promedio_tiempo_sesion {
+    type: number
+    sql: ${TABLE}.promedioTiempoSesion ;;
+  }
+
+  dimension: estadoGeo {
     type: string
-    sql: ${TABLE}.idArticulo ;;
+    sql: ${TABLE}.estado_1 ;;
   }
 
-  dimension: nombre_articulo {
+  dimension: ciudad {
     type: string
-    sql: ${TABLE}.nombreArticulo ;;
+    sql: ${TABLE}.ciudad ;;
   }
 
-  dimension: marca_articulo {
+  dimension: pais {
     type: string
-    sql: ${TABLE}.marcaArticulo ;;
+    sql: ${TABLE}.pais ;;
   }
 
-  dimension: lista_articulo_id {
+  dimension: id_cliente {
     type: string
-    sql: ${TABLE}.listaArticuloId ;;
+    sql: ${TABLE}.idCliente ;;
   }
 
-  dimension: lista_articulo_nombre {
+  dimension: id_tienda {
     type: string
-    sql: ${TABLE}.listaArticuloNombre ;;
+    sql: ${TABLE}.idTienda ;;
   }
 
-  dimension: busquedas {
-    type: number
-    sql: ${TABLE}.busquedas ;;
+  dimension: fecha_nacimiento_soriana {
+    type: string
+    sql: ${TABLE}.fechaNacimientoSoriana ;;
   }
 
-  dimension: compras {
-    type: number
-    sql: ${TABLE}.compras ;;
+  dimension: origen_cliente {
+    type: string
+    sql: ${TABLE}.origenCliente ;;
   }
 
-  dimension: sesion_incompleta {
-    type: number
-    sql: ${TABLE}.sesionIncompleta ;;
+  dimension: semana {
+    type: string
+    sql: ${TABLE}.semana ;;
   }
 
-  dimension: sesion_con_compra {
+  dimension: ticke_total {
     type: number
-    sql: ${TABLE}.sesionConCompra ;;
+    sql: ${TABLE}.tickeTotal ;;
   }
 
-  dimension: duracion_min {
+  dimension: conteo_compras {
     type: number
-    sql: ${TABLE}.DuracionMin ;;
+    sql: ${TABLE}.conteoCompras ;;
+  }
+
+  dimension: tipo_cliente {
+    type: string
+    sql: ${TABLE}.tipoCliente ;;
   }
 
   set: detail {
@@ -483,18 +450,27 @@ view: busquedasarticulos {
       fecha_creacion_cdp_time,
       ultima_modificacion_cdp,
       coindicencia_sfccclientes_sfccinvitados,
+      fecha_eventos,
       usuario_logueado,
-      id_sesion,
-      id_articulo,
-      nombre_articulo,
-      marca_articulo,
-      lista_articulo_id,
-      lista_articulo_nombre,
-      busquedas,
-      compras,
-      sesion_incompleta,
-      sesion_con_compra,
-      duracion_min
+      total_sesiones,
+      productos_buscados,
+      sesiones_con_compras,
+      productos_comprados,
+      busquedas_sobre_compras,
+      sesiones_sin_compras,
+      tiempo_total,
+      promedio_tiempo_sesion,
+      estadoGeo,
+      ciudad,
+      pais,
+      id_cliente,
+      id_tienda,
+      fecha_nacimiento_soriana,
+      origen_cliente,
+      semana,
+      ticke_total,
+      conteo_compras,
+      tipo_cliente
     ]
   }
 }
