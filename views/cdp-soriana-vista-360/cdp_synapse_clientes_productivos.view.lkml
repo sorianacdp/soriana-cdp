@@ -40,17 +40,17 @@ view: cdp_synapse_clientes_productivos {
           when geo.region='' then '(not set)'
           when geo.region is null then '(not set)'
           else geo.region
-          end as estado,
+          end as estadoGeo,
           case
           when geo.city='' then '(not set)'
           when geo.city is null then '(not set)'
           else geo.city
-          end as ciudad,
+          end as ciudadGeo,
           case
           when geo.country='' then '(not set)'
           when geo.country is null then '(not set)'
           else geo.country
-          end as pais
+          end as paisGeo
       from
           `costumer-data-proyect.analytics_249184604.events_*`,rango_fecha, unnest(items) as items
       WHERE
@@ -68,9 +68,9 @@ view: cdp_synapse_clientes_productivos {
           sessiones.idTransaccion,
           if(sessiones.idTransaccion = '(not set)', 1, 0) as busquedas,
           if(sessiones.idTransaccion != '(not set)', 1, 0) as compras,
-          sessiones.estado,
-          sessiones.ciudad,
-          sessiones.pais,
+          sessiones.estadoGeo,
+          sessiones.ciudadGeo,
+          sessiones.paisGeo,
           engagement.engagement_time_msec
       from sessiones
       inner join engagement on engagement.session_id = sessiones.idSesion
@@ -85,11 +85,11 @@ view: cdp_synapse_clientes_productivos {
           if(sum(sesionDuracion.compras) = 0, 1,0) as sesionIncompleta,
           if(sum(sesionDuracion.compras) > 0, 1,0) as sesionConCompra,
           sesionDuracion.engagement_time_msec/1000 as DuracionMin,
-          sesionDuracion.estado,
-          sesionDuracion.ciudad,
-          sesionDuracion.pais
+          sesionDuracion.estadoGeo,
+          sesionDuracion.ciudadGeo,
+          sesionDuracion.paisGeo
       FROM sesionDuracion
-      GROUP BY sesionDuracion.fecha,sesionDuracion.usuarioLogueado, sesionDuracion.idSesion,sesionDuracion.engagement_time_msec,sesionDuracion.estado,sesionDuracion.ciudad,sesionDuracion.pais
+      GROUP BY sesionDuracion.fecha,sesionDuracion.usuarioLogueado, sesionDuracion.idSesion,sesionDuracion.engagement_time_msec,sesionDuracion.estadoGeo,sesionDuracion.ciudadGeo,sesionDuracion.paisGeo
       ORDER BY sesionDuracion.usuarioLogueado
 ),sessioneCompletas as (
       select
@@ -103,13 +103,13 @@ view: cdp_synapse_clientes_productivos {
           sum(sesionPerUsuario.sesionIncompleta) as SesionesSinCompras,
           sesionPerUsuario.DuracionMin as TiempoTotal,
           sesionPerUsuario.DuracionMin/count(sesionPerUsuario.idSesion) as promedioTiempoSesion,
-          sesionPerUsuario.estado,
-          sesionPerUsuario.ciudad,
-          sesionPerUsuario.pais
+          sesionPerUsuario.estadoGeo,
+          sesionPerUsuario.ciudadGeo,
+          sesionPerUsuario.paisGeo
       from sesionPerUsuario
-      group by sesionPerUsuario.usuarioLogueado,sesionPerUsuario.fecha,sesionPerUsuario.DuracionMin,sesionPerUsuario.estado,
-          sesionPerUsuario.ciudad,
-          sesionPerUsuario.pais
+      group by sesionPerUsuario.usuarioLogueado,sesionPerUsuario.fecha,sesionPerUsuario.DuracionMin,sesionPerUsuario.estadoGeo,
+          sesionPerUsuario.ciudadGeo,
+          sesionPerUsuario.paisGeo
 )
 
       SELECT * FROM `customer_data_platform.cdp_synapse_clientes_productivos` LEFT JOIN sessioneCompletas ON sessioneCompletas.usuarioLogueado=GAUserId ORDER BY sessioneCompletas.  usuarioLogueado desc
@@ -449,19 +449,19 @@ view: cdp_synapse_clientes_productivos {
     sql: ${TABLE}.promedioTiempoSesion ;;
   }
 
-  dimension: estado_1 {
+  dimension: estadoGeo {
     type: string
-    sql: ${TABLE}.estado_1 ;;
+    sql: ${TABLE}.estadoGeo ;;
   }
 
-  dimension: ciudad {
+  dimension: ciudadGeo {
     type: string
-    sql: ${TABLE}.ciudad ;;
+    sql: ${TABLE}.ciudadGeo ;;
   }
 
-  dimension: pais {
+  dimension: paisGeo {
     type: string
-    sql: ${TABLE}.pais ;;
+    sql: ${TABLE}.paisGeo ;;
   }
 
   set: detail {
@@ -530,9 +530,9 @@ view: cdp_synapse_clientes_productivos {
       sesiones_sin_compras,
       tiempo_total,
       promedio_tiempo_sesion,
-      estado_1,
-      ciudad,
-      pais
+      estadoGeo,
+      ciudadGeo,
+      paisGeo
     ]
   }
 }
