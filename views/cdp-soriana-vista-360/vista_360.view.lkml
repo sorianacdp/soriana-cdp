@@ -339,7 +339,7 @@ view: vista_360 {
     sql: ${TABLE}.promedioTiempoSesion ;;
   }
 
-  dimension: estado_1 {
+  dimension: estadoGeo {
     type: string
     sql: ${TABLE}.estado_1 ;;
   }
@@ -359,11 +359,6 @@ view: vista_360 {
     sql: ${TABLE}.idCliente ;;
   }
 
-  dimension: grcliente_id_1 {
-    type: string
-    sql: ${TABLE}.GRClienteId_1 ;;
-  }
-
   dimension: id_tienda {
     type: string
     sql: ${TABLE}.idTienda ;;
@@ -379,31 +374,6 @@ view: vista_360 {
     sql: ${TABLE}.origenCliente ;;
   }
 
-  dimension: nombre_1 {
-    type: string
-    sql: ${TABLE}.nombre_1 ;;
-  }
-
-  dimension: apellido {
-    type: string
-    sql: ${TABLE}.apellido ;;
-  }
-
-  dimension: fecha_nacimiento_1 {
-    type: string
-    sql: ${TABLE}.fechaNacimiento_1 ;;
-  }
-
-  dimension: sexo_1 {
-    type: string
-    sql: ${TABLE}.sexo_1 ;;
-  }
-
-  dimension: correo_1 {
-    type: string
-    sql: ${TABLE}.correo_1 ;;
-  }
-
   dimension: semana {
     type: string
     sql: ${TABLE}.semana ;;
@@ -417,11 +387,6 @@ view: vista_360 {
   dimension: conteo_compras {
     type: number
     sql: ${TABLE}.conteoCompras ;;
-  }
-
-  dimension: ticket_promedio_1 {
-    type: number
-    sql: ${TABLE}.ticketPromedio_1 ;;
   }
 
   dimension: tipo_cliente {
@@ -495,23 +460,16 @@ view: vista_360 {
       sesiones_sin_compras,
       tiempo_total,
       promedio_tiempo_sesion,
-      estado_1,
+      estadoGeo,
       ciudad,
       pais,
       id_cliente,
-      grcliente_id_1,
       id_tienda,
       fecha_nacimiento_soriana,
       origen_cliente,
-      nombre_1,
-      apellido,
-      fecha_nacimiento_1,
-      sexo_1,
-      correo_1,
       semana,
       ticke_total,
       conteo_compras,
-      ticket_promedio_1,
       tipo_cliente
     ]
   }
