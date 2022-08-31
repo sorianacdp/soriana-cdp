@@ -1,6 +1,6 @@
 view: cdp_soriana_tipos_usuario_ultima_compra {
   derived_table: {
-    sql: with rango_fecha as (
+    sql:with rango_fecha as (
         select
         --fecha inicio
         max(format_date('%Y%m%d',FechaHoraTicket)) as  fecha_inicio,
@@ -28,7 +28,9 @@ view: cdp_soriana_tipos_usuario_ultima_compra {
       distinct clientes,
       max_semana,
       tienda,
-      cast( format_date('%U', parse_date("%Y%m%d",max(fecha))) as INT) as semanaUltimaCompra
+      format_date('%Y', parse_date("%Y%m%d",max(fecha))) as anio,
+      cast( format_date('%U', parse_date("%Y%m%d",max(fecha))) as INT) as semanaUltimaCompra,
+      DATE_DIFF(CURRENT_DATE(), parse_date("%Y%m%d",max(fecha)), WEEK) as haceNSemanas,
       from prep,rango_fecha
       group by 1,2,3
       order by semanaUltimaCompra),
@@ -47,6 +49,7 @@ view: cdp_soriana_tipos_usuario_ultima_compra {
 
 ----------------------------
 ----------------------------
+----canal del cliente
 ----canal del cliente
 ventaTienda as (
 SELECT
@@ -68,25 +71,21 @@ distinct vt.IdClienteSkvt as clienteOmni,
 from ventaTienda as vt
 inner join ventaInternet as vi on (vt.IdClienteSkvt = vi.IdClienteSkvi)),
 
-restavenTienda as (select
-vt.IdClienteSkvt as id, vt.canalCliente as canalCliente
-from ventaTienda as vt
-left join omni as om on (vt.IdClienteSkvt=om.clienteOmni)
-where om.clienteOmni is null),
-
-restavenInternet as (select
-vi.IdClienteSkvi as id, vi.canalCliente as canalCliente
-from ventaInternet as vi
-left join omni as om on (vi.IdClienteSkvi=om.clienteOmni)
-where om.clienteOmni is null),
-
-canaltotal as (
-select clienteOmni,canalCliente from omni
+union_OFFON as (
+select IdClienteSkvt as idclienteun, canalCliente  from ventaTienda
 union distinct
-select * from restavenTienda
-union distinct
-select * from restavenInternet
-order by clienteOmni)
+select * from ventaInternet),
+
+canalorigen as (select
+distinct un.idclienteun as idclienteun,
+un.canalCliente as canalCliente,
+case
+when om.clienteOmni is not null then 'true'
+else 'false'
+end as omnicanal
+from union_OFFON as un
+left join omni as om on(un.idclienteun=om.clienteOmni))
+
 
 
 ---------------------------------------
@@ -100,12 +99,15 @@ order by clienteOmni)
       uc.tienda as idTienda,
       ns.fechaNacimientoSoriana as fechaNacimientoSoriana,
       ct.canalCliente as origenCliente,
+      ct.omnicanal as omnicanal,
       cp.nombre as nombre,
       cp.apellidoPaterno as apellido,
       format_date('%Y-%m-%d',cp.fechaNacimiento) as fechaNacimiento,
       cp.sexo as sexo,
       cp.correo as correo,
       cast(semanaUltimaCompra as string) as semanaUltimaCompra,
+      haceNSemanas as haceNSemanas,
+      anio,
       --tipos se clientes
       case
       when (semanaUltimaCompra >= max_semana-7) and (semanaUltimaCompra <= max_semana-6) then 'CLIENTE RECUPERABLE'
@@ -116,10 +118,10 @@ order by clienteOmni)
       from ultimaCompraCliente as uc
       left join `costumer-data-proyect.customer_data_platform.cdp_synapse_clientes_productivos` as cp on (uc.clientes=cp.IdClienteSk)
       left join nacimientoSoriana as ns on ( uc.clientes= ns.idclientes)
-      left join canaltotal as ct on ( uc.clientes=ct.clienteOmni)
+      left join canalorigen as ct on ( uc.clientes=ct.idclienteun)
 
       --where cp.correo is not null
-      group by 1,2,3,4,5,6,7,8,9,10,11,12
+      group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
       order by semanaUltimaCompra desc
       ;;
   }
@@ -173,6 +175,11 @@ order by clienteOmni)
     sql: ${TABLE}.origenCliente ;;
   }
 
+  dimension: omnicanal {
+    type: string
+    sql: ${TABLE}.omnicanal ;;
+  }
+
   dimension: nombre {
     type: string
     sql: ${TABLE}.nombre ;;
@@ -203,6 +210,15 @@ order by clienteOmni)
     sql: ${TABLE}.semanaUltimaCompra ;;
   }
 
+  dimension: haceNSemanas {
+    type: number
+    sql: ${TABLE}.haceNSemanas ;;
+  }
+  dimension: anio {
+    type: string
+    sql: ${TABLE}.anio ;;
+  }
+
   dimension: tipo_cliente {
     type: string
     sql: ${TABLE}.tipoCliente ;;
@@ -215,12 +231,15 @@ order by clienteOmni)
       idTienda,
       fechaNacimientoSoriana,
       origenCliente,
+      omnicanal,
       nombre,
       apellido,
       fecha_nacimiento,
       sexo,
       correo,
       semana_ultima_compra,
+      haceNSemanas,
+      anio,
       tipo_cliente
     ]
   }
