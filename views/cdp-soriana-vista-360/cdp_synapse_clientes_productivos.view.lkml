@@ -13,7 +13,7 @@ view: cdp_synapse_clientes_productivos {
           `costumer-data-proyect.analytics_249184604.events_*`,
           rango_fecha
       where
-            _table_suffix between rango_fecha.fecha_inicio and rango_fecha.fecha_final
+            _table_suffix between rango_fecha.fecha_inicio and rango_fecha.fecha_final and event_name IN ('view_item_list', 'view_item', 'add_to_wishlist', 'add_to_cart','list_add_to_cart','remove_from_cart','begin_checkout','purchase','search','select_content','click')
       group by session_id
 ),sessiones as (
       select
@@ -35,13 +35,28 @@ view: cdp_synapse_clientes_productivos {
            ifnull(items.item_list_id,'(not set)') as listaArticuloId,
            ifnull(items.item_list_name,'(not set)') as listaArticuloNombre,
           --event cart
-          ifnull((select value.string_value from unnest(event_params) where key = 'transaction_id'),'(not set)') as idTransaccion
+          ifnull((select value.string_value from unnest(event_params) where key = 'transaction_id'),'(not set)') as idTransaccion,
+          case
+          when geo.region='' then '(not set)'
+          when geo.region is null then '(not set)'
+          else geo.region
+          end as estado,
+          case
+          when geo.city='' then '(not set)'
+          when geo.city is null then '(not set)'
+          else geo.city
+          end as ciudad,
+          case
+          when geo.country='' then '(not set)'
+          when geo.country is null then '(not set)'
+          else geo.country
+          end as pais
       from
           `costumer-data-proyect.analytics_249184604.events_*`,rango_fecha, unnest(items) as items
       WHERE
          _table_suffix between rango_fecha.fecha_inicio and rango_fecha.fecha_final and event_name IN ('view_item_list', 'view_item', 'add_to_wishlist', 'add_to_cart','list_add_to_cart','remove_from_cart','begin_checkout','purchase')
          and platform in ('IOS', 'ANDROID','WEB')
-      group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+      group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18
       order by  fecha desc, nombreEvento
       ),sesionDuracion as (
       select
@@ -53,6 +68,9 @@ view: cdp_synapse_clientes_productivos {
           sessiones.idTransaccion,
           if(sessiones.idTransaccion = '(not set)', 1, 0) as busquedas,
           if(sessiones.idTransaccion != '(not set)', 1, 0) as compras,
+          sessiones.estado,
+          sessiones.ciudad,
+          sessiones.pais,
           engagement.engagement_time_msec
       from sessiones
       inner join engagement on engagement.session_id = sessiones.idSesion
@@ -66,9 +84,12 @@ view: cdp_synapse_clientes_productivos {
           sum(sesionDuracion.compras) compras,
           if(sum(sesionDuracion.compras) = 0, 1,0) as sesionIncompleta,
           if(sum(sesionDuracion.compras) > 0, 1,0) as sesionConCompra,
-          max(sesionDuracion.engagement_time_msec)/1000 as DuracionMin
+          sesionDuracion.engagement_time_msec/1000 as DuracionMin,
+          sesionDuracion.estado,
+          sesionDuracion.ciudad,
+          sesionDuracion.pais
       FROM sesionDuracion
-      GROUP BY sesionDuracion.fecha,sesionDuracion.usuarioLogueado, sesionDuracion.idSesion
+      GROUP BY sesionDuracion.fecha,sesionDuracion.usuarioLogueado, sesionDuracion.idSesion,sesionDuracion.engagement_time_msec,sesionDuracion.estado,sesionDuracion.ciudad,sesionDuracion.pais
       ORDER BY sesionDuracion.usuarioLogueado
 ),sessioneCompletas as (
       select
@@ -80,13 +101,18 @@ view: cdp_synapse_clientes_productivos {
           sum(sesionPerUsuario.compras) as ProductosComprados,
           if(sum(sesionPerUsuario.compras)> 0,sum(sesionPerUsuario.busquedas)/sum(sesionPerUsuario.compras),0) as BusquedasSobreCompras,
           sum(sesionPerUsuario.sesionIncompleta) as SesionesSinCompras,
-          sum(sesionPerUsuario.DuracionMin) as TiempoTotal,
-          sum(sesionPerUsuario.DuracionMin)/count(sesionPerUsuario.idSesion) as promedioTiempoSesion
+          sesionPerUsuario.DuracionMin as TiempoTotal,
+          sesionPerUsuario.DuracionMin/count(sesionPerUsuario.idSesion) as promedioTiempoSesion,
+          sesionPerUsuario.estado,
+          sesionPerUsuario.ciudad,
+          sesionPerUsuario.pais
       from sesionPerUsuario
-      group by sesionPerUsuario.usuarioLogueado,sesionPerUsuario.fecha
+      group by sesionPerUsuario.usuarioLogueado,sesionPerUsuario.fecha,sesionPerUsuario.DuracionMin,sesionPerUsuario.estado,
+          sesionPerUsuario.ciudad,
+          sesionPerUsuario.pais
 )
 
-      SELECT * FROM `customer_data_platform.cdp_synapse_clientes_productivos` LEFT JOIN sessioneCompletas ON sessioneCompletas.usuarioLogueado=GAUserId ORDER BY sessioneCompletas.TotalSesiones desc
+      SELECT * FROM `customer_data_platform.cdp_synapse_clientes_productivos` LEFT JOIN sessioneCompletas ON sessioneCompletas.usuarioLogueado=GAUserId ORDER BY sessioneCompletas.  usuarioLogueado desc
       ;;
   }
 
@@ -423,6 +449,21 @@ view: cdp_synapse_clientes_productivos {
     sql: ${TABLE}.promedioTiempoSesion ;;
   }
 
+  dimension: estado_1 {
+    type: string
+    sql: ${TABLE}.estado_1 ;;
+  }
+
+  dimension: ciudad {
+    type: string
+    sql: ${TABLE}.ciudad ;;
+  }
+
+  dimension: pais {
+    type: string
+    sql: ${TABLE}.pais ;;
+  }
+
   set: detail {
     fields: [
       correo,
@@ -488,7 +529,10 @@ view: cdp_synapse_clientes_productivos {
       busquedas_sobre_compras,
       sesiones_sin_compras,
       tiempo_total,
-      promedio_tiempo_sesion
+      promedio_tiempo_sesion,
+      estado_1,
+      ciudad,
+      pais
     ]
   }
 }
