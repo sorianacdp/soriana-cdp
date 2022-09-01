@@ -122,7 +122,7 @@ parameter: limSupCalClient {
     case: {
     #cliente nuevo
       when: {
-        sql: sum((${TABLE}.conteoCompras) = {% parameter conteoR1%} ) ;;
+        sql: ${TABLE}.conteoCompras = {% parameter conteoR1%} ;;
         label: "CLIENTE NUEVO"
       }
     #cliente prospecto
