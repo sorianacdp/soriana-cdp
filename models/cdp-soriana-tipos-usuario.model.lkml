@@ -20,3 +20,4 @@ include: "/views/cdp-soriana-tipos-usuario/*.view.lkml"                # include
 # }
 
 explore: cdp_soriana_tipos_usuarios {}
+explore: cdp_soriana_segmentacion_dinamico {}
