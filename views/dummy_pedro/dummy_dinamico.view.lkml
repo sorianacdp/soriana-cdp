@@ -68,12 +68,8 @@ view: dummy_dinamico {
 
 parameter: limSupCalClient {
   type: unquoted
-  allowed_value: {value: "570"}
-  allowed_value: {value: "700"}
-  allowed_value: {value: "800"}
-  allowed_value: {value: "900"}
-  allowed_value: {value: "1000"}
-  allowed_value: {value: "2000"}
+  default_value: "570"
+
 }
 
   parameter: limInfCalClient {
