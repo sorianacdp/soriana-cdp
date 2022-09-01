@@ -87,7 +87,7 @@ parameter: limSupCalClient {
     allowed_value: {value: "1"}
   }
 
-  dimension: tipoCliente {
+  dimension: tipoCliente2 {
     case: {
     #cliente nuevo
       when: {
