@@ -104,14 +104,6 @@ parameter: limSupCalClient {
 
   }
 
-  parameter: conteoR2 {
-    type: unquoted
-    default_value: "2"
-    allowed_value: {value: "2"}
-    allowed_value: {value: "3"}
-    allowed_value: {value: "4"}
-  }
-
   parameter: conteoR1 {
     type: unquoted
     default_value: "1"
@@ -128,68 +120,57 @@ parameter: limSupCalClient {
 
   dimension: tipoCliente {
     case: {
-
+    #cliente nuevo
       when: {
-        sql: (${TABLE}.conteoCompras = {% parameter conteoR1%} ) ;;
+        sql: ${TABLE}.conteoCompras = {% parameter conteoR1%} ) ;;
         label: "CLIENTE NUEVO"
       }
-
+    #cliente prospecto
       when: {
-        sql: (${TABLE}.conteoCompras = {% parameter conteoR0%} ) ;;
+        sql: ${TABLE}.conteoCompras = {% parameter conteoR0%} ;;
         label: "CLIENTE PROSPECTO"
       }
-
+   #cliente premium
       when: {
-        sql: (${TABLE}.conteoCompras >= {% parameter conteoR4%}) and (${TABLE}.ticketPromedio/ ${TABLE}.conteoCompras > {% parameter limSupCalClient%})   ;;
+        sql: (${TABLE}.conteoCompras >= {% parameter conteoR4%}) and (${TABLE}.ticketPromedio > {% parameter limSupCalClient%})   ;;
         label: "CLIENTE PREMIUM"
       }
+
+    #cliente valiosos
       when: {
-        sql: (${TABLE}.conteoCompras >= {% parameter conteoR2%} and ${TABLE}.conteoCompras <= {% parameter conteoR3%} ) and (${TABLE}.ticketPromedio/ ${TABLE}.conteoCompras > {% parameter limSupCalClient%}) ;;
+        sql: (${TABLE}.conteoCompras >= {% parameter conteoR3%} and ${TABLE}.conteoCompras < {% parameter conteoR4%} ) and (${TABLE}.ticketPromedio > {% parameter limSupCalClient%}) ;;
         label: "CLIENTE VALIOSO"
       }
       when: {
-        sql: (${TABLE}.conteoCompras >= {% parameter conteoR1%} and ${TABLE}.conteoCompras <= {% parameter conteoR2%} ) and (${TABLE}.ticketPromedio/ ${TABLE}.conteoCompras > {% parameter limSupCalClient%}) ;;
+        sql: (${TABLE}.conteoCompras >= {% parameter conteoR4%}) and (${TABLE}.ticketPromedio >= {% parameter limInfCalClient%} and ${TABLE}.ticketPromedio <= {% parameter limSupCalClient%}) ;;
+        label: "CLIENTE VALIOSO"
+      }
+
+      #cliente potencial
+      when: {
+        sql: (${TABLE}.conteoCompras > {% parameter conteoR1%} and ${TABLE}.conteoCompras < {% parameter conteoR3%} ) and (${TABLE}.ticketPromedio > {% parameter limSupCalClient%}) ;;
+        label: "CLIENTE POTENCIAL"
+      }
+      when: {
+        sql: (${TABLE}.conteoCompras >= {% parameter conteoR3%} and ${TABLE}.conteoCompras < {% parameter conteoR4%}) and (${TABLE}.ticketPromedio >= {% parameter limInfCalClient%} and ${TABLE}.ticketPromedio <= {% parameter limSupCalClient%}) ;;
+        label: "CLIENTE POTENCIAL"
+      }
+      when: {
+        sql: (${TABLE}.conteoCompras >= {% parameter conteoR4%}) and (${TABLE}.ticketPromedio < {% parameter limInfCalClient%} ) ;;
         label: "CLIENTE POTENCIAL"
       }
 
+      # cliente no comprometido
       when: {
-        sql: (${TABLE}.conteoCompras >= {% parameter conteoR4%}) and (${TABLE}.ticketPromedio/ ${TABLE}.conteoCompras >= {% parameter limInfCalClient%} and ${TABLE}.ticketPromedio/ ${TABLE}.conteoCompras <= {% parameter limSupCalClient%} ) ;;
-        label: "CLIENTE VALIOSO"
-      }
-      when: {
-        sql: (${TABLE}.conteoCompras >= {% parameter conteoR2%} and ${TABLE}.conteoCompras <= {% parameter conteoR3%}) and (${TABLE}.ticketPromedio/ ${TABLE}.conteoCompras >= {% parameter limInfCalClient%} and ${TABLE}.ticketPromedio/ ${TABLE}.conteoCompras <= {% parameter limSupCalClient%} ) ;;
-        label: "CLIENTE POTENCIAL"
-      }
-      when: {
-        sql: (${TABLE}.conteoCompras >= {% parameter conteoR1%} and ${TABLE}.conteoCompras <= {% parameter conteoR2%}) and (${TABLE}.ticketPromedio/ ${TABLE}.conteoCompras >= {% parameter limInfCalClient%} and ${TABLE}.ticketPromedio/ ${TABLE}.conteoCompras <= {% parameter limSupCalClient%} ) ;;
+        sql: (${TABLE}.conteoCompras >= {% parameter conteoR3%} and ${TABLE}.conteoCompras < {% parameter conteoR4%}) and (${TABLE}.ticketPromedio < {% parameter limInfCalClient%} ) ;;
         label: "NO COMPROMETIDO"
       }
       when: {
-        sql: (${TABLE}.conteoCompras >= {% parameter conteoR4%}) and (${TABLE}.ticketPromedio/ ${TABLE}.conteoCompras < {% parameter limInfCalClient%} ) ;;
-        label: "CLIENTE POTENCIAL"
-      }
-      when: {
-        sql: (${TABLE}.conteoCompras >= {% parameter conteoR1%} and ${TABLE}.conteoCompras <= {% parameter conteoR3%}) and (${TABLE}.ticketPromedio/ ${TABLE}.conteoCompras < {% parameter limInfCalClient%} ) ;;
+        sql: (${TABLE}.conteoCompras > {% parameter conteoR1%} and ${TABLE}.conteoCompras < {% parameter conteoR3%}) and (${TABLE}.ticketPromedio < {% parameter limInfCalClient%} ) ;;
         label: "NO COMPROMETIDO"
       }
       when: {
-        sql: (${TABLE}.conteoCompras >= {% parameter conteoR2%} and ${TABLE}.conteoCompras <= {% parameter conteoR3%}) and (${TABLE}.ticketPromedio/ ${TABLE}.conteoCompras < {% parameter limInfCalClient%} ) ;;
-        label: "NO COMPROMETIDO"
-      }
-      when: {
-        sql: (${TABLE}.conteoCompras >= {% parameter conteoR1%} and ${TABLE}.conteoCompras <= {% parameter conteoR2%}) and (${TABLE}.ticketPromedio/ ${TABLE}.conteoCompras < {% parameter limInfCalClient%} ) ;;
-        label: "NO COMPROMETIDO"
-      }
-      when: {
-        sql: (${TABLE}.conteoCompras >= {% parameter conteoR1%} and ${TABLE}.conteoCompras <= {% parameter conteoR2%}) and (${TABLE}.ticketPromedio/ ${TABLE}.conteoCompras >= {% parameter limInfCalClient%} and ${TABLE}.ticketPromedio/ ${TABLE}.conteoCompras <= {% parameter limSupCalClient%} ) ;;
-        label: "NO COMPROMETIDO"
-      }
-      when: {
-        sql: (${TABLE}.conteoCompras >= {% parameter conteoR1%} and ${TABLE}.conteoCompras <= {% parameter conteoR3%}) and (${TABLE}.ticketPromedio/ ${TABLE}.conteoCompras >= {% parameter limInfCalClient%} and ${TABLE}.ticketPromedio/ ${TABLE}.conteoCompras <= {% parameter limSupCalClient%} ) ;;
-        label: "NO COMPROMETIDO"
-      }
-      when: {
-        sql: (${TABLE}.conteoCompras >= {% parameter conteoR1%} and ${TABLE}.conteoCompras <= {% parameter conteoR3%}) and (${TABLE}.ticketPromedio/ ${TABLE}.conteoCompras > {% parameter limSupCalClient%} ) ;;
+        sql: (${TABLE}.conteoCompras > {% parameter conteoR1%} and ${TABLE}.conteoCompras <  {% parameter conteoR3%}) and (${TABLE}.ticketPromedio >= {% parameter limInfCalClient%} and ${TABLE}.ticketPromedio <= {% parameter limSupCalClient%}) ;;
         label: "NO COMPROMETIDO"
       }
       else: "(not set)"
