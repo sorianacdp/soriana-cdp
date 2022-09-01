@@ -36,7 +36,6 @@ view: cdp_synapse_clientes_productivos {
            ifnull(items.item_list_name,'(not set)') as listaArticuloNombre,
           --event cart
           ifnull((select value.string_value from unnest(event_params) where key = 'transaction_id'),'(not set)') as idTransaccion
-
       from
           `costumer-data-proyect.analytics_249184604.events_*`,rango_fecha, unnest(items) as items
       WHERE
@@ -73,6 +72,7 @@ view: cdp_synapse_clientes_productivos {
       ORDER BY sesionDuracion.usuarioLogueado
 ),sessioneCompletas as (
       select
+          ROW_NUMBER () OVER (PARTITION BY sesionPerUsuario.usuarioLogueado ORDER BY sesionPerUsuario.usuarioLogueado) AS rownumber,
           sesionPerUsuario.fecha as fechaEventos,
           sesionPerUsuario.usuarioLogueado,
           count(sesionPerUsuario.idSesion) as TotalSesiones,
@@ -86,9 +86,8 @@ view: cdp_synapse_clientes_productivos {
       from sesionPerUsuario
       group by sesionPerUsuario.usuarioLogueado,sesionPerUsuario.fecha,sesionPerUsuario.DuracionMin
 )
-
       SELECT * FROM `customer_data_platform.cdp_synapse_clientes_productivos` LEFT JOIN sessioneCompletas ON sessioneCompletas.usuarioLogueado=GAUserId ORDER BY sessioneCompletas.  usuarioLogueado desc
-      ;;
+ ;;
   }
 
   measure: count {
@@ -373,6 +372,11 @@ view: cdp_synapse_clientes_productivos {
     sql: ${TABLE}.coindicenciaSFCCClientesSFCCInvitados ;;
   }
 
+  dimension: rownumber {
+    type: number
+    sql: ${TABLE}.rownumber ;;
+  }
+
   dimension: fecha_eventos {
     type: date
     datatype: date
@@ -480,6 +484,7 @@ view: cdp_synapse_clientes_productivos {
       fecha_creacion_cdp_time,
       ultima_modificacion_cdp,
       coindicencia_sfccclientes_sfccinvitados,
+      rownumber,
       fecha_eventos,
       usuario_logueado,
       total_sesiones,
