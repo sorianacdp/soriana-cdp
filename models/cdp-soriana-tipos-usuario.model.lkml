@@ -23,5 +23,5 @@ explore: cdp_soriana_tipos_usuarios {}
 explore: cdp_soriana_prueba_mapa {}
 
 map_layer: mexico {
-  file: "/maps/mexico.json"
+  file: "/maps/mx_tj.json"
 }
