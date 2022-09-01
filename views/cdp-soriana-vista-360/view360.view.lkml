@@ -356,10 +356,6 @@ view: view360 {
     sql: ${TABLE}.idCliente ;;
   }
 
-  dimension: grcliente_id_1 {
-    type: string
-    sql: ${TABLE}.GRClienteId_1 ;;
-  }
 
   dimension: id_tienda {
     type: string
@@ -391,7 +387,7 @@ view: view360 {
     sql: ${TABLE}.conteoCompras ;;
   }
 
-  dimension: ticket_promedio_1 {
+  dimension: ticket_promedioCalculo {
     type: number
     sql: ${TABLE}.ticketPromedio_1 ;;
   }
@@ -480,14 +476,13 @@ view: view360 {
       tiempo_total,
       promedio_tiempo_sesion,
       id_cliente,
-      grcliente_id_1,
       id_tienda,
       fecha_nacimiento_soriana,
       origen_cliente,
       semana,
       ticke_total,
       conteo_compras,
-      ticket_promedio_1,
+      ticket_promedioCalculo,
       latitud,
       longitud,
       tipo_cliente
