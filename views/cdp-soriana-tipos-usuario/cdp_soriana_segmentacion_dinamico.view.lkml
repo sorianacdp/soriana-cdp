@@ -1,4 +1,4 @@
-view: cdp-soriana-segmentacion-clientes-dinamico {
+view: cdp_soriana_segmentacion_dinamico {
   derived_table: {
     sql: SELECT *
         FROM `costumer-data-proyect.customer_data_platform.cdp-soriana-segmentacionClientesCLC`
@@ -10,7 +10,7 @@ view: cdp-soriana-segmentacion-clientes-dinamico {
     drill_fields: [detail*]
   }
 
-  measure: count_distinct {
+  measure: countdistinct {
     type: count_distinct
     sql: ${TABLE}.idCliente ;;
   }
@@ -19,37 +19,37 @@ view: cdp-soriana-segmentacion-clientes-dinamico {
   measure: clientePremium {
     type: count_distinct
     sql: ${TABLE}.idCliente ;;
-    filters: [tipoCliente2: "CLIENTE PREMIUM"]
+    filters: [tipoCliente: "CLIENTE PREMIUM"]
   }
 
   measure: clienteValioso {
     type: count_distinct
     sql: ${TABLE}.idCliente ;;
-    filters: [tipoCliente2: "CLIENTE VALIOSO"]
+    filters: [tipoCliente: "CLIENTE VALIOSO"]
   }
 
   measure: clientePotencial {
     type: count_distinct
     sql: ${TABLE}.idCliente ;;
-    filters: [tipoCliente2: "CLIENTE POTENCIAL"]
+    filters: [tipoCliente: "CLIENTE POTENCIAL"]
   }
 
   measure: clienteNoComprometido {
     type: count_distinct
     sql: ${TABLE}.idCliente ;;
-    filters: [tipoCliente2: "NO COMPROMETIDO"]
+    filters: [tipoCliente: "NO COMPROMETIDO"]
   }
 
   measure: clienteNuevo {
     type: count_distinct
     sql: ${TABLE}.idCliente ;;
-    filters: [tipoCliente2: "CLIENTE NUEVO"]
+    filters: [tipoCliente: "CLIENTE NUEVO"]
   }
 
   measure: clienteProspecto {
     type: count_distinct
     sql: ${TABLE}.idCliente ;;
-    filters: [tipoCliente2: "CLIENTE PROSPECTO"]
+    filters: [tipoCliente: "CLIENTE PROSPECTO"]
   }
 
   dimension: id_cliente {
@@ -199,7 +199,7 @@ parameter: limSupCalClient {
     allowed_value: {value: "1"}
   }
 
-  dimension: tipoCliente2 {
+  dimension: tipoCliente {
     case: {
     #cliente nuevo
       when: {
@@ -262,7 +262,8 @@ parameter: limSupCalClient {
 
 
   set: detail {
-    fields: [id_cliente,
+    fields: [
+      id_cliente,
       GRClienteId,
       idTienda,
       origenCliente,
@@ -279,6 +280,6 @@ parameter: limSupCalClient {
       ticke_total,
       conteo_compras,
       ticket_promedio,
-      tipoCliente2]
+      tipoCliente]
   }
 }
