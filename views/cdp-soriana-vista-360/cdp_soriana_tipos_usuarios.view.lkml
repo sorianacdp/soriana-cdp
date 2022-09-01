@@ -81,7 +81,7 @@ view: cdp_soriana_tipos_usuarios {
       select
       --info cliente
       distinct cast(p.clientes as STRING) as idCliente,
-      cp.GRClienteId as GRClienteId,
+      cp.GRClienteId as GR_Cliente_Id,
       p.tienda as idTienda,
       ns.fechaNacimientoSoriana,
       ct.canalCliente as origenCliente,
@@ -89,7 +89,7 @@ view: cdp_soriana_tipos_usuarios {
       format_date('%U', parse_date("%Y%m%d",fecha)) as semana,
       sum(p.ticket) as tickeTotal,
       sum(p.conteoCompras) as conteoCompras,
-      sum(p.ticket)/sum(p.conteoCompras) as ticketPromedio,
+      sum(p.ticket)/sum(p.conteoCompras) as ticketPromedioCliente,
       td.Latitud,
       td.Longitud,
       --tipo de cliente
@@ -133,9 +133,9 @@ view: cdp_soriana_tipos_usuarios {
     sql: ${TABLE}.idCliente ;;
   }
 
-  dimension: grcliente_id {
+  dimension: gr_cliente_id {
     type: string
-    sql: ${TABLE}.GRClienteId ;;
+    sql: ${TABLE}.GR_Cliente_Id ;;
   }
 
   dimension: id_tienda {
@@ -168,9 +168,9 @@ view: cdp_soriana_tipos_usuarios {
     sql: ${TABLE}.conteoCompras ;;
   }
 
-  dimension: ticket_promedio {
+  dimension: ticket_promedio_cliente {
     type: number
-    sql: ${TABLE}.ticketPromedio ;;
+    sql: ${TABLE}.ticketPromedioCliente ;;
   }
 
   dimension: latitud {
@@ -191,14 +191,14 @@ view: cdp_soriana_tipos_usuarios {
   set: detail {
     fields: [
       id_cliente,
-      grcliente_id,
+      gr_cliente_id,
       id_tienda,
       fecha_nacimiento_soriana,
       origen_cliente,
       semana,
       ticke_total,
       conteo_compras,
-      ticket_promedio,
+      ticket_promedio_cliente,
       latitud,
       longitud,
       tipo_cliente
