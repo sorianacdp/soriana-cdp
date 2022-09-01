@@ -1,4 +1,4 @@
-view: dummy_dinamico {
+view: cdp-soriana-segmentacion-clientes-dinamico {
   derived_table: {
     sql: SELECT *
         FROM `costumer-data-proyect.customer_data_platform.cdp-soriana-segmentacionClientesCLC`
