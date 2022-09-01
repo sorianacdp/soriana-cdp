@@ -122,7 +122,7 @@ parameter: limSupCalClient {
     case: {
     #cliente nuevo
       when: {
-        sql: ${TABLE}.conteoCompras = {% parameter conteoR1%} ) ;;
+        sql: sum((${TABLE}.conteoCompras) = {% parameter conteoR1%} ) ;;
         label: "CLIENTE NUEVO"
       }
     #cliente prospecto
@@ -173,12 +173,10 @@ parameter: limSupCalClient {
         sql: (${TABLE}.conteoCompras > {% parameter conteoR1%} and ${TABLE}.conteoCompras <  {% parameter conteoR3%}) and (${TABLE}.ticketPromedio >= {% parameter limInfCalClient%} and ${TABLE}.ticketPromedio <= {% parameter limSupCalClient%}) ;;
         label: "NO COMPROMETIDO"
       }
+
       else: "(not set)"
     }
   }
-
-
-
 
 
 
