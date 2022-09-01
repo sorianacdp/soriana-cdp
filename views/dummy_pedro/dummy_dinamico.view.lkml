@@ -157,6 +157,7 @@ parameter: limSupCalClient {
 
   parameter: limInfCalClient {
     type: unquoted
+    default_value: "150"
     allowed_value: {value: "150"}
     allowed_value: {value: "200"}
     allowed_value: {value: "250"}
