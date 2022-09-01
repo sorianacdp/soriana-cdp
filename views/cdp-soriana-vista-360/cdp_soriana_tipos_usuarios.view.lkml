@@ -121,6 +121,7 @@ view: cdp_soriana_tipos_usuarios {
       group by 1,2,3,4,5,6, td.Latitud,td.Longitud
       order by semana asc, idCliente desc
       ;;
+
   }
 
   measure: count {
