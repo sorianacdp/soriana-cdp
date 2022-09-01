@@ -73,7 +73,7 @@ view: view360 {
     sql: ${TABLE}.SFCustomerNo ;;
   }
 
-  dimension: grcliente_id {
+  dimension: gr_cliente_id {
     type: string
     sql: ${TABLE}.GRClienteId ;;
   }
@@ -421,7 +421,7 @@ view: view360 {
       id_cliente_sfcc,
       gauser_id,
       sfcustomer_no,
-      grcliente_id,
+      gr_cliente_id,
       advertising_id,
       nombre,
       apellido_paterno,
