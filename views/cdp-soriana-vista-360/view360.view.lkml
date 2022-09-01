@@ -387,9 +387,9 @@ view: view360 {
     sql: ${TABLE}.conteoCompras ;;
   }
 
-  dimension: ticket_promedioCalculo {
+  dimension: ticket_promedio_cliente {
     type: number
-    sql: ${TABLE}.ticket_Promedio_Cliente ;;
+    sql: ${TABLE}.ticketPromedioCliente ;;
   }
 
   dimension: latitud {
@@ -482,7 +482,7 @@ view: view360 {
       semana,
       ticke_total,
       conteo_compras,
-      ticket_promedioCalculo,
+      ticket_promedio_cliente,
       latitud,
       longitud,
       tipo_cliente
