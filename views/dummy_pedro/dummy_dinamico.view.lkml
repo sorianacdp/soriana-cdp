@@ -1,6 +1,6 @@
 view: dummy_dinamico {
   derived_table: {
-    sql: SELECT * EXCEPT (tipoCliente)
+    sql: SELECT *
         FROM `costumer-data-proyect.customer_data_platform.cdp-soriana-segmentacionClientesCLC`
       ;;
   }
@@ -261,6 +261,23 @@ parameter: limSupCalClient {
 
 
   set: detail {
-    fields: [id_cliente, semana, ticke_total, conteo_compras, ticket_promedio]
+    fields: [id_cliente,
+      GRClienteId,
+      idTienda,
+      origenCliente,
+      omnicanal,
+      fechaNacimientoSoriana,
+      nombre,
+      apellido,
+      fecha_nacimiento,
+      sexo,
+      correo,
+      semana,
+      haceNSemanas,
+      anio,
+      ticke_total,
+      conteo_compras,
+      ticket_promedio,
+      tipoCliente2]
   }
 }
