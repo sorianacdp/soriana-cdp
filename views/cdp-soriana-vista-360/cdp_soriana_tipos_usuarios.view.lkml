@@ -120,7 +120,9 @@ view: cdp_soriana_tipos_usuarios {
       inner join `costumer-data-proyect.customer_data_platform.cdp_synapse_tiendas_productivas` as td on (td.IdTienda = p.tienda)
       group by 1,2,3,4,5,6, td.Latitud,td.Longitud
       order by semana asc, idCliente desc
+      persist_for: "10 hours"
       ;;
+
   }
 
   measure: count {
