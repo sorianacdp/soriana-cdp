@@ -128,6 +128,17 @@ parameter: limSupCalClient {
 
   dimension: tipoCliente {
     case: {
+
+      when: {
+        sql: (${TABLE}.conteoCompras = {% parameter conteoR1%} ) ;;
+        label: "CLIENTE NUEVO"
+      }
+
+      when: {
+        sql: (${TABLE}.conteoCompras = {% parameter conteoR0%} ) ;;
+        label: "CLIENTE PROSPECTO"
+      }
+
       when: {
         sql: (${TABLE}.conteoCompras >= {% parameter conteoR4%}) and (${TABLE}.ticketPromedio/ ${TABLE}.conteoCompras > {% parameter limSupCalClient%})   ;;
         label: "CLIENTE PREMIUM"
@@ -140,14 +151,7 @@ parameter: limSupCalClient {
         sql: (${TABLE}.conteoCompras >= {% parameter conteoR1%} and ${TABLE}.conteoCompras <= {% parameter conteoR2%} ) and (${TABLE}.ticketPromedio/ ${TABLE}.conteoCompras > {% parameter limSupCalClient%}) ;;
         label: "CLIENTE POTENCIAL"
       }
-      when: {
-        sql: (${TABLE}.conteoCompras = {% parameter conteoR1%} ) ;;
-        label: "CLIENTE NUEVO"
-      }
-      when: {
-        sql: (${TABLE}.conteoCompras = {% parameter conteoR0%} ) ;;
-        label: "CLIENTE PROSPECTO"
-      }
+
       when: {
         sql: (${TABLE}.conteoCompras >= {% parameter conteoR4%}) and (${TABLE}.ticketPromedio/ ${TABLE}.conteoCompras >= {% parameter limInfCalClient%} and ${TABLE}.ticketPromedio/ ${TABLE}.conteoCompras <= {% parameter limSupCalClient%} ) ;;
         label: "CLIENTE VALIOSO"
