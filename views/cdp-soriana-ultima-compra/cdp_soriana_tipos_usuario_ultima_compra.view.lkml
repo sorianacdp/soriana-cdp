@@ -249,6 +249,11 @@ select * from anioAnterior
     drill_fields: [detail*]
   }
 
+  measure: count_distinct {
+    type: count_distinct
+    sql: ${TABLE}.idCliente ;;
+  }
+
   measure: clienteActual {
     type: count_distinct
     sql: ${TABLE}.idCliente ;;
