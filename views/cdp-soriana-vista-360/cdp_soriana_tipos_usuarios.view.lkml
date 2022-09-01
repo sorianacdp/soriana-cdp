@@ -1,6 +1,6 @@
 view: cdp_soriana_tipos_usuarios {
   derived_table: {
-    sql:  with rango_fecha as (
+    sql: with rango_fecha as (
             select
             --fecha inicio
             max(format_date('%Y%m%d',FechaHoraTicket)) as  fecha_inicio,
@@ -14,16 +14,15 @@ view: cdp_soriana_tipos_usuarios {
         prep as (
   select
   distinct format_date('%Y%m%d',FechaHoraTicket) as fecha,
-  IdClienteSk as clientes,
-  IdTienda as tienda,
-  count (distinct IdClienteSk) as conteoCompras,
-  ImporteVentaNeta as ticket,
-  from `costumer-data-proyect.customer_data_platform.cdp_synapse_tickets_productivos`,rango_fecha
-  where  format_date('%Y%m%d',FechaHoraTicket) <= rango_fecha.fecha_inicio and  format_date('%Y%m%d',FechaHoraTicket) >=rango_fecha.fecha_final and IdClienteSk is not null
-  group by 1,2,3,5
-  ),
 
-      nacimientoSoriana as (
+      IdClienteSk as clientes,
+      IdTienda as tienda,
+      count (distinct IdClienteSk) as conteoCompras,
+      ImporteVentaNeta as ticket
+      from `costumer-data-proyect.customer_data_platform.cdp_synapse_tickets_productivos`,rango_fecha
+      where  format_date('%Y%m%d',FechaHoraTicket) <= rango_fecha.fecha_inicio and  format_date('%Y%m%d',FechaHoraTicket) >=rango_fecha.fecha_final and IdClienteSk is not null
+      group by 1,2,3,5
+      ),nacimientoSoriana as (
       select
       distinct IdClienteSk as idclientes,
       DATE_DIFF(CURRENT_DATE(), parse_date("%Y%m%d",min(format_date('%Y%m%d',FechaHoraTicket))), DAY)  as diasDeVida,
@@ -76,32 +75,23 @@ view: cdp_soriana_tipos_usuarios {
       union distinct
       select * from restavenInternet
       order by clienteOmni)
-
-
-
       ---------------------------------------
       --------------------------------------
       ---------------------------
-
-
       select
       --info cliente
       distinct cast(p.clientes as STRING) as idCliente,
-      cp.GRClienteId as GRClienteId,
+      cp.GRClienteId as GR_Cliente_Id,
       p.tienda as idTienda,
       ns.fechaNacimientoSoriana,
       ct.canalCliente as origenCliente,
-      cp.nombre as nombre,
-      cp.apellidoPaterno as apellido,
-      format_date('%Y-%m-%d',cp.fechaNacimiento) as fechaNacimiento,
-      cp.sexo as sexo,
-      cp.correo as correo,
-
       --info compras
       format_date('%U', parse_date("%Y%m%d",fecha)) as semana,
       sum(p.ticket) as tickeTotal,
       sum(p.conteoCompras) as conteoCompras,
-      sum(p.ticket)/sum(p.conteoCompras) as ticketPromedio,
+      sum(p.ticket)/sum(p.conteoCompras) as ticketPromedioCliente,
+      td.Latitud,
+      td.Longitud,
       --tipo de cliente
       --tipo de cliente
       case
@@ -127,7 +117,8 @@ view: cdp_soriana_tipos_usuarios {
       left join `costumer-data-proyect.customer_data_platform.cdp_synapse_clientes_productivos` as cp on (p.clientes=cp.IdClienteSk)
       left join nacimientoSoriana as ns on ( p.clientes= ns.idclientes)
       left join canaltotal as ct on ( p.clientes=ct.clienteOmni)
-      group by 1,2,3,4,5,6,7,8,9,10,11
+      inner join `costumer-data-proyect.customer_data_platform.cdp_synapse_tiendas_productivas` as td on (td.IdTienda = p.tienda)
+      group by 1,2,3,4,5,6, td.Latitud,td.Longitud
       order by semana asc, idCliente desc
       ;;
   }
@@ -137,92 +128,30 @@ view: cdp_soriana_tipos_usuarios {
     drill_fields: [detail*]
   }
 
-  measure: clientePremium {
-    type: count_distinct
-    sql: ${TABLE}.idCliente ;;
-    filters: [tipo_cliente: "CLIENTE PREMIUM"]
-  }
-
-  measure: clienteValioso {
-    type: count_distinct
-    sql: ${TABLE}.idCliente ;;
-    filters: [tipo_cliente: "CLIENTE VALIOSO"]
-  }
-
-  measure: clientePotencial {
-    type: count_distinct
-    sql: ${TABLE}.idCliente ;;
-    filters: [tipo_cliente: "CLIENTE POTENCIAL"]
-  }
-
-  measure: clienteNoComprometido {
-    type: count_distinct
-    sql: ${TABLE}.idCliente ;;
-    filters: [tipo_cliente: "NO COMPROMETIDO"]
-  }
-
-  measure: clienteNuevo {
-    type: count_distinct
-    sql: ${TABLE}.idCliente ;;
-    filters: [tipo_cliente: "CLIENTE NUEVO"]
-  }
-
-  measure: clienteProspecto {
-    type: count_distinct
-    sql: ${TABLE}.idCliente ;;
-    filters: [tipo_cliente: "CLIENTE PROSPECTO"]
-  }
-
   dimension: id_cliente {
     type: string
     sql: ${TABLE}.idCliente ;;
   }
 
-  dimension: GRClienteId {
+  dimension: gr_cliente_id {
     type: string
-    sql: ${TABLE}.GRClienteId ;;
+    sql: ${TABLE}.GR_Cliente_Id ;;
   }
 
-  dimension: idTienda {
+  dimension: id_tienda {
     type: string
     sql: ${TABLE}.idTienda ;;
   }
 
-  dimension: origenCliente {
-    type: string
-    sql: ${TABLE}.origenCliente ;;
-  }
-
-  dimension: fechaNacimientoSoriana {
+  dimension: fecha_nacimiento_soriana {
     type: string
     sql: ${TABLE}.fechaNacimientoSoriana ;;
   }
 
-  dimension: nombre {
+  dimension: origen_cliente {
     type: string
-    sql: ${TABLE}.nombre ;;
+    sql: ${TABLE}.origenCliente ;;
   }
-
-  dimension: apellido {
-    type: string
-    sql: ${TABLE}.apellido ;;
-  }
-
-  dimension: fecha_nacimiento {
-    type: string
-    sql: ${TABLE}.fechaNacimiento ;;
-  }
-
-  dimension: sexo {
-    type: string
-    sql: ${TABLE}.sexo ;;
-  }
-
-  dimension: correo {
-    type: string
-    sql: ${TABLE}.correo ;;
-  }
-
 
   dimension: semana {
     type: string
@@ -239,9 +168,19 @@ view: cdp_soriana_tipos_usuarios {
     sql: ${TABLE}.conteoCompras ;;
   }
 
-  dimension: ticket_promedio {
+  dimension: ticket_promedio_cliente {
     type: number
-    sql: ${TABLE}.ticketPromedio ;;
+    sql: ${TABLE}.ticketPromedioCliente ;;
+  }
+
+  dimension: latitud {
+    type: number
+    sql: ${TABLE}.Latitud ;;
+  }
+
+  dimension: longitud {
+    type: number
+    sql: ${TABLE}.Longitud ;;
   }
 
   dimension: tipo_cliente {
@@ -252,19 +191,16 @@ view: cdp_soriana_tipos_usuarios {
   set: detail {
     fields: [
       id_cliente,
-      GRClienteId,
-      idTienda,
-      origenCliente,
-      fechaNacimientoSoriana,
-      nombre,
-      apellido,
-      fecha_nacimiento,
-      sexo,
-      correo,
+      gr_cliente_id,
+      id_tienda,
+      fecha_nacimiento_soriana,
+      origen_cliente,
       semana,
       ticke_total,
       conteo_compras,
-      ticket_promedio,
+      ticket_promedio_cliente,
+      latitud,
+      longitud,
       tipo_cliente
     ]
   }

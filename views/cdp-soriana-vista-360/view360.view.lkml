@@ -1,14 +1,21 @@
-view: vista_360 {
+view: view360 {
   derived_table: {
-    sql: SELECT * FROM ${cdp_synapse_clientes_productivos.SQL_TABLE_NAME}
+    sql: SELECT
+       ROW_NUMBER () OVER (PARTITION BY correo ORDER BY correo) AS rownumberCorreo
+      ,* FROM ${cdp_synapse_clientes_productivos.SQL_TABLE_NAME}
       LEFT JOIN ${cdp_soriana_tipos_usuarios.SQL_TABLE_NAME}
-      ON cdp_soriana_tipos_usuarios.GRClienteId = cdp_synapse_clientes_productivos.GRClienteId
+      ON (cdp_synapse_clientes_productivos.GRClienteId = cdp_soriana_tipos_usuarios.GR_Cliente_Id )
        ;;
   }
 
   measure: count {
     type: count
     drill_fields: [detail*]
+  }
+
+  dimension: rownumber_correo {
+    type: number
+    sql: ${TABLE}.rownumberCorreo ;;
   }
 
   dimension: correo {
@@ -66,7 +73,7 @@ view: vista_360 {
     sql: ${TABLE}.SFCustomerNo ;;
   }
 
-  dimension: grcliente_id {
+  dimension: gr_cliente_id {
     type: string
     sql: ${TABLE}.GRClienteId ;;
   }
@@ -288,6 +295,11 @@ view: vista_360 {
     sql: ${TABLE}.coindicenciaSFCCClientesSFCCInvitados ;;
   }
 
+  dimension: rownumber {
+    type: number
+    sql: ${TABLE}.rownumber ;;
+  }
+
   dimension: fecha_eventos {
     type: date
     datatype: date
@@ -339,25 +351,11 @@ view: vista_360 {
     sql: ${TABLE}.promedioTiempoSesion ;;
   }
 
-  dimension: estadoGeo {
-    type: string
-    sql: ${TABLE}.estado_1 ;;
-  }
-
-  dimension: ciudad {
-    type: string
-    sql: ${TABLE}.ciudad ;;
-  }
-
-  dimension: pais {
-    type: string
-    sql: ${TABLE}.pais ;;
-  }
-
   dimension: id_cliente {
     type: string
     sql: ${TABLE}.idCliente ;;
   }
+
 
   dimension: id_tienda {
     type: string
@@ -389,6 +387,17 @@ view: vista_360 {
     sql: ${TABLE}.conteoCompras ;;
   }
 
+  dimension: ticket_promedio_cliente {
+    type: number
+    sql: ${TABLE}.ticketPromedioCliente ;;
+  }
+
+  dimension: store_location {
+    type: location
+    sql_latitude: ${TABLE}.Latitud ;;
+    sql_longitude: ${TABLE}.Longitud ;;
+  }
+
   dimension: tipo_cliente {
     type: string
     sql: ${TABLE}.tipoCliente ;;
@@ -396,6 +405,7 @@ view: vista_360 {
 
   set: detail {
     fields: [
+      rownumber_correo,
       correo,
       id_cliente_sk,
       id_cliente_digital,
@@ -407,7 +417,7 @@ view: vista_360 {
       id_cliente_sfcc,
       gauser_id,
       sfcustomer_no,
-      grcliente_id,
+      gr_cliente_id,
       advertising_id,
       nombre,
       apellido_paterno,
@@ -450,6 +460,7 @@ view: vista_360 {
       fecha_creacion_cdp_time,
       ultima_modificacion_cdp,
       coindicencia_sfccclientes_sfccinvitados,
+      rownumber,
       fecha_eventos,
       usuario_logueado,
       total_sesiones,
@@ -460,9 +471,6 @@ view: vista_360 {
       sesiones_sin_compras,
       tiempo_total,
       promedio_tiempo_sesion,
-      estadoGeo,
-      ciudad,
-      pais,
       id_cliente,
       id_tienda,
       fecha_nacimiento_soriana,
@@ -470,6 +478,8 @@ view: vista_360 {
       semana,
       ticke_total,
       conteo_compras,
+      ticket_promedio_cliente,
+      store_location,
       tipo_cliente
     ]
   }
