@@ -10,14 +10,117 @@ view: dummy_dinamico {
     drill_fields: [detail*]
   }
 
+  measure: count_distinct {
+    type: count_distinct
+    sql: ${TABLE}.idCliente ;;
+  }
+
+
+  measure: clientePremium {
+    type: count_distinct
+    sql: ${TABLE}.idCliente ;;
+    filters: [tipoCliente2: "CLIENTE PREMIUM"]
+  }
+
+  measure: clienteValioso {
+    type: count_distinct
+    sql: ${TABLE}.idCliente ;;
+    filters: [tipoCliente2: "CLIENTE VALIOSO"]
+  }
+
+  measure: clientePotencial {
+    type: count_distinct
+    sql: ${TABLE}.idCliente ;;
+    filters: [tipoCliente2: "CLIENTE POTENCIAL"]
+  }
+
+  measure: clienteNoComprometido {
+    type: count_distinct
+    sql: ${TABLE}.idCliente ;;
+    filters: [tipoCliente2: "NO COMPROMETIDO"]
+  }
+
+  measure: clienteNuevo {
+    type: count_distinct
+    sql: ${TABLE}.idCliente ;;
+    filters: [tipoCliente2: "CLIENTE NUEVO"]
+  }
+
+  measure: clienteProspecto {
+    type: count_distinct
+    sql: ${TABLE}.idCliente ;;
+    filters: [tipoCliente2: "CLIENTE PROSPECTO"]
+  }
+
   dimension: id_cliente {
     type: string
     sql: ${TABLE}.idCliente ;;
   }
 
+  dimension: GRClienteId {
+    type: string
+    sql: ${TABLE}.GRClienteId ;;
+  }
+
+  dimension: idTienda {
+    type: string
+    sql: ${TABLE}.idTienda ;;
+  }
+
+  dimension: origenCliente {
+    type: string
+    sql: ${TABLE}.origenCliente ;;
+  }
+
+  dimension: omnicanal {
+    type: string
+    sql: ${TABLE}.omnicanal ;;
+  }
+
+  dimension: fechaNacimientoSoriana {
+    type: string
+    sql: ${TABLE}.fechaNacimientoSoriana ;;
+  }
+
+  dimension: nombre {
+    type: string
+    sql: ${TABLE}.nombre ;;
+  }
+
+  dimension: apellido {
+    type: string
+    sql: ${TABLE}.apellido ;;
+  }
+
+  dimension: fecha_nacimiento {
+    type: string
+    sql: ${TABLE}.fechaNacimiento ;;
+  }
+
+  dimension: sexo {
+    type: string
+    sql: ${TABLE}.sexo ;;
+  }
+
+  dimension: correo {
+    type: string
+    sql: ${TABLE}.correo ;;
+  }
+
+
   dimension: semana {
     type: string
     sql: ${TABLE}.semana ;;
+  }
+
+  dimension: haceNSemanas {
+    type: number
+    sql: ${TABLE}.haceNSemanas ;;
+  }
+
+  dimension: anio {
+    type: string
+    sql: ${TABLE}.anio ;;
   }
 
   dimension: ticke_total {
@@ -34,6 +137,14 @@ view: dummy_dinamico {
     type: number
     sql: ${TABLE}.ticketPromedio ;;
   }
+
+
+  filter: aniofilter {
+    type: yesno
+    sql: ${TABLE}.anio;;
+  }
+##########################################################################
+
 
 parameter: limSupCalClient {
   type: unquoted
