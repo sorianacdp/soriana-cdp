@@ -389,7 +389,7 @@ view: view360 {
 
   dimension: ticket_promedioCalculo {
     type: number
-    sql: ${TABLE}.ticketPromedio_1 ;;
+    sql: ${TABLE}.ticket_Promedio_Cliente ;;
   }
 
   dimension: latitud {
