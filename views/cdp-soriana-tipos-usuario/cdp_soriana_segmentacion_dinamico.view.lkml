@@ -149,6 +149,7 @@ view: cdp_soriana_segmentacion_dinamico {
 parameter: limSupCalClient {
   type: unquoted
   default_value: "570"
+  allowed_value: {value: "570"}
   allowed_value: {value: "600"}
   allowed_value: {value: "700"}
   allowed_value: {value: "800"}
