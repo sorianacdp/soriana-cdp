@@ -272,7 +272,10 @@ parameter: limSupCalClient {
     }
   }
 
-
+  #dimension: enlaces {
+  #  type: string
+  #  html:;;
+ #}
 
   set: detail {
     fields: [
