@@ -149,10 +149,19 @@ view: cdp_soriana_segmentacion_dinamico {
 parameter: limSupCalClient {
   type: unquoted
   default_value: "570"
-  allowed_value: {value: "570"}
+  allowed_value: {value: "600"}
+  allowed_value: {value: "700"}
+  allowed_value: {value: "800"}
+  allowed_value: {value: "900"}
+  allowed_value: {value: "1000"}
+  allowed_value: {value: "1100"}
+  allowed_value: {value: "1200"}
+  allowed_value: {value: "1300"}
+  allowed_value: {value: "1500"}
+  allowed_value: {value: "1700"}
+  allowed_value: {value: "1900"}
   allowed_value: {value: "2000"}
-  allowed_value: {value: "3000"}
-  allowed_value: {value: "3500"}
+  allowed_value: {value: "2500"}
 }
 
   parameter: limInfCalClient {
@@ -164,6 +173,9 @@ parameter: limSupCalClient {
     allowed_value: {value: "300"}
     allowed_value: {value: "350"}
     allowed_value: {value: "400"}
+    allowed_value: {value: "450"}
+    allowed_value: {value: "500"}
+    allowed_value: {value: "550"}
 
   }
 
