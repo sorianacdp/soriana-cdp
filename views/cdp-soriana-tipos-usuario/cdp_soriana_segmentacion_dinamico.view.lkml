@@ -144,72 +144,38 @@ view: cdp_soriana_segmentacion_dinamico {
     sql: ${TABLE}.anio;;
   }
 ##########################################################################
+#################
 
-
-parameter: limSupCalClient {
-  type: unquoted
-  default_value: "570"
-  allowed_value: {value: "570"}
-  allowed_value: {value: "600"}
-  allowed_value: {value: "700"}
-  allowed_value: {value: "800"}
-  allowed_value: {value: "900"}
-  allowed_value: {value: "1000"}
-  allowed_value: {value: "1100"}
-  allowed_value: {value: "1200"}
-  allowed_value: {value: "1300"}
-  allowed_value: {value: "1500"}
-  allowed_value: {value: "1700"}
-  allowed_value: {value: "1900"}
-  allowed_value: {value: "2000"}
-  allowed_value: {value: "2500"}
-}
+    parameter: limSupCalClient {
+      type: number
+      default_value: "570"
+    }
 
   parameter: limInfCalClient {
-    type: unquoted
+    type: number
     default_value: "150"
-    allowed_value: {value: "150"}
-    allowed_value: {value: "200"}
-    allowed_value: {value: "250"}
-    allowed_value: {value: "300"}
-    allowed_value: {value: "350"}
-    allowed_value: {value: "400"}
-    allowed_value: {value: "450"}
-    allowed_value: {value: "500"}
-    allowed_value: {value: "550"}
 
   }
 
   parameter: conteoR4{
-    type: unquoted
+    type: number
     default_value: "4"
-    allowed_value: {value: "4"}
-    allowed_value: {value: "5"}
-    allowed_value: {value: "6"}
-    allowed_value: {value: "7"}
-    allowed_value: {value: "8"}
+
   }
   parameter: conteoR3 {
-    type: unquoted
+    type: number
     default_value: "3"
-    allowed_value: {value: "3"}
-    allowed_value: {value: "4"}
-    allowed_value: {value: "5"}
 
   }
 
   parameter: conteoR1 {
-    type: unquoted
+    type: number
     default_value: "1"
-    allowed_value: {value: "1"}
-    allowed_value: {value: "2"}
-    allowed_value: {value: "3"}
+
   }
   parameter: conteoR0 {
-    type: unquoted
+    type: number
     default_value: "0"
-    allowed_value: {value: "0"}
-    allowed_value: {value: "1"}
   }
 
   dimension: tipoCliente {
