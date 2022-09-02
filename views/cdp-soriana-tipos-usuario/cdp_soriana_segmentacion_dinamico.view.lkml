@@ -114,7 +114,7 @@ view: cdp_soriana_segmentacion_dinamico {
   }
 
   dimension: haceNSemanas {
-    type: number
+    type: string
     sql: ${TABLE}.haceNSemanas ;;
   }
 
