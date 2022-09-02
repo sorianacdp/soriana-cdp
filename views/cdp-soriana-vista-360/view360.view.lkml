@@ -1,10 +1,6 @@
 view: view360 {
   derived_table: {
-    sql: SELECT
-       ROW_NUMBER () OVER (PARTITION BY correo ORDER BY correo) AS rownumberCorreo
-      ,* FROM ${cdp_synapse_clientes_productivos.SQL_TABLE_NAME}
-      LEFT JOIN ${cdp_soriana_tipos_usuarios.SQL_TABLE_NAME}
-      ON (cdp_synapse_clientes_productivos.GRClienteId = cdp_soriana_tipos_usuarios.GR_Cliente_Id )
+    sql: select * from `customer_data_platform.view-360`
        ;;
   }
 
