@@ -20,8 +20,4 @@ include: "/views/cdp-soriana-tipos-usuario/*.view.lkml"                # include
 # }
 
 explore: cdp_soriana_tipos_usuarios {}
-explore: cdp_soriana_prueba_mapa {}
-
-map_layer: mexico {
-  file: "/maps/mx_tj.json"
-}
+explore: cdp_soriana_segmentacion_dinamico {}

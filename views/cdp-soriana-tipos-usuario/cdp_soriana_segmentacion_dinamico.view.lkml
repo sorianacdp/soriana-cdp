@@ -1,38 +1,7 @@
-view: dummy_dinamico {
+view: cdp_soriana_segmentacion_dinamico {
   derived_table: {
-    sql: with rango_fecha as (
-      select
-      --fecha inicio
-      max(format_date('%Y%m%d',FechaHoraTicket)) as  fecha_inicio,
-      --semana maxima del rango
-      cast( format_date('%U', parse_date("%Y%m%d",max(format_date('%Y%m%d',FechaHoraTicket)))) as INT) as max_semana,
-      --fecha final 8 semanas antes, o 56 dias--- 10 semanas 70 dias
-        format_date('%Y%m%d',DATE_SUB(DATE(max(FechaHoraTicket)), INTERVAL 90 DAY)) as fecha_final,
-      from `costumer-data-proyect.customer_data_platform.cdp_synapse_tickets_productivos`),
-      ------------------------------
-      --------------------------------
-      prep as (
-        select
-        distinct format_date('%Y%m%d',FechaHoraTicket) as fecha,
-        IdClienteSk as clientes,
-        count (distinct IdClienteSk) as conteoCompras,
-        ImporteVentaNeta as ticket,
-        from `costumer-data-proyect.customer_data_platform.cdp_synapse_tickets_productivos`,rango_fecha
-        where  format_date('%Y%m%d',FechaHoraTicket) <= rango_fecha.fecha_inicio and  format_date('%Y%m%d',FechaHoraTicket) >=rango_fecha.fecha_final and IdClienteSk is not null
-        group by 1,2,4
-        )
-
-      select
-      --info cliente
-      distinct cast(p.clientes as STRING) as idCliente,
-      --info compras
-      format_date('%U', parse_date("%Y%m%d",fecha)) as semana,
-      sum(p.ticket) as tickeTotal,
-      sum(p.conteoCompras) as conteoCompras,
-      sum(p.ticket)/sum(p.conteoCompras) as ticketPromedio,
-
-      from prep as p
-      group by 1,2
+    sql: SELECT *
+        FROM `costumer-data-proyect.customer_data_platform.cdp-soriana-segmentacionClientesCLC`
       ;;
   }
 
@@ -41,14 +10,117 @@ view: dummy_dinamico {
     drill_fields: [detail*]
   }
 
+  measure: countdistinct {
+    type: count_distinct
+    sql: ${TABLE}.idCliente ;;
+  }
+
+
+  measure: clientePremium {
+    type: count_distinct
+    sql: ${TABLE}.idCliente ;;
+    filters: [tipoCliente: "CLIENTE PREMIUM"]
+  }
+
+  measure: clienteValioso {
+    type: count_distinct
+    sql: ${TABLE}.idCliente ;;
+    filters: [tipoCliente: "CLIENTE VALIOSO"]
+  }
+
+  measure: clientePotencial {
+    type: count_distinct
+    sql: ${TABLE}.idCliente ;;
+    filters: [tipoCliente: "CLIENTE POTENCIAL"]
+  }
+
+  measure: clienteNoComprometido {
+    type: count_distinct
+    sql: ${TABLE}.idCliente ;;
+    filters: [tipoCliente: "NO COMPROMETIDO"]
+  }
+
+  measure: clienteNuevo {
+    type: count_distinct
+    sql: ${TABLE}.idCliente ;;
+    filters: [tipoCliente: "CLIENTE NUEVO"]
+  }
+
+  measure: clienteProspecto {
+    type: count_distinct
+    sql: ${TABLE}.idCliente ;;
+    filters: [tipoCliente: "CLIENTE PROSPECTO"]
+  }
+
   dimension: id_cliente {
     type: string
     sql: ${TABLE}.idCliente ;;
   }
 
+  dimension: GRClienteId {
+    type: string
+    sql: ${TABLE}.GRClienteId ;;
+  }
+
+  dimension: idTienda {
+    type: string
+    sql: ${TABLE}.idTienda ;;
+  }
+
+  dimension: origenCliente {
+    type: string
+    sql: ${TABLE}.origenCliente ;;
+  }
+
+  dimension: omnicanal {
+    type: string
+    sql: ${TABLE}.omnicanal ;;
+  }
+
+  dimension: fechaNacimientoSoriana {
+    type: string
+    sql: ${TABLE}.fechaNacimientoSoriana ;;
+  }
+
+  dimension: nombre {
+    type: string
+    sql: ${TABLE}.nombre ;;
+  }
+
+  dimension: apellido {
+    type: string
+    sql: ${TABLE}.apellido ;;
+  }
+
+  dimension: fecha_nacimiento {
+    type: string
+    sql: ${TABLE}.fechaNacimiento ;;
+  }
+
+  dimension: sexo {
+    type: string
+    sql: ${TABLE}.sexo ;;
+  }
+
+  dimension: correo {
+    type: string
+    sql: ${TABLE}.correo ;;
+  }
+
+
   dimension: semana {
     type: string
     sql: ${TABLE}.semana ;;
+  }
+
+  dimension: haceNSemanas {
+    type: number
+    sql: ${TABLE}.haceNSemanas ;;
+  }
+
+  dimension: anio {
+    type: string
+    sql: ${TABLE}.anio ;;
   }
 
   dimension: ticke_total {
@@ -66,23 +138,45 @@ view: dummy_dinamico {
     sql: ${TABLE}.ticketPromedio ;;
   }
 
+
+  filter: aniofilter {
+    type: yesno
+    sql: ${TABLE}.anio;;
+  }
+##########################################################################
+
+
 parameter: limSupCalClient {
   type: unquoted
   default_value: "570"
   allowed_value: {value: "570"}
+  allowed_value: {value: "600"}
+  allowed_value: {value: "700"}
+  allowed_value: {value: "800"}
+  allowed_value: {value: "900"}
+  allowed_value: {value: "1000"}
+  allowed_value: {value: "1100"}
+  allowed_value: {value: "1200"}
+  allowed_value: {value: "1300"}
+  allowed_value: {value: "1500"}
+  allowed_value: {value: "1700"}
+  allowed_value: {value: "1900"}
   allowed_value: {value: "2000"}
-  allowed_value: {value: "3000"}
-  allowed_value: {value: "3500"}
+  allowed_value: {value: "2500"}
 }
 
   parameter: limInfCalClient {
     type: unquoted
+    default_value: "150"
     allowed_value: {value: "150"}
     allowed_value: {value: "200"}
     allowed_value: {value: "250"}
     allowed_value: {value: "300"}
     allowed_value: {value: "350"}
     allowed_value: {value: "400"}
+    allowed_value: {value: "450"}
+    allowed_value: {value: "500"}
+    allowed_value: {value: "550"}
 
   }
 
@@ -122,7 +216,7 @@ parameter: limSupCalClient {
     case: {
     #cliente nuevo
       when: {
-        sql: sum((${TABLE}.conteoCompras) = {% parameter conteoR1%} ) ;;
+        sql: ${TABLE}.conteoCompras = {% parameter conteoR1%} ;;
         label: "CLIENTE NUEVO"
       }
     #cliente prospecto
@@ -181,6 +275,24 @@ parameter: limSupCalClient {
 
 
   set: detail {
-    fields: [id_cliente, semana, ticke_total, conteo_compras, ticket_promedio]
+    fields: [
+      id_cliente,
+      GRClienteId,
+      idTienda,
+      origenCliente,
+      omnicanal,
+      fechaNacimientoSoriana,
+      nombre,
+      apellido,
+      fecha_nacimiento,
+      sexo,
+      correo,
+      semana,
+      haceNSemanas,
+      anio,
+      ticke_total,
+      conteo_compras,
+      ticket_promedio,
+      tipoCliente]
   }
 }
