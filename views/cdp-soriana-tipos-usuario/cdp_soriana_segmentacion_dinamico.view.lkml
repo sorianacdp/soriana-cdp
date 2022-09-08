@@ -52,6 +52,19 @@ view: cdp_soriana_segmentacion_dinamico {
     filters: [tipoCliente: "CLIENTE PROSPECTO"]
   }
 
+  measure: clienteActivo {
+    type: count_distinct
+    sql: ${TABLE}.idCliente ;;
+    filters: [tipoClientevida: "CLIENTE ACTIVO"]
+  }
+
+  measure: clientePerdido {
+    type: count_distinct
+    sql: ${TABLE}.idCliente ;;
+    filters: [tipoClientevida: "CLIENTE PERDIDO"]
+  }
+
+
   dimension: id_cliente {
     type: string
     sql: ${TABLE}.idCliente ;;
@@ -136,6 +149,11 @@ view: cdp_soriana_segmentacion_dinamico {
   dimension: ticket_promedio {
     type: number
     sql: ${TABLE}.ticketPromedio ;;
+  }
+
+  dimension: tipoClientevida {
+    type: string
+    sql: ${TABLE}.tipoClientevida ;;
   }
 
 
@@ -237,6 +255,8 @@ view: cdp_soriana_segmentacion_dinamico {
       else: "(not set)"
     }
   }
+
+
 
   #dimension: enlaces {
   #  type: string
