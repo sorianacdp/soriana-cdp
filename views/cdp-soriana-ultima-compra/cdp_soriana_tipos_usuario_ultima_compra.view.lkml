@@ -79,6 +79,10 @@ view: cdp_soriana_tipos_usuario_ultima_compra {
     sql: ${TABLE}.omnicanal ;;
   }
 
+  dimension: canalExclusivo {
+    type: string
+    sql: ${TABLE}.canalExclusivo ;;
+  }
   dimension: nombre {
     type: string
     sql: ${TABLE}.nombre ;;

@@ -106,6 +106,11 @@ view: cdp_soriana_segmentacion_dinamico {
     sql: ${TABLE}.omnicanal ;;
   }
 
+  dimension: canalExclusivo {
+    type: string
+    sql: ${TABLE}.canalExclusivo ;;
+  }
+
   dimension: fechaNacimientoSoriana {
     type: string
     sql: ${TABLE}.fechaNacimientoSoriana ;;
