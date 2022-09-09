@@ -80,6 +80,22 @@ view: cdp_soriana_segmentacion_dinamico {
     sql: ${TABLE}.idTienda ;;
   }
 
+  dimension: Tienda {
+    type: string
+    sql: ${TABLE}.Tienda ;;
+  }
+
+  dimension: Formato {
+    type: string
+    sql: ${TABLE}.Formato ;;
+  }
+
+  dimension: Estado {
+    type: string
+    sql: ${TABLE}.Estado ;;
+  }
+
+
   dimension: origenCliente {
     type: string
     sql: ${TABLE}.origenCliente ;;
