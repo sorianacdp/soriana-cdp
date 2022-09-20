@@ -212,6 +212,51 @@ view: cdp_soriana_rfm_ltv {
     filters: [tipo_cliente: "CLIENTE PROSPECTO"]
   }
 
+######### Calculo RFM ##################
+########################################
+
+  parameter: limSupTicketRFM {
+    type: number
+    default_value: "2000"
+  }
+
+  parameter: limInfTicketRFM {
+    type: number
+    default_value: "1000"
+  }
+
+
+  dimension: tipoCliente {
+    case: {
+      #GASTAN MUCHO
+      when: {
+        sql: ${TABLE}.ticketPromedio > {% parameter limSupTicketRFM%} ;;
+        label: "GASTAN MUCHO"
+      }
+      #cliente GASTAN MODERADO
+      when: {
+        sql: ${TABLE}.ticketPromedio >= {% parameter limInfTicketRFM%} and ${TABLE}.ticketPromedio <= {% parameter limSupTicketRFM%} ;;
+        label: "GASTAN MODERADO"
+      }
+
+      #cliente GASTAN POCO
+      when: {
+        sql: ${TABLE}.ticketPromedio >= {% parameter limInfTicketRFM%} and ${TABLE}.ticketPromedio <= {% parameter limSupTicketRFM%} ;;
+        label: "GASTAN POCO"
+      }
+
+      else: "(not set)"
+    }
+  }
+
+
+
+
+
+
+
+
+
 
   set: detail {
     fields: [
