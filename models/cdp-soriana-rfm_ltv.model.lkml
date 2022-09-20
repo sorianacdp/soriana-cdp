@@ -18,3 +18,4 @@ include: "/views/cdp-soriana-RFM_LTV/*.view.lkml"                # include all v
 #     sql_on: ${users.id} = ${orders.user_id} ;;
 #   }
 # }
+explore: cdp_soriana_RFMLTV {}
