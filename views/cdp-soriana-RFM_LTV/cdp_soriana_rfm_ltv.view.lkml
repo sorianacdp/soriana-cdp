@@ -10,8 +10,13 @@ view: cdp_soriana_rfm_ltv {
     drill_fields: [detail*]
   }
 
+  measure: countdistinct {
+    type: count_distinct
+    sql: ${TABLE}.IdClienteSk ;;
+  }
+
   dimension: id_cliente_sk {
-    type: number
+    type: string
     sql: ${TABLE}.IdClienteSk ;;
   }
 
@@ -61,7 +66,7 @@ view: cdp_soriana_rfm_ltv {
   }
 
   dimension: anio_mes {
-    type: number
+    type: string
     sql: ${TABLE}.AnioMes ;;
   }
 
