@@ -1,7 +1,7 @@
 view: cdp_soriana_segmentacion_dinamico {
   derived_table: {
     sql: SELECT *
-        FROM `costumer-data-proyect.customer_data_platform.cdp-soriana-segmentacionClientesCLC`
+        FROM `costumer-data-proyect.customer_data_platform.cdp-soriana-RFM_LTV`
       ;;
   }
 
