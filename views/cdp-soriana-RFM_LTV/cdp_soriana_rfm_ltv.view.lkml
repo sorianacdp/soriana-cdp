@@ -230,18 +230,18 @@ view: cdp_soriana_rfm_ltv {
     case: {
       #GASTAN MUCHO
       when: {
-        sql: ${TABLE}.ticketPromedio > {% parameter limSupTicketRFM%} ;;
+        sql: ticket_promedio > {% parameter limSupTicketRFM%} and tipo_cliente= "CLIENTE PREMIUM" and  ;;
         label: "GASTAN MUCHO"
       }
       #cliente GASTAN MODERADO
       when: {
-        sql: ${TABLE}.ticketPromedio >= {% parameter limInfTicketRFM%} and ${TABLE}.ticketPromedio <= {% parameter limSupTicketRFM%} ;;
+        sql: (ticket_promedio >= {% parameter limInfTicketRFM%} and ticket_promedio <= {% parameter limSupTicketRFM%}) ;;
         label: "GASTAN MODERADO"
       }
 
       #cliente GASTAN POCO
       when: {
-        sql: ${TABLE}.ticketPromedio >= {% parameter limInfTicketRFM%} and ${TABLE}.ticketPromedio <= {% parameter limSupTicketRFM%} ;;
+        sql: (ticket_promedio < {% parameter limSupTicketRFM%}) ;;
         label: "GASTAN POCO"
       }
 
