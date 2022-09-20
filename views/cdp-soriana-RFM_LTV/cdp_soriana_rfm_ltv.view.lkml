@@ -175,6 +175,44 @@ view: cdp_soriana_rfm_ltv {
     sql: ${TABLE}.categoriaVisto5 ;;
   }
 
+
+  measure: clientePremium {
+    type: count_distinct
+    sql: ${TABLE}.IdClienteSk ;;
+    filters: [tipo_cliente: "CLIENTE PREMIUM"]
+  }
+
+  measure: clienteValioso {
+    type: count_distinct
+    sql: ${TABLE}.IdClienteSk ;;
+    filters: [tipo_cliente: "CLIENTE VALIOSO"]
+  }
+
+  measure: clientePotencial {
+    type: count_distinct
+    sql: ${TABLE}.IdClienteSk ;;
+    filters: [tipo_cliente: "CLIENTE POTENCIAL"]
+  }
+
+  measure: clienteNoComprometido {
+    type: count_distinct
+    sql: ${TABLE}.IdClienteSk ;;
+    filters: [tipo_cliente: "NO COMPROMETIDO"]
+  }
+
+  measure: clienteNuevo {
+    type: count_distinct
+    sql: ${TABLE}.IdClienteSk ;;
+    filters: [tipo_cliente: "CLIENTE NUEVO"]
+  }
+
+  measure: clienteProspecto {
+    type: count_distinct
+    sql: ${TABLE}.IdClienteSk ;;
+    filters: [tipo_cliente: "CLIENTE PROSPECTO"]
+  }
+
+
   set: detail {
     fields: [
       id_cliente_sk,
