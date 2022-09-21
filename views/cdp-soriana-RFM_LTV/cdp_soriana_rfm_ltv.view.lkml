@@ -65,9 +65,14 @@ view: cdp_soriana_rfm_ltv {
     sql: ${TABLE}.haceNSemanas ;;
   }
 
-  dimension: anio_mes {
+  dimension: anio {
     type: string
-    sql: ${TABLE}.AnioMes ;;
+    sql: ${TABLE}.anio ;;
+  }
+
+  dimension: mes {
+    type: string
+    sql: ${TABLE}.mes ;;
   }
 
   dimension: fecha_nacimiento_soriana {
@@ -174,43 +179,145 @@ view: cdp_soriana_rfm_ltv {
     type: string
     sql: ${TABLE}.categoriaVisto5 ;;
   }
+############################tipo de cliente CLC
+#################
 
+  parameter: limSupCalClient {
+    type: number
+    default_value: "570"
+  }
+
+  parameter: limInfCalClient {
+    type: number
+    default_value: "150"
+
+  }
+
+  parameter: conteoR4{
+    type: number
+    default_value: "4"
+
+  }
+  parameter: conteoR3 {
+    type: number
+    default_value: "3"
+
+  }
+
+  parameter: conteoR1 {
+    type: number
+    default_value: "1"
+
+  }
+  parameter: conteoR0 {
+    type: number
+    default_value: "0"
+  }
+
+  dimension: tipoClienteCLC {
+    case: {
+      #cliente nuevo
+      when: {
+        sql: ${TABLE}.conteoCompras = {% parameter conteoR1%} ;;
+        label: "CLIENTE NUEVO"
+      }
+      #cliente prospecto
+      when: {
+        sql: ${TABLE}.conteoCompras = {% parameter conteoR0%} ;;
+        label: "CLIENTE PROSPECTO"
+      }
+      #cliente premium
+      when: {
+        sql: (${TABLE}.conteoCompras >= {% parameter conteoR4%}) and (${TABLE}.ticketPromedio > {% parameter limSupCalClient%})   ;;
+        label: "CLIENTE PREMIUM"
+      }
+
+      #cliente valiosos
+      when: {
+        sql: (${TABLE}.conteoCompras >= {% parameter conteoR3%} and ${TABLE}.conteoCompras < {% parameter conteoR4%} ) and (${TABLE}.ticketPromedio > {% parameter limSupCalClient%}) ;;
+        label: "CLIENTE VALIOSO"
+      }
+      when: {
+        sql: (${TABLE}.conteoCompras >= {% parameter conteoR4%}) and (${TABLE}.ticketPromedio >= {% parameter limInfCalClient%} and ${TABLE}.ticketPromedio <= {% parameter limSupCalClient%}) ;;
+        label: "CLIENTE VALIOSO"
+      }
+
+      #cliente potencial
+      when: {
+        sql: (${TABLE}.conteoCompras > {% parameter conteoR1%} and ${TABLE}.conteoCompras < {% parameter conteoR3%} ) and (${TABLE}.ticketPromedio > {% parameter limSupCalClient%}) ;;
+        label: "CLIENTE POTENCIAL"
+      }
+      when: {
+        sql: (${TABLE}.conteoCompras >= {% parameter conteoR3%} and ${TABLE}.conteoCompras < {% parameter conteoR4%}) and (${TABLE}.ticketPromedio >= {% parameter limInfCalClient%} and ${TABLE}.ticketPromedio <= {% parameter limSupCalClient%}) ;;
+        label: "CLIENTE POTENCIAL"
+      }
+      when: {
+        sql: (${TABLE}.conteoCompras >= {% parameter conteoR4%}) and (${TABLE}.ticketPromedio < {% parameter limInfCalClient%} ) ;;
+        label: "CLIENTE POTENCIAL"
+      }
+
+      # cliente no comprometido
+      when: {
+        sql: (${TABLE}.conteoCompras >= {% parameter conteoR3%} and ${TABLE}.conteoCompras < {% parameter conteoR4%}) and (${TABLE}.ticketPromedio < {% parameter limInfCalClient%} ) ;;
+        label: "NO COMPROMETIDO"
+      }
+      when: {
+        sql: (${TABLE}.conteoCompras > {% parameter conteoR1%} and ${TABLE}.conteoCompras < {% parameter conteoR3%}) and (${TABLE}.ticketPromedio < {% parameter limInfCalClient%} ) ;;
+        label: "NO COMPROMETIDO"
+      }
+      when: {
+        sql: (${TABLE}.conteoCompras > {% parameter conteoR1%} and ${TABLE}.conteoCompras <  {% parameter conteoR3%}) and (${TABLE}.ticketPromedio >= {% parameter limInfCalClient%} and ${TABLE}.ticketPromedio <= {% parameter limSupCalClient%}) ;;
+        label: "NO COMPROMETIDO"
+      }
+
+      else: "(not set)"
+    }
+  }
+
+
+
+
+
+#####################conteo de clientes por calificacion
 
   measure: clientePremium {
     type: count_distinct
     sql: ${TABLE}.IdClienteSk ;;
-    filters: [tipo_cliente: "CLIENTE PREMIUM"]
+    filters: [tipoClienteCLC: "CLIENTE PREMIUM"]
   }
 
   measure: clienteValioso {
     type: count_distinct
     sql: ${TABLE}.IdClienteSk ;;
-    filters: [tipo_cliente: "CLIENTE VALIOSO"]
+    filters: [tipoClienteCLC: "CLIENTE VALIOSO"]
   }
 
   measure: clientePotencial {
     type: count_distinct
     sql: ${TABLE}.IdClienteSk ;;
-    filters: [tipo_cliente: "CLIENTE POTENCIAL"]
+    filters: [tipoClienteCLC: "CLIENTE POTENCIAL"]
   }
 
   measure: clienteNoComprometido {
     type: count_distinct
     sql: ${TABLE}.IdClienteSk ;;
-    filters: [tipo_cliente: "NO COMPROMETIDO"]
+    filters: [tipoClienteCLC: "NO COMPROMETIDO"]
   }
 
   measure: clienteNuevo {
     type: count_distinct
     sql: ${TABLE}.IdClienteSk ;;
-    filters: [tipo_cliente: "CLIENTE NUEVO"]
+    filters: [tipoClienteCLC: "CLIENTE NUEVO"]
   }
 
   measure: clienteProspecto {
     type: count_distinct
     sql: ${TABLE}.IdClienteSk ;;
-    filters: [tipo_cliente: "CLIENTE PROSPECTO"]
+    filters: [tipoClienteCLC: "CLIENTE PROSPECTO"]
   }
+
+
+
 
 ######### Calculo RFM ##################
 ########################################
@@ -226,37 +333,72 @@ view: cdp_soriana_rfm_ltv {
   }
 
 
-  dimension: tipoCliente {
+  dimension: RFMClientesNuevos {
     case: {
       #GASTAN MUCHO
       when: {
-        sql: ticket_promedio > {% parameter limSupTicketRFM%} and tipo_cliente= "CLIENTE PREMIUM" and  ;;
+        sql: ${TABLE}.ticketPromedio > {% parameter limSupTicketRFM%} ;;
         label: "GASTAN MUCHO"
       }
       #cliente GASTAN MODERADO
       when: {
-        sql: (ticket_promedio >= {% parameter limInfTicketRFM%} and ticket_promedio <= {% parameter limSupTicketRFM%}) ;;
+        sql: (${TABLE}.ticketPromedio >= {% parameter limInfTicketRFM%} and ${TABLE}.ticketPromedio <= {% parameter limSupTicketRFM%}) ;;
         label: "GASTAN MODERADO"
       }
 
       #cliente GASTAN POCO
       when: {
-        sql: (ticket_promedio < {% parameter limSupTicketRFM%}) ;;
+        sql: (${TABLE}.ticketPromedio < {% parameter limInfTicketRFM%}) ;;
         label: "GASTAN POCO"
       }
 
       else: "(not set)"
     }
   }
+  #################################################
+
+  ############## CALCULO LTV ###########################
+  #######################################################
+
+  ###suma ticket por tipo cliente
+  measure: tikclientePremium {
+    type: sum
+    sql: ${TABLE}.ticketPromedio ;;
+    filters: [tipoClienteCLC: "CLIENTE PREMIUM"]
+  }
+
+  measure: tikclienteValioso {
+    type: sum
+    sql: ${TABLE}.ticketPromedio ;;
+    filters: [tipoClienteCLC: "CLIENTE VALIOSO"]
+  }
+
+  measure: tikclientePotencial {
+    type: sum
+    sql: ${TABLE}.ticketPromedio ;;
+    filters: [tipoClienteCLC: "CLIENTE POTENCIAL"]
+  }
+
+  measure: tikclienteNoComprometido {
+    type: sum
+    sql: ${TABLE}.ticketPromedio ;;
+    filters: [tipoClienteCLC: "NO COMPROMETIDO"]
+  }
+
+  measure: tikclienteNuevo {
+    type: sum
+    sql: ${TABLE}.ticketPromedio ;;
+    filters: [tipoClienteCLC: "CLIENTE NUEVO"]
+  }
+
+  measure: tikclienteProspecto {
+    type: sum
+    sql: ${TABLE}.ticketPromedio ;;
+    filters: [tipoClienteCLC: "CLIENTE PROSPECTO"]
+  }
 
 
-
-
-
-
-
-
-
+  ##########################################################
 
   set: detail {
     fields: [
@@ -270,7 +412,8 @@ view: cdp_soriana_rfm_ltv {
       semana_ultima_compra,
       resta_semana,
       hace_nsemanas,
-      anio_mes,
+      anio,
+      mes,
       fecha_nacimiento_soriana,
       dias_de_vida,
       recencia,
@@ -281,6 +424,7 @@ view: cdp_soriana_rfm_ltv {
       ticket_promedio,
       canal_exclusivo,
       frecuenciade_compra,
+      tipoClienteCLC,
       tipo_cliente,
       categoria_compra1,
       categoria_compra2,
