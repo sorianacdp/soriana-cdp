@@ -397,7 +397,10 @@ view: cdp_soriana_rfm_ltv {
     filters: [tipoClienteCLC: "CLIENTE PROSPECTO"]
   }
 
-
+  dimension: mapa {
+    map_layer_name: mexico
+    sql: sql: ${TABLE}.Estado  ;;
+  }
   ##########################################################
 
   set: detail {
