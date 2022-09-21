@@ -9,6 +9,22 @@ view: vista_360_complemento {
     drill_fields: [detail*]
   }
 
+  measure: plataformaAndroid {
+    type: count_distinct
+    sql: ${TABLE}.plataforma ;;
+    filters: [plataforma: "ANDROID"]
+  }
+  measure: plataformaIOS {
+    type: count_distinct
+    sql: ${TABLE}.plataforma ;;
+    filters: [plataforma: "IOS"]
+  }
+  measure: plataformaWEB {
+    type: count_distinct
+    sql: ${TABLE}.plataforma ;;
+    filters: [plataforma: "WEB"]
+  }
+
   dimension: rownumber_correo {
     type: number
     sql: ${TABLE}.RownumberCorreo ;;
