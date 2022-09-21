@@ -289,6 +289,11 @@ view: vista_360_complemento {
     sql: ${TABLE}.SemanaSesionesGA ;;
   }
 
+  dimension: plataforma {
+    type: string
+    sql: ${TABLE}.plataforma ;;
+  }
+
   dimension: usuario_logueado {
     type: string
     sql: ${TABLE}.usuarioLogueado ;;
@@ -602,6 +607,7 @@ view: vista_360_complemento {
       ultima_modificacion_cdp_time,
       rownumber_sesiones_ga,
       semana_sesiones_ga,
+      plataforma,
       usuario_logueado,
       tipo_sesion,
       busquedas,
