@@ -399,7 +399,7 @@ view: cdp_soriana_rfm_ltv {
 
   dimension: mapa {
     map_layer_name: mexico
-    sql: sql: ${TABLE}.Estado  ;;
+    sql: ${TABLE}.Estado  ;;
   }
   ##########################################################
 
