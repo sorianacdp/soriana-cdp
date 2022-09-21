@@ -9,6 +9,22 @@ view: vista_360_complemento {
     drill_fields: [detail*]
   }
 
+  measure: plataformaAndroid {
+    type: count_distinct
+    sql: ${TABLE}.idClienteSk ;;
+    filters: [plataforma: "ANDROID"]
+  }
+  measure: plataformaIOS {
+    type: count_distinct
+    sql: ${TABLE}.idClienteSk ;;
+    filters: [plataforma: "IOS"]
+  }
+  measure: plataformaWEB {
+    type: count_distinct
+    sql: ${TABLE}.idClienteSk ;;
+    filters: [plataforma: "WEB"]
+  }
+
   dimension: rownumber_correo {
     type: number
     sql: ${TABLE}.RownumberCorreo ;;
@@ -289,6 +305,11 @@ view: vista_360_complemento {
     sql: ${TABLE}.SemanaSesionesGA ;;
   }
 
+  dimension: plataforma {
+    type: string
+    sql: ${TABLE}.plataforma ;;
+  }
+
   dimension: usuario_logueado {
     type: string
     sql: ${TABLE}.usuarioLogueado ;;
@@ -319,10 +340,9 @@ view: vista_360_complemento {
     sql: ${TABLE}.tiempoEngagementMin ;;
   }
 
-  dimension: estado_sesion {
-    type: string
+  dimension: estados_sesiones {
     sql: ${TABLE}.estadoSesion ;;
-
+    map_layer_name: countries
   }
 
   dimension: rownumber_top_ranking_busquedas {
@@ -603,13 +623,14 @@ view: vista_360_complemento {
       ultima_modificacion_cdp_time,
       rownumber_sesiones_ga,
       semana_sesiones_ga,
+      plataforma,
       usuario_logueado,
       tipo_sesion,
       busquedas,
       compras,
       media_source,
       tiempo_engagement_min,
-      estado_sesion,
+      estados_sesiones,
       rownumber_top_ranking_busquedas,
       numero_semana_top_ranking_busquedas,
       usario_logeado_top5,
