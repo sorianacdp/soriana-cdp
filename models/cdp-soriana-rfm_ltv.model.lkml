@@ -1,7 +1,7 @@
 connection: "cdp-soriana-dataset-prod"
 
 include: "/views/cdp-soriana-RFM_LTV/*.view.lkml"                # include all views in the views/ folder in this project
-# include: "/**/*.view.lkml"                 # include all views in this project
+# include: "/maps/*.view.lkml"                 # include all views in this project
 # include: "my_dashboard.dashboard.lookml"   # include a LookML dashboard called my_dashboard
 
 # # Select the views that should be a part of this model,
@@ -18,4 +18,9 @@ include: "/views/cdp-soriana-RFM_LTV/*.view.lkml"                # include all v
 #     sql_on: ${users.id} = ${orders.user_id} ;;
 #   }
 # }
-explore: cdp_soriana_rfm_ltv {}
+
+explore: cdp_soriana_rfm_ltv{}
+
+map_layer: mexico {
+  file: "/maps/mx_tj.json"
+}
