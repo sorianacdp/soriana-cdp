@@ -1,6 +1,8 @@
 connection: "cdp-soriana-dataset-prod"
 
-include: "/views/cdp-soriana-vista-360/*.view.lkml"                # include all views in the views/ folder in this project
+include: "/views/cdp-soriana-vista-360/*.view.lkml"
+
+# include all views in the views/ folder in this project
 # include: "/**/*.view.lkml"                 # include all views in this project
 # include: "my_dashboard.dashboard.lookml"   # include a LookML dashboard called my_dashboard
 
@@ -18,6 +20,6 @@ include: "/views/cdp-soriana-vista-360/*.view.lkml"                # include all
 #     sql_on: ${users.id} = ${orders.user_id} ;;
 #   }
 # }
-explore: cdp_synapse_clientes_productivos {}
-explore: cdp_soriana_tipos_usuarios {}
+
 explore: view360 {}
+explore: vista_360_complemento {}
