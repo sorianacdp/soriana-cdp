@@ -22,7 +22,7 @@ include: "/views/cdp-soriana-vista-360/*.view.lkml"
 # }
 
 map_layer: mexico {
-  file: "/maps/mx_tj.json"
+  file: "/maps/mexico.json"
 }
 
 explore: view360 {}
