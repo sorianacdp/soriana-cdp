@@ -332,6 +332,7 @@ view: cdp_soriana_rfm_ltv {
     default_value: "1000"
   }
 
+#######################################################################
 
   dimension: RFMClientesNuevos {
     case: {
@@ -356,6 +357,40 @@ view: cdp_soriana_rfm_ltv {
     }
   }
   #################################################
+#######################################################################
+
+
+  dimension: RFMClientesPremium1 {
+    case: {
+      #GASTAN MUCHO
+      when: {
+        sql: ${TABLE}.ticketPromedio > {% parameter limSupTicketRFM%} and ${TABLE}.frecuenciadeCompra='COMPRA CADA SEMANA' ;;
+        label: "Clientes Premium que Gastan Mucho y Compran Seguido 1 semana"
+      }
+      else: "(not set)"
+    }
+  }
+
+  dimension: RFMClientesPremium2 {
+    case: {
+      #GASTAN MUCHO
+      when: {
+        sql: ${TABLE}.ticketPromedio > {% parameter limSupTicketRFM%} and ${TABLE}.frecuenciadeCompra='COMPRA CADA DOS SEMANAS' ;;
+        label: "Clientes Premium que Gastan Mucho y Compran Seguido 2 semanas"
+      }
+      else: "(not set)"
+    }
+  }
+  #####
+  #################################################
+
+
+
+
+
+
+
+
 
   ############## CALCULO LTV ###########################
   #######################################################
