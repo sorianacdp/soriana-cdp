@@ -334,19 +334,30 @@ view: cdp_soriana_rfm_ltv {
 
 #######################################################################
 
-  dimension: RFMClientesNuevos {
+  dimension: RFMClientesNuevosgm {
     case: {
       #GASTAN MUCHO
       when: {
         sql: ${TABLE}.ticketPromedio > {% parameter limSupTicketRFM%} ;;
         label: "GASTAN MUCHO"
       }
+      else: "(not set)"
+    }
+  }
+
+  dimension: RFMClientesNuevosgmo {
+    case: {
       #cliente GASTAN MODERADO
       when: {
         sql: (${TABLE}.ticketPromedio >= {% parameter limInfTicketRFM%} and ${TABLE}.ticketPromedio <= {% parameter limSupTicketRFM%}) ;;
         label: "GASTAN MODERADO"
-      }
+        }
+      else: "(not set)"
+    }
+  }
 
+  dimension: RFMClientesNuevosgmp {
+    case: {
       #cliente GASTAN POCO
       when: {
         sql: (${TABLE}.ticketPromedio < {% parameter limInfTicketRFM%}) ;;
@@ -359,13 +370,13 @@ view: cdp_soriana_rfm_ltv {
   #################################################
 #######################################################################
 
-
+###########GASTAN MUCHO
   dimension: RFMClientesPremium1 {
     case: {
       #GASTAN MUCHO
       when: {
         sql: ${TABLE}.ticketPromedio > {% parameter limSupTicketRFM%} and ${TABLE}.frecuenciadeCompra='COMPRA CADA SEMANA' ;;
-        label: "Clientes Premium que Gastan Mucho y Compran Seguido 1 semana"
+        label: "Conteo de Clientes"
       }
       else: "(not set)"
     }
@@ -376,11 +387,158 @@ view: cdp_soriana_rfm_ltv {
       #GASTAN MUCHO
       when: {
         sql: ${TABLE}.ticketPromedio > {% parameter limSupTicketRFM%} and ${TABLE}.frecuenciadeCompra='COMPRA CADA DOS SEMANAS' ;;
-        label: "Clientes Premium que Gastan Mucho y Compran Seguido 2 semanas"
+        label: "Conteo de Clientes"
       }
       else: "(not set)"
     }
   }
+
+  dimension: RFMClientesValioso3 {
+    case: {
+      #GASTAN MUCHO
+      when: {
+        sql: ${TABLE}.ticketPromedio > {% parameter limSupTicketRFM%} and ${TABLE}.frecuenciadeCompra='COMPRA CADA TRES SEMANAS' ;;
+        label: "Conteo de Clientes"
+      }
+      else: "(not set)"
+    }
+  }
+
+  dimension: RFMClientesValioso4 {
+    case: {
+      #GASTAN MUCHO
+      when: {
+        sql: ${TABLE}.ticketPromedio > {% parameter limSupTicketRFM%} and ${TABLE}.frecuenciadeCompra='COMPRA CADA CUATRO SEMANAS' ;;
+        label: "Conteo de Clientes"
+      }
+      else: "(not set)"
+    }
+  }
+
+  dimension: RFMClientesPotencial6 {
+    case: {
+      #GASTAN MUCHO
+      when: {
+        sql: ${TABLE}.ticketPromedio > {% parameter limSupTicketRFM%} and ${TABLE}.frecuenciadeCompra='COMPRA CADA SEIS SEMANAS' ;;
+        label: "Conteo de Clientes"
+      }
+      else: "(not set)"
+    }
+  }
+
+###########GASTAN MODERADO
+  dimension: RFMClientesValioso1 {
+    case: {
+      #GASTAN MODERADO
+      when: {
+        sql: (${TABLE}.ticketPromedio >= {% parameter limInfTicketRFM%} and ${TABLE}.ticketPromedio <= {% parameter limSupTicketRFM%}) and ${TABLE}.frecuenciadeCompra='COMPRA CADA SEMANA' ;;
+        label: "Conteo de Clientes"
+      }
+      else: "(not set)"
+    }
+  }
+
+  dimension: RFMClientesValioso2 {
+    case: {
+      #GASTAN MODERADO
+      when: {
+        sql: (${TABLE}.ticketPromedio >= {% parameter limInfTicketRFM%} and ${TABLE}.ticketPromedio <= {% parameter limSupTicketRFM%}) and ${TABLE}.frecuenciadeCompra='COMPRA CADA DOS SEMANAS' ;;
+        label: "Conteo de Clientes"
+      }
+      else: "(not set)"
+    }
+  }
+
+  dimension: RFMClientesPotencial3 {
+    case: {
+      #GASTAN MODERADO
+      when: {
+        sql: (${TABLE}.ticketPromedio >= {% parameter limInfTicketRFM%} and ${TABLE}.ticketPromedio <= {% parameter limSupTicketRFM%}) and ${TABLE}.frecuenciadeCompra='COMPRA CADA TRES SEMANAS' ;;
+        label: "Conteo de Clientes"
+      }
+      else: "(not set)"
+    }
+  }
+
+  dimension: RFMClientesPotencial4 {
+    case: {
+      #GASTAN MODERADO
+      when: {
+        sql: (${TABLE}.ticketPromedio >= {% parameter limInfTicketRFM%} and ${TABLE}.ticketPromedio <= {% parameter limSupTicketRFM%}) and ${TABLE}.frecuenciadeCompra='COMPRA CADA CUATRO SEMANAS' ;;
+        label: "Conteo de Clientes"
+      }
+      else: "(not set)"
+    }
+  }
+
+  dimension: RFMClientesNoComprometido6 {
+    case: {
+      #GASTAN MODERADO
+      when: {
+        sql: (${TABLE}.ticketPromedio >= {% parameter limInfTicketRFM%} and ${TABLE}.ticketPromedio <= {% parameter limSupTicketRFM%}) and ${TABLE}.frecuenciadeCompra='COMPRA CADA SEIS SEMANAS' ;;
+        label: "Conteo de Clientes"
+      }
+      else: "(not set)"
+    }
+  }
+
+###########GASTAN POCO
+  dimension: RFMClientesPotencial1 {
+    case: {
+      #GASTAN POCO
+      when: {
+        sql: (${TABLE}.ticketPromedio < {% parameter limInfTicketRFM%}) and ${TABLE}.frecuenciadeCompra='COMPRA CADA SEMANA' ;;
+        label: "Conteo de Clientes"
+      }
+      else: "(not set)"
+    }
+  }
+
+  dimension: RFMClientesPotencial2 {
+    case: {
+      #GASTAN POCO
+      when: {
+        sql: (${TABLE}.ticketPromedio < {% parameter limInfTicketRFM%}) and ${TABLE}.frecuenciadeCompra='COMPRA CADA DOS SEMANAS' ;;
+        label: "Conteo de Clientes"
+      }
+      else: "(not set)"
+    }
+  }
+
+  dimension: RFMClientesNoComprometido3 {
+    case: {
+      #GASTAN POCO
+      when: {
+        sql: (${TABLE}.ticketPromedio < {% parameter limInfTicketRFM%}) and ${TABLE}.frecuenciadeCompra='COMPRA CADA TRES SEMANAS' ;;
+        label: "Conteo de Clientes"
+      }
+      else: "(not set)"
+    }
+  }
+
+  dimension: RFMClientesNoComprometido4 {
+    case: {
+      #GASTAN POCO
+      when: {
+        sql: (${TABLE}.ticketPromedio < {% parameter limInfTicketRFM%}) and ${TABLE}.frecuenciadeCompra='COMPRA CADA CUATRO SEMANAS' ;;
+        label: "Conteo de Clientes"
+      }
+      else: "(not set)"
+    }
+  }
+
+  dimension: RFMClientesNoComprometido6_2 {
+    case: {
+      #GASTAN POCO
+      when: {
+        sql: (${TABLE}.ticketPromedio < {% parameter limInfTicketRFM%}) and ${TABLE}.frecuenciadeCompra='COMPRA CADA SEIS SEMANAS' ;;
+        label: "Conteo de Clientes"
+      }
+      else: "(not set)"
+    }
+  }
+
+
   #####
   #################################################
 
