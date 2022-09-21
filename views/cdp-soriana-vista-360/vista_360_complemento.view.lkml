@@ -11,17 +11,17 @@ view: vista_360_complemento {
 
   measure: plataformaAndroid {
     type: count_distinct
-    sql: ${TABLE}.plataforma ;;
+    sql: ${TABLE}.usuarioLogueado ;;
     filters: [plataforma: "ANDROID"]
   }
   measure: plataformaIOS {
     type: count_distinct
-    sql: ${TABLE}.plataforma ;;
+    sql: ${TABLE}.usuarioLogueado ;;
     filters: [plataforma: "IOS"]
   }
   measure: plataformaWEB {
     type: count_distinct
-    sql: ${TABLE}.plataforma ;;
+    sql: ${TABLE}.usuarioLogueado ;;
     filters: [plataforma: "WEB"]
   }
 
