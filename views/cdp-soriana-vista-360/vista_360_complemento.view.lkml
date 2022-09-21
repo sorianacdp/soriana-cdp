@@ -342,7 +342,7 @@ view: vista_360_complemento {
 
   dimension: estados_sesiones {
     sql: ${TABLE}.estadoSesion ;;
-    map_layer_name: countries
+    map_layer_name: mexico
   }
 
   dimension: rownumber_top_ranking_busquedas {
