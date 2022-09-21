@@ -48,6 +48,21 @@ view: cdp_soriana_tipos_usuario_ultima_compra {
     sql: ${TABLE}.idTienda ;;
   }
 
+  dimension: Tienda {
+    type: string
+    sql: ${TABLE}.Tienda ;;
+  }
+
+  dimension: Formato {
+    type: string
+    sql: ${TABLE}.Formato ;;
+  }
+
+  dimension: Estado {
+    type: string
+    sql: ${TABLE}.Estado ;;
+  }
+
 
   dimension: fechaNacimientoSoriana {
     type: string
@@ -64,6 +79,10 @@ view: cdp_soriana_tipos_usuario_ultima_compra {
     sql: ${TABLE}.omnicanal ;;
   }
 
+  dimension: canalExclusivo {
+    type: string
+    sql: ${TABLE}.canalExclusivo ;;
+  }
   dimension: nombre {
     type: string
     sql: ${TABLE}.nombre ;;
