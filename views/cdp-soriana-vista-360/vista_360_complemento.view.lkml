@@ -319,10 +319,9 @@ view: vista_360_complemento {
     sql: ${TABLE}.tiempoEngagementMin ;;
   }
 
-  dimension: estado_sesion {
-    type: string
+  dimension: estados_sesiones {
     sql: ${TABLE}.estadoSesion ;;
-
+    map_layer_name: countries
   }
 
   dimension: rownumber_top_ranking_busquedas {
@@ -609,7 +608,7 @@ view: vista_360_complemento {
       compras,
       media_source,
       tiempo_engagement_min,
-      estado_sesion,
+      estados_sesiones,
       rownumber_top_ranking_busquedas,
       numero_semana_top_ranking_busquedas,
       usario_logeado_top5,
