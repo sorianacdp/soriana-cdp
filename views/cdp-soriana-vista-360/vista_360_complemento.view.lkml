@@ -362,27 +362,27 @@ view: vista_360_complemento {
 
   dimension: top_producto1 {
     type: string
-    sql: ${TABLE}.topProducto1 ;;
+    sql: ${TABLE}.topCategoriaGA1 ;;
   }
 
   dimension: top_producto2 {
     type: string
-    sql: ${TABLE}.topProducto2 ;;
+    sql: ${TABLE}.topCategoriaGA2 ;;
   }
 
   dimension: top_producto3 {
     type: string
-    sql: ${TABLE}.topProducto3 ;;
+    sql: ${TABLE}.topCategoriaGA3 ;;
   }
 
   dimension: top_producto4 {
     type: string
-    sql: ${TABLE}.topProducto4 ;;
+    sql: ${TABLE}.topCategoriaGA4 ;;
   }
 
   dimension: top_producto5 {
     type: string
-    sql: ${TABLE}.topProducto5 ;;
+    sql: ${TABLE}.topCategoriaGA5 ;;
   }
 
   dimension: rownumber_clc {
