@@ -546,10 +546,20 @@ view: cdp_soriana_rfm_ltv {
 
   #####
   #################################################
+  measure: promTicket{
+    type: sum
+    sql: ${TABLE}.ticketPromedio ;;
+  }
 
+  measure: promConteoCompras{
+    type: sum
+    sql: ${TABLE}.conteoCompras ;;
+  }
 
-
-
+  measure: promRecencia{
+    type: average
+    sql: ${TABLE}.recencia ;;
+  }
 
 
 
@@ -636,7 +646,11 @@ view: cdp_soriana_rfm_ltv {
       categoria_visto2,
       categoria_visto3,
       categoria_visto4,
-      categoria_visto5
+      categoria_visto5,
+      promTicket,
+      promConteoCompras,
+      promRecencia
+
     ]
   }
 }
