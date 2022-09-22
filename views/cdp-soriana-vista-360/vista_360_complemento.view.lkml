@@ -360,29 +360,29 @@ view: vista_360_complemento {
     sql: ${TABLE}.UsarioLogeadoTop5 ;;
   }
 
-  dimension: top_producto1 {
+  dimension: top_categoriaGA1 {
     type: string
-    sql: ${TABLE}.topProducto1 ;;
+    sql: ${TABLE}.topCategoriaGA1 ;;
   }
 
-  dimension: top_producto2 {
+  dimension: top_categoriaGA2 {
     type: string
-    sql: ${TABLE}.topProducto2 ;;
+    sql: ${TABLE}.topCategoriaGA2 ;;
   }
 
-  dimension: top_producto3 {
+  dimension: top_categoriaGA3 {
     type: string
-    sql: ${TABLE}.topProducto3 ;;
+    sql: ${TABLE}.topCategoriaGA3 ;;
   }
 
-  dimension: top_producto4 {
+  dimension: top_categoriaGA4 {
     type: string
-    sql: ${TABLE}.topProducto4 ;;
+    sql: ${TABLE}.topCategoriaGA4 ;;
   }
 
-  dimension: top_producto5 {
+  dimension: top_categoriaGA5 {
     type: string
-    sql: ${TABLE}.topProducto5 ;;
+    sql: ${TABLE}.topCategoriaGA5 ;;
   }
 
   dimension: rownumber_clc {
@@ -634,11 +634,11 @@ view: vista_360_complemento {
       rownumber_top_ranking_busquedas,
       numero_semana_top_ranking_busquedas,
       usario_logeado_top5,
-      top_producto1,
-      top_producto2,
-      top_producto3,
-      top_producto4,
-      top_producto5,
+      top_categoriaGA1,
+      top_categoriaGA2,
+      top_categoriaGA3,
+      top_categoriaGA4,
+      top_categoriaGA5,
       rownumber_clc,
       id_cliente,
       grcliente_clc,
