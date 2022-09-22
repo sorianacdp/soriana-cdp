@@ -95,6 +95,11 @@ view: cdp_soriana_rfm_ltv {
     sql: ${TABLE}.fechaUltimaCompra ;;
   }
 
+  dimension: semana_frecuencia_compra {
+    type: string
+    sql: ${TABLE}.SemanaFrecuenciaCompra ;;
+  }
+
   dimension: sexo {
     type: string
     sql: ${TABLE}.Sexo ;;
