@@ -451,7 +451,7 @@ view: vista_360_complemento {
   }
 
   dimension: semana {
-    type: string
+    type: number
     sql: ${TABLE}.semana ;;
   }
 
