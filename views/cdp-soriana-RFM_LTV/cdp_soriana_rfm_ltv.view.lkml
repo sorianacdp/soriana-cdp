@@ -380,7 +380,7 @@ view: cdp_soriana_rfm_ltv {
     case: {
       #GASTAN MUCHO
       when: {
-        sql: ${TABLE}.ticketPromedio > {% parameter limSupTicketRFM%} and ${TABLE}.frecuenciadeCompra='COMPRA CADA SEMANA' ;;
+        sql: ${TABLE}.ticketPromedio > {% parameter limSupTicketRFM%} and ${TABLE}.frecuenciadeCompra='COMPRA HACE UNA SEMANA' ;;
         label: "Conteo de Clientes"
       }
       else: "(not set)"
@@ -391,7 +391,7 @@ view: cdp_soriana_rfm_ltv {
     case: {
       #GASTAN MUCHO
       when: {
-        sql: ${TABLE}.ticketPromedio > {% parameter limSupTicketRFM%} and ${TABLE}.frecuenciadeCompra='COMPRA CADA DOS SEMANAS' ;;
+        sql: ${TABLE}.ticketPromedio > {% parameter limSupTicketRFM%} and ${TABLE}.frecuenciadeCompra='COMPRA HACE DOS SEMANAS' ;;
         label: "Conteo de Clientes"
       }
       else: "(not set)"
@@ -402,7 +402,7 @@ view: cdp_soriana_rfm_ltv {
     case: {
       #GASTAN MUCHO
       when: {
-        sql: ${TABLE}.ticketPromedio > {% parameter limSupTicketRFM%} and ${TABLE}.frecuenciadeCompra='COMPRA CADA TRES SEMANAS' ;;
+        sql: ${TABLE}.ticketPromedio > {% parameter limSupTicketRFM%} and ${TABLE}.frecuenciadeCompra='COMPRA HACE TRES SEMANAS' ;;
         label: "Conteo de Clientes"
       }
       else: "(not set)"
@@ -413,7 +413,7 @@ view: cdp_soriana_rfm_ltv {
     case: {
       #GASTAN MUCHO
       when: {
-        sql: ${TABLE}.ticketPromedio > {% parameter limSupTicketRFM%} and ${TABLE}.frecuenciadeCompra='COMPRA CADA CUATRO SEMANAS' ;;
+        sql: ${TABLE}.ticketPromedio > {% parameter limSupTicketRFM%} and ${TABLE}.frecuenciadeCompra='COMPRA HACE CUATRO SEMANAS' ;;
         label: "Conteo de Clientes"
       }
       else: "(not set)"
@@ -424,7 +424,7 @@ view: cdp_soriana_rfm_ltv {
     case: {
       #GASTAN MUCHO
       when: {
-        sql: ${TABLE}.ticketPromedio > {% parameter limSupTicketRFM%} and ${TABLE}.frecuenciadeCompra='COMPRA CADA SEIS SEMANAS' ;;
+        sql: ${TABLE}.ticketPromedio > {% parameter limSupTicketRFM%} and ${TABLE}.frecuenciadeCompra='COMPRA HACE SEIS SEMANAS' ;;
         label: "Conteo de Clientes"
       }
       else: "(not set)"
@@ -436,7 +436,7 @@ view: cdp_soriana_rfm_ltv {
     case: {
       #GASTAN MODERADO
       when: {
-        sql: (${TABLE}.ticketPromedio >= {% parameter limInfTicketRFM%} and ${TABLE}.ticketPromedio <= {% parameter limSupTicketRFM%}) and ${TABLE}.frecuenciadeCompra='COMPRA CADA SEMANA' ;;
+        sql: (${TABLE}.ticketPromedio >= {% parameter limInfTicketRFM%} and ${TABLE}.ticketPromedio <= {% parameter limSupTicketRFM%}) and ${TABLE}.frecuenciadeCompra='COMPRA HACE UNA SEMANA' ;;
         label: "Conteo de Clientes"
       }
       else: "(not set)"
@@ -447,7 +447,7 @@ view: cdp_soriana_rfm_ltv {
     case: {
       #GASTAN MODERADO
       when: {
-        sql: (${TABLE}.ticketPromedio >= {% parameter limInfTicketRFM%} and ${TABLE}.ticketPromedio <= {% parameter limSupTicketRFM%}) and ${TABLE}.frecuenciadeCompra='COMPRA CADA DOS SEMANAS' ;;
+        sql: (${TABLE}.ticketPromedio >= {% parameter limInfTicketRFM%} and ${TABLE}.ticketPromedio <= {% parameter limSupTicketRFM%}) and ${TABLE}.frecuenciadeCompra='COMPRA HACE DOS SEMANAS' ;;
         label: "Conteo de Clientes"
       }
       else: "(not set)"
@@ -458,7 +458,7 @@ view: cdp_soriana_rfm_ltv {
     case: {
       #GASTAN MODERADO
       when: {
-        sql: (${TABLE}.ticketPromedio >= {% parameter limInfTicketRFM%} and ${TABLE}.ticketPromedio <= {% parameter limSupTicketRFM%}) and ${TABLE}.frecuenciadeCompra='COMPRA CADA TRES SEMANAS' ;;
+        sql: (${TABLE}.ticketPromedio >= {% parameter limInfTicketRFM%} and ${TABLE}.ticketPromedio <= {% parameter limSupTicketRFM%}) and ${TABLE}.frecuenciadeCompra='COMPRA HACE TRES SEMANAS' ;;
         label: "Conteo de Clientes"
       }
       else: "(not set)"
@@ -469,7 +469,7 @@ view: cdp_soriana_rfm_ltv {
     case: {
       #GASTAN MODERADO
       when: {
-        sql: (${TABLE}.ticketPromedio >= {% parameter limInfTicketRFM%} and ${TABLE}.ticketPromedio <= {% parameter limSupTicketRFM%}) and ${TABLE}.frecuenciadeCompra='COMPRA CADA CUATRO SEMANAS' ;;
+        sql: (${TABLE}.ticketPromedio >= {% parameter limInfTicketRFM%} and ${TABLE}.ticketPromedio <= {% parameter limSupTicketRFM%}) and ${TABLE}.frecuenciadeCompra='COMPRA HACE CUATRO SEMANAS' ;;
         label: "Conteo de Clientes"
       }
       else: "(not set)"
@@ -480,7 +480,7 @@ view: cdp_soriana_rfm_ltv {
     case: {
       #GASTAN MODERADO
       when: {
-        sql: (${TABLE}.ticketPromedio >= {% parameter limInfTicketRFM%} and ${TABLE}.ticketPromedio <= {% parameter limSupTicketRFM%}) and ${TABLE}.frecuenciadeCompra='COMPRA CADA SEIS SEMANAS' ;;
+        sql: (${TABLE}.ticketPromedio >= {% parameter limInfTicketRFM%} and ${TABLE}.ticketPromedio <= {% parameter limSupTicketRFM%}) and ${TABLE}.frecuenciadeCompra='COMPRA HACE SEIS SEMANAS' ;;
         label: "Conteo de Clientes"
       }
       else: "(not set)"
@@ -492,7 +492,7 @@ view: cdp_soriana_rfm_ltv {
     case: {
       #GASTAN POCO
       when: {
-        sql: (${TABLE}.ticketPromedio < {% parameter limInfTicketRFM%}) and ${TABLE}.frecuenciadeCompra='COMPRA CADA SEMANA' ;;
+        sql: (${TABLE}.ticketPromedio < {% parameter limInfTicketRFM%}) and ${TABLE}.frecuenciadeCompra='COMPRA HACE UNA SEMANA' ;;
         label: "Conteo de Clientes"
       }
       else: "(not set)"
@@ -503,7 +503,7 @@ view: cdp_soriana_rfm_ltv {
     case: {
       #GASTAN POCO
       when: {
-        sql: (${TABLE}.ticketPromedio < {% parameter limInfTicketRFM%}) and ${TABLE}.frecuenciadeCompra='COMPRA CADA DOS SEMANAS' ;;
+        sql: (${TABLE}.ticketPromedio < {% parameter limInfTicketRFM%}) and ${TABLE}.frecuenciadeCompra='COMPRA HACE DOS SEMANAS' ;;
         label: "Conteo de Clientes"
       }
       else: "(not set)"
@@ -514,7 +514,7 @@ view: cdp_soriana_rfm_ltv {
     case: {
       #GASTAN POCO
       when: {
-        sql: (${TABLE}.ticketPromedio < {% parameter limInfTicketRFM%}) and ${TABLE}.frecuenciadeCompra='COMPRA CADA TRES SEMANAS' ;;
+        sql: (${TABLE}.ticketPromedio < {% parameter limInfTicketRFM%}) and ${TABLE}.frecuenciadeCompra='COMPRA HACE TRES SEMANAS' ;;
         label: "Conteo de Clientes"
       }
       else: "(not set)"
@@ -525,7 +525,7 @@ view: cdp_soriana_rfm_ltv {
     case: {
       #GASTAN POCO
       when: {
-        sql: (${TABLE}.ticketPromedio < {% parameter limInfTicketRFM%}) and ${TABLE}.frecuenciadeCompra='COMPRA CADA CUATRO SEMANAS' ;;
+        sql: (${TABLE}.ticketPromedio < {% parameter limInfTicketRFM%}) and ${TABLE}.frecuenciadeCompra='COMPRA HACE CUATRO SEMANAS' ;;
         label: "Conteo de Clientes"
       }
       else: "(not set)"
@@ -536,7 +536,7 @@ view: cdp_soriana_rfm_ltv {
     case: {
       #GASTAN POCO
       when: {
-        sql: (${TABLE}.ticketPromedio < {% parameter limInfTicketRFM%}) and ${TABLE}.frecuenciadeCompra='COMPRA CADA SEIS SEMANAS' ;;
+        sql: (${TABLE}.ticketPromedio < {% parameter limInfTicketRFM%}) and ${TABLE}.frecuenciadeCompra='COMPRA HACE SEIS SEMANAS' ;;
         label: "Conteo de Clientes"
       }
       else: "(not set)"
