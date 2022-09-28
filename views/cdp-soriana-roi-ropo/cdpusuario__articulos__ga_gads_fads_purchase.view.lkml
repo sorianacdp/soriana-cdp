@@ -2,6 +2,12 @@ view: cdpusuario__articulos__ga_gads_fads_purchase {
   sql_table_name: `costumer-data-proyect.customer_data_platform.cdp-usuario_ articulos _ga_gads_fads_purchase`
     ;;
 
+  measure: TotalVentaGAds {
+    type: sum
+    sql: ${TABLE}.precio_venta;;
+    filters: [nombre_campana_google_ads: "!=(not set)",nombre_campana_facebook_ads: "(not set)"]
+  }
+
   dimension: articulos_comprados {
     type: string
     sql: ${TABLE}.articulosComprados ;;
