@@ -5,7 +5,7 @@ view: cdpusuario__articulos__ga_gads_fads_purchase {
   measure: TotalVentaGAds {
     type: sum
     sql: ${TABLE}.precio_venta;;
-    filters: [nombre_campana_google_ads: "!=(not set)",nombre_campana_facebook_ads: "(not set)"]
+    filters: [nombre_campana_google_ads: "-(not set)",nombre_campana_facebook_ads: "(not set)"]
   }
 
   dimension: articulos_comprados {
