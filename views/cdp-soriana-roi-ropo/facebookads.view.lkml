@@ -41,7 +41,7 @@ view: facebookads {
 
   measure: CostoPromedio {
     type: average
-    sql: ${TABLE}.ingresoTotal;;
+    sql: ${TABLE}.totalCostoCampaniasFacebook;;
   }
 
   dimension: hace_nsemana_inicio {
