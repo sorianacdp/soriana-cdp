@@ -16,7 +16,10 @@ view: googleads {
     type: count
     drill_fields: [detail*]
   }
-
+  measure: TotalVentaGAds {
+    type: sum
+    sql: ${TABLE}.costoPorConversionGoogleAds;;
+  }
   dimension: hace_nsemana {
     type: number
     sql: ${TABLE}.HaceNSemana ;;
