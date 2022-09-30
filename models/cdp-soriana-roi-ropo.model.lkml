@@ -23,3 +23,4 @@ explore: cdpusuario__articulos__ga_gads_fads_purchase {}
 explore: cdpusuario__articulos__ga_gads_fads_view_item {}
 explore: facebookads {}
 explore: googleads {}
+explore: cdpsorianaticketsgaropo {}
