@@ -25,3 +25,4 @@ explore: facebookads {}
 explore: googleads {}
 explore: cdpsorianaticketsgaropo {}
 explore: semanavistayropo {}
+explore: googleadsingresosvscostos {}
