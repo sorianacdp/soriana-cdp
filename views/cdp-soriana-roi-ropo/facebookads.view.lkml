@@ -21,16 +21,23 @@ view: facebookads {
        totalClicksFacebook,
        totalCostoCampaniasFacebook
       FROM dataset
-       )
-       SELECT
-       --dateStart,
-       Extract(week from current_date)-SemanaInicio as HaceNSemanaInicio,
-       Extract(week from current_date)-SemanaFin as HaceNSemanaFinal,
-       sum(totalClicksFacebook) totalClicksFacebook,
-       sum(totalCostoCampaniasFacebook) totalCostoCampaniasFacebook
-       FROM dataset2
-       group by 1,2
-       order by 1,2
+), dataset3 as(
+SELECT
+  Extract(week from current_date)-SemanaFin as HaceNSemanaInicio,
+  sum(totalClicksFacebook) totalClicksFacebook,
+  (sum(totalCostoCampaniasFacebook) / Extract(week from current_date)-SemanaInicio)  totalCostoCampaniasFacebook,
+FROM dataset2
+--where Extract(week from current_date)-SemanaFin != Extract(week from current_date)-SemanaInicio
+group by 1, SemanaInicio
+order by 1
+)
+select
+HaceNSemanaInicio as HaceNSemana,
+AVG(totalClicksFacebook) as totalClicksFacebook,
+AVG(totalCostoCampaniasFacebook) as totalCostoCampaniasFacebook
+from dataset3
+group by 1
+order by HaceNSemanaInicio
        ;;
   }
 
@@ -40,18 +47,13 @@ view: facebookads {
   }
 
   measure: CostoPromedio {
-    type: average
+    type: sum
     sql: ${TABLE}.totalCostoCampaniasFacebook;;
   }
 
-  dimension: hace_nsemana_inicio {
+  dimension: hace_nsemana {
     type: number
-    sql: ${TABLE}.HaceNSemanaInicio ;;
-  }
-
-  dimension: hace_nsemana_final {
-    type: number
-    sql: ${TABLE}.HaceNSemanaFinal ;;
+    sql: ${TABLE}.HaceNSemana ;;
   }
 
   dimension: total_clicks_facebook {
@@ -65,6 +67,6 @@ view: facebookads {
   }
 
   set: detail {
-    fields: [hace_nsemana_inicio, hace_nsemana_final, total_clicks_facebook, total_costo_campanias_facebook]
+    fields: [hace_nsemana, total_clicks_facebook, total_costo_campanias_facebook]
   }
 }
