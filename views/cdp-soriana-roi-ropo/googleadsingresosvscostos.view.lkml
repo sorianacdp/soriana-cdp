@@ -12,6 +12,16 @@ view: googleadsingresosvscostos {
     drill_fields: [detail*]
   }
 
+  measure: costoPorConversionGoogleAds {
+    type: sum
+    sql: ${TABLE}.costoPorConversionGoogleAds;;
+  }
+
+  measure: TotalVentaGAds {
+    type: sum
+    sql: ${TABLE}.TotalVentaGADS;;
+  }
+
   dimension: hace_nsemanas {
     type: number
     sql: ${TABLE}.HaceNsemanas ;;
