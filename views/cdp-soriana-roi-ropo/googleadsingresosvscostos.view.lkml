@@ -28,6 +28,6 @@ view: googleadsingresosvscostos {
   }
 
   set: detail {
-    fields: [hace_nsemanas, total_venta_gads, costo_por_conversion_google_ads]
+    fields: [hace_nsemanas,costo_por_conversion_google_ads,total_venta_gads]
   }
 }
