@@ -25,5 +25,5 @@ map_layer: mexico {
   file: "/maps/mx_tj.json"
 }
 
-explore: view360 {}
+
 explore: vista_360_complemento {}
