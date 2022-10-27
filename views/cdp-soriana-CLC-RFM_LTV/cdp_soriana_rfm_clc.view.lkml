@@ -11,6 +11,79 @@ view: cdp_soriana_rfm_clc {
     drill_fields: [detail*]
   }
 
+  measure: countdistinct {
+    type: count_distinct
+    sql: ${TABLE}.GRClienteId ;;
+  }
+
+  measure: countdistinctPros {
+    type: count_distinct
+    sql: ${TABLE}.userIdGa ;;
+  }
+
+#############
+  measure: clientePremium {
+    type: count_distinct
+    sql: ${TABLE}.GRClienteId ;;
+    filters: [califica_cliente: "CLIENTE PREMIUM"]
+  }
+
+  measure: clienteValioso {
+    type: count_distinct
+    sql: ${TABLE}.GRClienteId ;;
+    filters: [califica_cliente: "CLIENTE VALIOSO"]
+  }
+
+  measure: clientePotencial {
+    type: count_distinct
+    sql: ${TABLE}.GRClienteId ;;
+    filters: [califica_cliente: "CLIENTE POTENCIAL"]
+  }
+
+  measure: clienteOcasional {
+    type: count_distinct
+    sql: ${TABLE}.GRClienteId ;;
+    filters: [califica_cliente: "CLIENTE OCASIONAL"]
+  }
+
+  measure: clienteNuevo {
+    type: count_distinct
+    sql: ${TABLE}.GRClienteId ;;
+    filters: [califica_cliente: "CLIENTE NUEVO"]
+  }
+
+  measure: clienteNuevo1compra {
+    type: count_distinct
+    sql: ${TABLE}.GRClienteId ;;
+    filters: [califica_cliente: "CLIENTE NUEVO + 1 COMPRA"]
+  }
+
+  measure: clienteProspecto {
+    type: count_distinct
+    sql: ${TABLE}.userIdGa ;;
+    filters: [califica_cliente: "CLIENTE PROSPECTO"]
+  }
+
+  measure: clienteDormido {
+    type: count_distinct
+    sql: ${TABLE}.GRClienteId ;;
+    filters: [califica_cliente: "CLIENTE DORMIDO"]
+  }
+
+  measure: clienteEnRiesgo {
+    type: count_distinct
+    sql: ${TABLE}.GRClienteId ;;
+    filters: [califica_cliente: "CLIENTE EN RIESGO"]
+  }
+
+  measure: clientePerdido {
+    type: count_distinct
+    sql: ${TABLE}.GRClienteId ;;
+    filters: [califica_cliente: "CLIENTE PERDIDO"]
+  }
+
+
+######################
   dimension: grcliente_id {
     type: string
     sql: ${TABLE}.GRClienteId ;;
