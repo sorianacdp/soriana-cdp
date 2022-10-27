@@ -335,6 +335,11 @@ view: vista_360_complemento {
     sql: ${TABLE}.mediaSource ;;
   }
 
+  dimension: media_source_origen {
+    type: string
+    sql: ${TABLE}.mediaSourceOrigen ;;
+  }
+
   dimension: tiempo_engagement_min {
     type: number
     sql: ${TABLE}.tiempoEngagementMin ;;
@@ -629,6 +634,7 @@ view: vista_360_complemento {
       busquedas,
       compras,
       media_source,
+      media_source_origen,
       tiempo_engagement_min,
       estados_sesiones,
       rownumber_top_ranking_busquedas,

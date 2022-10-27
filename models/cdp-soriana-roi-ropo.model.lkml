@@ -1,8 +1,6 @@
 connection: "cdp-soriana-dataset-prod"
 
-include: "/views/cdp-soriana-vista-360/*.view.lkml"
-
-# include all views in the views/ folder in this project
+include: "/views/cdp-soriana-roi-ropo/*.view.lkml"                # include all views in the views/ folder in this project
 # include: "/**/*.view.lkml"                 # include all views in this project
 # include: "my_dashboard.dashboard.lookml"   # include a LookML dashboard called my_dashboard
 
@@ -20,10 +18,12 @@ include: "/views/cdp-soriana-vista-360/*.view.lkml"
 #     sql_on: ${users.id} = ${orders.user_id} ;;
 #   }
 # }
-
-map_layer: mexico {
-  file: "/maps/mx_tj.json"
-}
-
-
-explore: vista_360_complemento {}
+explore: cdpusuario__articulos__ga_gads_fads_add_cart {}
+explore: cdpusuario__articulos__ga_gads_fads_purchase {}
+explore: cdpusuario__articulos__ga_gads_fads_view_item {}
+explore: facebookads {}
+explore: googleads {}
+explore: cdpsorianaticketsgaropo {}
+explore: semanavistayropo {}
+explore: googleadsingresosvscostos {}
+explore: facebookadsingresovscosto {}
