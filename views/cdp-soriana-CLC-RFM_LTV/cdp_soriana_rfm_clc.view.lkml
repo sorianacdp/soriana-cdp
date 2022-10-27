@@ -89,6 +89,11 @@ view: cdp_soriana_rfm_clc {
     sql: ${TABLE}.GRClienteId ;;
   }
 
+  dimension: correo {
+    type: string
+    sql: ${TABLE}.correo ;;
+  }
+
   dimension: advertising_id {
     type: string
     sql: ${TABLE}.advertisingId ;;
@@ -229,6 +234,7 @@ view: cdp_soriana_rfm_clc {
       grcliente_id,
       advertising_id,
       user_id_ga,
+      correo,
       medio_fuente,
       fecha_nacimiento_soriana,
       fecha_ultima_compra,
