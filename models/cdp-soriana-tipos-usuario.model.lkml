@@ -1,6 +1,6 @@
 connection: "cdp-soriana-dataset-prod"
 
-include: "/views/cdp-soriana-CLC-RFM_LTV/*.view.lkml"                # include all views in the views/ folder in this project
+include: "/views/cdp-soriana-tipos-usuario/*.view.lkml"                # include all views in the views/ folder in this project
 # include: "/maps/*.view.lkml"                 # include all views in this project
 # include: "my_dashboard.dashboard.lookml"   # include a LookML dashboard called my_dashboard
 
@@ -19,6 +19,6 @@ include: "/views/cdp-soriana-CLC-RFM_LTV/*.view.lkml"                # include a
 #   }
 # }
 
-#explore: cdp_soriana_tipos_usuarios {}
-#explore: cdp_soriana_segmentacion_dinamico {}
-explore: cdp_soriana_rfm_clc {}
+explore: cdp_soriana_tipos_usuarios {}
+explore: cdp_soriana_segmentacion_dinamico {}
+#explore: cdp_soriana_rfm_clc {}
