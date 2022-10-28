@@ -235,6 +235,10 @@ view: cdp_soriana_rfm_clc {
     sql: ${TABLE}.gastoDeLaSemana ;;
   }
 
+  measure: sumaCompraSemana{
+    type: sum
+    sql: ${TABLE}.comprasDeLaSemana ;;
+  }
 
   set: detail {
     fields: [
