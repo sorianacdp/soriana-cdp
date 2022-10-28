@@ -229,6 +229,13 @@ view: cdp_soriana_rfm_clc {
     sql: ${TABLE}.calificaCliente ;;
   }
 
+
+  measure: sumaGatoSemana{
+    type: sum
+    sql: ${TABLE}.gastoDeLaSemana ;;
+  }
+
+
   set: detail {
     fields: [
       grcliente_id,
