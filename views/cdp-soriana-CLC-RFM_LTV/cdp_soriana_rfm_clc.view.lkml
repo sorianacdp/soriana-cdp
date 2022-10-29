@@ -242,7 +242,7 @@ view: cdp_soriana_rfm_clc {
 
   measure: sumaGastoAcumulado{
     type: sum
-    sql: sql: ${TABLE}.gastoPromedio8semanas ;;
+    sql: ${TABLE}.gastoPromedio8semanas ;;
   }
 
 
