@@ -240,6 +240,12 @@ view: cdp_soriana_rfm_clc {
     sql: ${TABLE}.comprasDeLaSemana ;;
   }
 
+  measure: sumaGastoAcumulado{
+    type: sum
+    sql: sql: ${TABLE}.gastoPromedio8semanas ;;
+  }
+
+
   set: detail {
     fields: [
       grcliente_id,
