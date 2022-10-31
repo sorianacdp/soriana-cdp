@@ -84,7 +84,7 @@ view: cdp_soriana_rfm_clc {
 
 ###########gasto promedio por segmento
 
-###suma ticket por tipo cliente
+###clientes premium
   measure: gastoPremium {
     type: sum
     sql: (${TABLE}.gastoDeLaSemana) ;;
@@ -98,7 +98,7 @@ view: cdp_soriana_rfm_clc {
   }
 
 
-###suma ticket por tipo cliente
+###clientes valiosos
   measure: gastoValioso {
     type: sum
     sql: (${TABLE}.gastoDeLaSemana) ;;
@@ -111,17 +111,112 @@ view: cdp_soriana_rfm_clc {
     filters: [califica_cliente: "CLIENTE VALIOSO"]
   }
 
+###clientes Potencial
+  measure: gastoPotencial {
+    type: sum
+    sql: (${TABLE}.gastoDeLaSemana) ;;
+    filters: [califica_cliente: "CLIENTE POTENCIAL"]
+  }
+
+  measure: comprasPotencial {
+    type: sum
+    sql: (${TABLE}.comprasDeLaSemana) ;;
+    filters: [califica_cliente: "CLIENTE POTENCIAL"]
+  }
+
+###clientes ocasional
+  measure: gastoOcasional {
+    type: sum
+    sql: (${TABLE}.gastoDeLaSemana) ;;
+    filters: [califica_cliente: "CLIENTE OCASIONAL"]
+  }
+
+  measure: comprasOcasional {
+    type: sum
+    sql: (${TABLE}.comprasDeLaSemana) ;;
+    filters: [califica_cliente: "CLIENTE OCASIONAL"]
+  }
+
+###clientes Nuevo
+  measure: gastoNuevo {
+    type: sum
+    sql: (${TABLE}.gastoDeLaSemana) ;;
+    filters: [califica_cliente: "CLIENTE NUEVO"]
+  }
+
+  measure: comprasNuevo {
+    type: sum
+    sql: (${TABLE}.comprasDeLaSemana) ;;
+    filters: [califica_cliente: "CLIENTE NUEVO"]
+  }
+
+###clientes Nuevo+1 compra
+  measure: gastoNuevo1 {
+    type: sum
+    sql: (${TABLE}.gastoDeLaSemana) ;;
+    filters: [califica_cliente: "CLIENTE NUEVO + 1 COMPRA"]
+  }
+
+  measure: comprasNuevo1 {
+    type: sum
+    sql: (${TABLE}.comprasDeLaSemana) ;;
+    filters: [califica_cliente: "CLIENTE NUEVO + 1 COMPRA"]
+  }
 
 
+###clientes prospecto
+  measure: gastoProspecto {
+    type: sum
+    sql: (${TABLE}.gastoDeLaSemana) ;;
+    filters: [califica_cliente: "CLIENTE PROSPECTO"]
+  }
+
+  measure: comprasProspecto {
+    type: sum
+    sql: (${TABLE}.comprasDeLaSemana) ;;
+    filters: [califica_cliente: "CLIENTE PROSPECTO"]
+  }
 
 
+###clientes Dormido
+  measure: gastoDormido {
+    type: sum
+    sql: (${TABLE}.gastoDeLaSemana) ;;
+    filters: [califica_cliente: "CLIENTE DORMIDO"]
+  }
+
+  measure: comprasDormido {
+    type: sum
+    sql: (${TABLE}.comprasDeLaSemana) ;;
+    filters: [califica_cliente: "CLIENTE DORMIDO"]
+  }
+
+###clientes En Riesgo
+  measure: gastoEnRiesgo {
+    type: sum
+    sql: (${TABLE}.gastoDeLaSemana) ;;
+    filters: [califica_cliente: "CLIENTE EN RIESGO"]
+  }
+
+  measure: comprasEnRiesgo {
+    type: sum
+    sql: (${TABLE}.comprasDeLaSemana) ;;
+    filters: [califica_cliente: "CLIENTE EN RIESGO"]
+  }
 
 
+###clientes En Riesgo
+  measure: gastoPerdido {
+    type: sum
+    sql: (${TABLE}.gastoDeLaSemana) ;;
+    filters: [califica_cliente: "CLIENTE PERDIDO"]
+  }
 
-
-
-
-
+  measure: comprasPerdido {
+    type: sum
+    sql: (${TABLE}.comprasDeLaSemana) ;;
+    filters: [califica_cliente: "CLIENTE PERDIDO"]
+  }
 
 
 
