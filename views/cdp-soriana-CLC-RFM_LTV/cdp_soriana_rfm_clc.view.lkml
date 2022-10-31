@@ -220,6 +220,76 @@ view: cdp_soriana_rfm_clc {
 
 
 
+##############################################
+###clientes premium
+  measure: gastoAcumPremium {
+    type: sum
+    sql: (${TABLE}.gastoPromedio8semanas) ;;
+    filters: [califica_cliente: "CLIENTE PREMIUM"]
+  }
+
+###clientes valiosos
+  measure: gastoAcumValioso {
+    type: sum
+    sql: (${TABLE}.gastoPromedio8semanas) ;;
+    filters: [califica_cliente: "CLIENTE VALIOSO"]
+  }
+
+
+###clientes Potencial
+  measure: gastoAcumPotencial {
+    type: sum
+    sql: (${TABLE}.gastoPromedio8semanas) ;;
+    filters: [califica_cliente: "CLIENTE POTENCIAL"]
+  }
+
+
+###clientes ocasional
+  measure: gastoAcumOcasional {
+    type: sum
+    sql: (${TABLE}.gastoPromedio8semanas) ;;
+    filters: [califica_cliente: "CLIENTE OCASIONAL"]
+  }
+
+###clientes Nuevo
+  measure: gastoAcumNuevo {
+    type: sum
+    sql: ${TABLE}.gastoPromedio8semanas) ;;
+    filters: [califica_cliente: "CLIENTE NUEVO"]
+  }
+
+
+###clientes Nuevo+1 compra
+  measure: gastoAcumNuevo1 {
+    type: sum
+    sql: (${TABLE}.gastoPromedio8semanas) ;;
+    filters: [califica_cliente: "CLIENTE NUEVO + 1 COMPRA"]
+  }
+
+
+###clientes Dormido
+  measure: gastoAcumDormido {
+    type: sum
+    sql: (${TABLE}.gastoPromedio8semanas) ;;
+    filters: [califica_cliente: "CLIENTE DORMIDO"]
+  }
+
+
+###clientes En Riesgo
+  measure: gastoAcumEnRiesgo {
+    type: sum
+    sql: (${TABLE}.gastoPromedio8semanas) ;;
+    filters: [califica_cliente: "CLIENTE EN RIESGO"]
+  }
+
+
+###clientes En Riesgo
+  measure: gastoAcumPerdido {
+    type: sum
+    sql: (${TABLE}.gastoPromedio8semanas) ;;
+    filters: [califica_cliente: "CLIENTE PERDIDO"]
+  }
+
 
 
 #################################
