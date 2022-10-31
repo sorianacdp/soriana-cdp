@@ -82,6 +82,38 @@ view: cdp_soriana_rfm_clc {
     filters: [califica_cliente: "CLIENTE PERDIDO"]
   }
 
+###########gasto promedio por segmento
+
+###suma ticket por tipo cliente
+  measure: gastoPromPremium {
+    type: sum
+    sql: (${TABLE}.gastoDeLaSemana)/(${TABLE}.comprasDeLaSemana) ;;
+    filters: [califica_cliente: "CLIENTE PREMIUM"]
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#################################
+
+
 
 ######################
   dimension: grcliente_id {
