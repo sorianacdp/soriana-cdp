@@ -98,6 +98,18 @@ view: cdp_soriana_rfm_clc {
   }
 
 
+###suma ticket por tipo cliente
+  measure: gastoValioso {
+    type: sum
+    sql: (${TABLE}.gastoDeLaSemana) ;;
+    filters: [califica_cliente: "CLIENTE VALIOSO"]
+  }
+
+  measure: comprasValioso {
+    type: sum
+    sql: (${TABLE}.comprasDeLaSemana) ;;
+    filters: [califica_cliente: "CLIENTE VALIOSO"]
+  }
 
 
 
