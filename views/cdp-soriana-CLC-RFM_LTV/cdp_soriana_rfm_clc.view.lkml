@@ -85,13 +85,17 @@ view: cdp_soriana_rfm_clc {
 ###########gasto promedio por segmento
 
 ###suma ticket por tipo cliente
-  measure: gastoPromPremium {
+  measure: gastoPremium {
     type: sum
     sql: (${TABLE}.gastoDeLaSemana) ;;
     filters: [califica_cliente: "CLIENTE PREMIUM"]
   }
 
-
+  measure: comprasPremium {
+    type: sum
+    sql: (${TABLE}.comprasDeLaSemana) ;;
+    filters: [califica_cliente: "CLIENTE PREMIUM"]
+  }
 
 
 
