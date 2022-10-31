@@ -87,7 +87,7 @@ view: cdp_soriana_rfm_clc {
 ###suma ticket por tipo cliente
   measure: gastoPromPremium {
     type: sum
-    sql: (${TABLE}.gastoDeLaSemana)/(${TABLE}.comprasDeLaSemana) ;;
+    sql: (${TABLE}.gastoDeLaSemana) ;;
     filters: [califica_cliente: "CLIENTE PREMIUM"]
   }
 
