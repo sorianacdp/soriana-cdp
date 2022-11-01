@@ -420,31 +420,6 @@ view: vista_360_complemento {
     sql: ${TABLE}.origenCliente ;;
   }
 
-  dimension: omnicanal {
-    type: string
-    sql: ${TABLE}.omnicanal ;;
-  }
-
-  dimension: nombre_clc {
-    type: string
-    sql: ${TABLE}.nombreCLC ;;
-  }
-
-  dimension: apellido {
-    type: string
-    sql: ${TABLE}.apellido ;;
-  }
-
-  dimension: fecha_nacimiento_clc {
-    type: string
-    sql: ${TABLE}.fechaNacimientoCLC ;;
-  }
-
-  dimension: sexo_clc {
-    type: string
-    sql: ${TABLE}.sexoCLC ;;
-  }
-
   dimension: correo_clc {
     type: string
     sql: ${TABLE}.correoCLC ;;
@@ -457,17 +432,12 @@ view: vista_360_complemento {
 
   dimension: semana {
     type: number
-    sql: ${TABLE}.semana ;;
+    sql: ${TABLE}.semanasCliente ;;
   }
 
   dimension: hace_nsemanas {
     type: number
     sql: ${TABLE}.haceNSemanas ;;
-  }
-
-  dimension: ticke_total {
-    type: number
-    sql: ${TABLE}.tickeTotal ;;
   }
 
   dimension: conteo_compras {
@@ -651,16 +621,10 @@ view: vista_360_complemento {
       id_tienda,
       fecha_nacimiento_soriana,
       origen_cliente,
-      omnicanal,
-      nombre_clc,
-      apellido,
-      fecha_nacimiento_clc,
-      sexo_clc,
       correo_clc,
       anio,
       semana,
       hace_nsemanas,
-      ticke_total,
       conteo_compras,
       ticket_promedio_clc,
       tipo_cliente,
