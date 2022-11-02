@@ -155,9 +155,12 @@ view: cdp_soriana_rfm_clc {
   }
 
 
-
+##########gasto por cliente:
 #################################
-
+  measure: costoCliente {
+    type: string
+    sql: ${TABLE}.GRClienteId ;;
+  }
 
 
 ######################
