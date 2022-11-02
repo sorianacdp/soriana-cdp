@@ -36,12 +36,12 @@ view: vista_360_complemento {
   }
 
   dimension: id_cliente_sk {
-    type: number
+    type: string
     sql: ${TABLE}.idClienteSk ;;
   }
 
   dimension: id_cliente_digital {
-    type: number
+    type: string
     sql: ${TABLE}.idClienteDigital ;;
   }
 
@@ -184,7 +184,7 @@ view: vista_360_complemento {
   }
 
   dimension: id_cliente_perfil_sk {
-    type: number
+    type: string
     sql: ${TABLE}.idClientePerfilSk ;;
   }
 
