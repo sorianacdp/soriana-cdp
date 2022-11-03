@@ -330,12 +330,12 @@ view: vista_360_complemento {
     sql: ${TABLE}.compras ;;
   }
 
-  dimension: media_source {
+  dimension: media_source_visita {
     type: string
     sql: ${TABLE}.mediaSource ;;
   }
 
-  dimension: media_source_origen {
+  dimension: media_source_origen_cliente {
     type: string
     sql: ${TABLE}.mediaSourceOrigen ;;
   }
@@ -603,8 +603,8 @@ view: vista_360_complemento {
       tipo_sesion,
       busquedas,
       compras,
-      media_source,
-      media_source_origen,
+      media_source_visita,
+      media_source_origen_cliente,
       tiempo_engagement_min,
       estados_sesiones,
       rownumber_top_ranking_busquedas,
