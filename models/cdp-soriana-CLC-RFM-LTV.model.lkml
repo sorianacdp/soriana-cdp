@@ -19,3 +19,4 @@ include: "/views/cdp-soriana-CLC-RFM_LTV/*.view.lkml"                # include a
 #   }
 # }
 explore: cdp_soriana_rfm_clc {}
+explore: cdp_soriana_medio_fuente_origen {}
