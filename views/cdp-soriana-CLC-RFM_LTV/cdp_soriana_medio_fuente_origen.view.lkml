@@ -9,6 +9,11 @@ view: cdp_soriana_medio_fuente_origen {
     drill_fields: [detail*]
   }
 
+  dimension: fecha_primera_compra{
+    type: string
+    sql: ${TABLE}.fechaPrimeraCompra ;;
+  }
+
   dimension: usuario_logueado_origin {
     type: string
     sql: ${TABLE}.usuarioLogueadoOrigin ;;
@@ -66,6 +71,7 @@ view: cdp_soriana_medio_fuente_origen {
 
   set: detail {
     fields: [
+      fecha_primera_compra,
       usuario_logueado_origin,
       advertising_id,
       media_source_origen,
