@@ -19,6 +19,11 @@ view: cdp_soriana_medio_fuente_origen {
     sql: ${TABLE}.fechaUltimaCompra ;;
   }
 
+  dimension: GRClienteId{
+    type: string
+    sql: ${TABLE}.GRClienteId ;;
+  }
+
   dimension: plataforma{
     type: string
     sql: ${TABLE}.plataforma ;;
