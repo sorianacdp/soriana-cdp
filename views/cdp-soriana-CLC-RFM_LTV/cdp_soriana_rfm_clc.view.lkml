@@ -16,6 +16,11 @@ view: cdp_soriana_rfm_clc {
     sql: ${TABLE}.GRClienteId ;;
   }
 
+  measure: countdistinctsk {
+    type: count_distinct
+    sql: ${TABLE}.idClientesk ;;
+  }
+
 
   measure: countdistinctPros {
     type: count_distinct
@@ -85,6 +90,79 @@ view: cdp_soriana_rfm_clc {
 
 
 ##############################################
+#############
+  measure: clientePremiumSk {
+    type: count_distinct
+    sql: ${TABLE}.idClientesk ;;
+    filters: [califica_cliente: "CLIENTE PREMIUM"]
+  }
+
+  measure: clienteValiosoSk {
+    type: count_distinct
+    sql: ${TABLE}.idClientesk ;;
+    filters: [califica_cliente: "CLIENTE VALIOSO"]
+  }
+
+  measure: clientePotencialSk {
+    type: count_distinct
+    sql: ${TABLE}.idClientesk ;;
+    filters: [califica_cliente: "CLIENTE POTENCIAL"]
+  }
+
+  measure: clienteOcasionalSk {
+    type: count_distinct
+    sql: ${TABLE}.idClientesk ;;
+    filters: [califica_cliente: "CLIENTE OCASIONAL"]
+  }
+
+  measure: clienteNuevoSk {
+    type: count_distinct
+    sql: ${TABLE}.idClientesk ;;
+    filters: [califica_cliente: "CLIENTE NUEVO"]
+  }
+
+  measure: clienteNuevo1compraSk {
+    type: count_distinct
+    sql: ${TABLE}.idClientesk ;;
+    filters: [califica_cliente: "CLIENTE NUEVO + 1 COMPRA"]
+  }
+
+  measure: clienteProspectoSk {
+    type: count_distinct
+    sql: ${TABLE}.userIdGa ;;
+    filters: [califica_cliente: "CLIENTE PROSPECTO"]
+  }
+
+  measure: clienteDormidoSk {
+    type: count_distinct
+    sql: ${TABLE}.idClientesk ;;
+    filters: [califica_cliente: "CLIENTE DORMIDO"]
+  }
+
+  measure: clienteEnRiesgoSk {
+    type: count_distinct
+    sql: ${TABLE}.idClientesk ;;
+    filters: [califica_cliente: "CLIENTE EN RIESGO"]
+  }
+
+  measure: clientePerdidoSk {
+    type: count_distinct
+    sql: ${TABLE}.idClientesk ;;
+    filters: [califica_cliente: "CLIENTE PERDIDO"]
+  }
+
+
+##############################################
+
+
+
+
+
+
+
+
+############################################
+
 ###clientes premium
   measure: gastoAcumPremium {
     type: sum
@@ -157,16 +235,16 @@ view: cdp_soriana_rfm_clc {
 
 ##########gasto por cliente:
 #################################
-  measure: costoCliente {
-    type: string
-    sql: ${TABLE}.GRClienteId ;;
-  }
-
 
 ######################
   dimension: grcliente_id {
     type: string
     sql: ${TABLE}.GRClienteId ;;
+  }
+
+  dimension: idClientesk {
+    type: string
+    sql: ${TABLE}.idClientesk ;;
   }
 
   dimension: correo {
@@ -336,6 +414,7 @@ view: cdp_soriana_rfm_clc {
   set: detail {
     fields: [
       grcliente_id,
+      idClientesk,
       advertising_id,
       user_id_ga,
       correo,
