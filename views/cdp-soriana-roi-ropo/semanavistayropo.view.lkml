@@ -1,12 +1,18 @@
 view: semanavistayropo {
   derived_table: {
-    sql: WITH  dataset1 as (SELECT Extract(week from po.fecha) semana, count(1) cantidadROPO From `customer_data_platform.cdp-soriana-tickets-ga-ropo` po
+    sql: WITH  dataset as (SELECT
+row_number() over(partition by correo,semanaCompra,idArticulo) as rown
+,*
+From `customer_data_platform.cdp-soriana-tickets-ga-ropo` po
+),
+dataset1 as (
+      SELECT Extract(week from po.fecha) semana, count(1) cantidadROPO From dataset po where rown = 1
       group by 1
-      ), dataset2 as (
+), dataset2 as (
       SELECT Extract(week from ro.fecha) semana, count(1) cantidadVistas From `customer_data_platform.cdp-usuario-articulos-vistos-sin-compra-ropo` ro
       GROUP BY 1
-      )
-      select
+)
+select
       Extract(week from current_date) - d1.semana as haceNSemana,
       --d1.fecha,
       d1.cantidadROPO,
