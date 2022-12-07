@@ -44,6 +44,11 @@ view: cdp_soriana_medio_fuente_origen {
     sql: ${TABLE}.mediaSourceOrigen ;;
   }
 
+  dimension: nombre_campaign{
+    type: string
+    sql: ${TABLE}.nombreCampaign ;;
+  }
+
   dimension: id_transaccion_primera_compra {
     type: string
     sql: ${TABLE}.idTransaccionPrimeraCompra ;;
