@@ -97,6 +97,7 @@ view: cdp_soriana_medio_fuente_origen {
       usuario_logueado_origin,
       advertising_id,
       media_source_origen,
+      nombre_campaign,
       id_transaccion_primera_compra,
       revenue_primera_compra,
       conteo_compras,
