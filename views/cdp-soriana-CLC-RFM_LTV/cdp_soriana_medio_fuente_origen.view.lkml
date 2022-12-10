@@ -89,6 +89,36 @@ view: cdp_soriana_medio_fuente_origen {
     sql: ${TABLE}.phoneMobile ;;
   }
 
+  dimension: dias_de_vida {
+    type: string
+    sql: ${TABLE}.dias_de_vida ;;
+  }
+
+  dimension: dias_sin_compra {
+    type: string
+    sql: ${TABLE}.dias_sin_compra ;;
+  }
+  dimension: tipo_a {
+    type: string
+    sql: ${TABLE}.tipo_a ;;
+  }
+  dimension: tipo_b {
+    type: string
+    sql: ${TABLE}.tipo_b ;;
+  }
+  dimension: rango_frecuencia {
+    type: string
+    sql: ${TABLE}.rango_frecuencia ;;
+  }
+  dimension: ticket_promedio {
+    type: string
+    sql: ${TABLE}.ticket_promedio ;;
+  }
+  dimension: bucket {
+    type: string
+    sql: ${TABLE}.bucket ;;
+  }
+
   set: detail {
     fields: [
       fecha_primera_compra,
@@ -104,7 +134,14 @@ view: cdp_soriana_medio_fuente_origen {
       email,
       first_name,
       last_name,
-      phone_mobile
+      phone_mobile,
+      dias_de_vida,
+      dias_sin_compra,
+      tipo_a,
+      tipo_b,
+      rango_frecuencia,
+      ticket_promedio,
+      bucket
     ]
   }
 }
