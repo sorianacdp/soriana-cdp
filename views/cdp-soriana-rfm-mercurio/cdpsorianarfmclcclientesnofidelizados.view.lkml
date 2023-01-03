@@ -45,6 +45,12 @@ view: cdpsorianarfmclcclientesnofidelizados {
     filters: [bucket: "Potencial"]
   }
 
+  measure: clientePremium {
+    type: count_distinct
+    sql: ${TABLE}.customerEmail ;;
+    filters: [bucket: "Premium"]
+  }
+
   measure: clienteValioso {
     type: count_distinct
     sql: ${TABLE}.customerEmail ;;
