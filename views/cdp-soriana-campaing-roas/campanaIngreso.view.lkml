@@ -12,6 +12,8 @@ EXTRACT(week FROM PARSE_DATE("%Y%m%d",event_date)) semana,
 event_name,
 platform as plataforma,
 ifnull(user_id,'(not set)') as usuarioLogueado,
+cp.GRClienteId,
+cp.correo,
 ifnull(geo.region,'(not set)') as geoRegion,
 ifnull(geo.city,'(not set)') as geonCity,
 ifnull(ecommerce.transaction_id,'(not set)') as idTransaccion,
@@ -19,7 +21,9 @@ ifnull(traffic_source.medium,'(not set)') as medio,
 ifnull(traffic_source.source,'(not set)') as fuente,
 ifnull(traffic_source.name,'(not set)') as nombreCampana,
 ecommerce.purchase_revenue as ingreso,
-FROM `costumer-data-proyect.analytics_249184604.events_*`, rango_fecha
+FROM `costumer-data-proyect.analytics_249184604.events_*` ga, rango_fecha
+inner join `customer_data_platform.cdp_synapse_universo_clientes_productivos` cp
+ON ga.user_id = cp.GAUserId
 WHERE
 -- and user_id != '(not set)'
 traffic_source.medium = 'email'
@@ -61,9 +65,19 @@ and PARSE_DATE("%Y%m%d",event_date) between  PARSE_DATE("%Y%m%d",fecha_inicio) a
     sql: ${TABLE}.plataforma ;;
   }
 
-  dimension: usuario_logueado {
+  dimension: gauser_id {
     type: string
     sql: ${TABLE}.usuarioLogueado ;;
+  }
+
+  dimension: grcliente_id {
+    type: string
+    sql: ${TABLE}.GRClienteId ;;
+  }
+
+  dimension: correo {
+    type: string
+    sql: ${TABLE}.correo ;;
   }
 
   dimension: geo_region {
@@ -114,7 +128,9 @@ and PARSE_DATE("%Y%m%d",event_date) between  PARSE_DATE("%Y%m%d",fecha_inicio) a
       semana,
       event_name,
       plataforma,
-      usuario_logueado,
+      gauser_id,
+      grcliente_id,
+      correo,
       geo_region,
       geon_city,
       id_transaccion,
