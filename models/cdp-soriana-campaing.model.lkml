@@ -20,3 +20,5 @@ include: "/views/cdp-soriana-campaing-roas/*.view.lkml"               # include 
 # }
 explore: camapaingreso {}
 explore: campanavistas {}
+explore:  billingrecomendationia{}
+explore: conteorecomendaciones {}
