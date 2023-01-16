@@ -1,6 +1,6 @@
 connection: "cdp-soriana-dataset-prod"
 
-include: "/views/cdp-soriana-campaing-roast/*.view.lkml"               # include all views in the views/ folder in this project
+include: "/views/cdp-soriana-campaing-roas/*.view.lkml"               # include all views in the views/ folder in this project
 # include: "/**/*.view.lkml"                 # include all views in this project
 # include: "my_dashboard.dashboard.lookml"   # include a LookML dashboard called my_dashboard
 
@@ -18,4 +18,5 @@ include: "/views/cdp-soriana-campaing-roast/*.view.lkml"               # include
 #     sql_on: ${users.id} = ${orders.user_id} ;;
 #   }
 # }
-explore: campaing_email{}
+explore: camapaingreso {}
+explore: campanavistas {}
