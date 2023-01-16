@@ -116,6 +116,12 @@ group by 1,2,fechaCarga
     sql: ${TABLE}.conteo ;;
   }
 
+  measure: suma_conteo {
+    type: sum
+    sql: ${TABLE}.conteo;;
+
+  }
+
   set: detail {
     fields: [fecha_carga, anio, semana, recomendaciones, conteo]
   }
