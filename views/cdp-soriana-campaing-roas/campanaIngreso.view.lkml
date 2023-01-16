@@ -101,6 +101,12 @@ and PARSE_DATE("%Y%m%d",event_date) between  PARSE_DATE("%Y%m%d",fecha_inicio) a
     sql: ${TABLE}.ingreso ;;
   }
 
+  measure: total_Ingreso {
+    type: sum
+    sql: ${TABLE}.ingreso;;
+
+  }
+
   set: detail {
     fields: [
       fecha,
