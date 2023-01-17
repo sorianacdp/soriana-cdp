@@ -1,6 +1,16 @@
-view: rfm2_0 {
+view: rfmecommerce {
   derived_table: {
-    sql: SELECT * FROM `costumer-data-proyect.calculos_rfm_clc.cdp-soriana-rfm-ecommerce` LIMIT 10
+    sql: WITH dataset as (
+      SELECT
+      correo,
+      GAUserId,
+      GRClienteId
+      FROM `costumer-data-proyect.customer_data_platform.cdp_synapse_universo_clientes_productivos`
+      )
+
+      SELECT * FROM `costumer-data-proyect.calculos_rfm_clc.cdp-soriana-rfm-ecommerce` i
+      left join dataset c
+      on (c.correo =  i.customerEmail)
       ;;
   }
 
@@ -146,6 +156,21 @@ view: rfm2_0 {
     sql: ${TABLE}.bucket ;;
   }
 
+  dimension: correo {
+    type: string
+    sql: ${TABLE}.correo ;;
+  }
+
+  dimension: gauser_id {
+    type: string
+    sql: ${TABLE}.GAUserId ;;
+  }
+
+  dimension: grcliente_id {
+    type: string
+    sql: ${TABLE}.GRClienteId ;;
+  }
+
   set: detail {
     fields: [
       customer_email,
@@ -173,7 +198,10 @@ view: rfm2_0 {
       dias_sin_compra,
       semanas_sin_compra,
       dias_de_vida,
-      bucket
+      bucket,
+      correo,
+      gauser_id,
+      grcliente_id
     ]
   }
 }
