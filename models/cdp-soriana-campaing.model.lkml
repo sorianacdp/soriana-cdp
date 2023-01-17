@@ -23,3 +23,4 @@ explore: campanavistas {}
 explore:  billingrecomendationia{}
 explore: conteorecomendaciones {}
 explore: costosretail {}
+explore:  roas{}
