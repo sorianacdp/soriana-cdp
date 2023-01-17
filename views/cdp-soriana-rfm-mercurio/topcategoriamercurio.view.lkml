@@ -1,4 +1,4 @@
-view: sql_runner_query {
+view: topcategoriamercurio {
   derived_table: {
     sql: SELECT * FROM `costumer-data-proyect.customer_data_platform. cdp-soriana-mercurio-topCategorias-compradas`
       ;;
