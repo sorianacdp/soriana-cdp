@@ -181,6 +181,11 @@ view: rfmecommerce {
     sql: ${TABLE}.ordenesSemana ;;
   }
 
+  measure: diasVida{
+    type: average
+    sql: ${TABLE}.diasDeVida ;;
+  }
+
   set: detail {
     fields: [
       customer_email,
