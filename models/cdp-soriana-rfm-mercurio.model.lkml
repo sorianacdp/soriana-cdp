@@ -20,3 +20,4 @@ include:  "/views/cdp-soriana-rfm-mercurio/*.view.lkml"                   # incl
 # }
 explore: cdpsorianarfmclcclientesnofidelizados {}
 explore: rfmecommerce {}
+explore: topcategoriamercurio {}
