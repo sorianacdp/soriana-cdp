@@ -410,6 +410,11 @@ view: cdp_soriana_rfm_clc {
     sql: ${TABLE}.gastoPromedio8semanas ;;
   }
 
+  measure: diasVida{
+    type: average
+    sql: ${TABLE}.diasSinCompra ;;
+  }
+
 
   set: detail {
     fields: [
