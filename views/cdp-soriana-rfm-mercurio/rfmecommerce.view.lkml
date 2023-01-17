@@ -171,7 +171,7 @@ view: rfmecommerce {
     sql: ${TABLE}.GRClienteId ;;
   }
 
-  measure: sumaGatoSemana{
+  measure: sumaGastoSemana{
     type: sum
     sql: ${TABLE}.gastoSemana ;;
   }
