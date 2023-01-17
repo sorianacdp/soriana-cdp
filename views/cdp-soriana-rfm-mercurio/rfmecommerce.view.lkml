@@ -171,6 +171,16 @@ view: rfmecommerce {
     sql: ${TABLE}.GRClienteId ;;
   }
 
+  measure: sumaGatoSemana{
+    type: sum
+    sql: ${TABLE}.gastoSemana ;;
+  }
+
+  measure: sumaCompraSemana{
+    type: sum
+    sql: ${TABLE}.ordenesSemana ;;
+  }
+
   set: detail {
     fields: [
       customer_email,
