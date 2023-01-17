@@ -156,6 +156,55 @@ view: rfmecommerce {
     sql: ${TABLE}.bucket ;;
   }
 
+  measure: clientePerdido {
+    type: count_distinct
+    sql: ${TABLE}.customerEmail ;;
+    filters: [bucket: "Perdido"]
+  }
+
+  measure: clienteDormido {
+    type: count_distinct
+    sql: ${TABLE}.customerEmail ;;
+    filters: [bucket: "Dormido"]
+  }
+
+  measure: clienteEnriesgo {
+    type: count_distinct
+    sql: ${TABLE}.customerEmail ;;
+    filters: [bucket: "En riesgo"]
+  }
+
+  measure: clienteNuevos {
+    type: count_distinct
+    sql: ${TABLE}.customerEmail ;;
+    filters: [bucket: "Nuevos"]
+  }
+
+  measure: clienteOcasional {
+    type: count_distinct
+    sql: ${TABLE}.customerEmail ;;
+    filters: [bucket: "Ocasional/No comprometido"]
+  }
+
+  measure: clientePotencial {
+    type: count_distinct
+    sql: ${TABLE}.customerEmail ;;
+    filters: [bucket: "Potencial"]
+  }
+
+  measure: clientePremium {
+    type: count_distinct
+    sql: ${TABLE}.customerEmail ;;
+    filters: [bucket: "Premium"]
+  }
+
+  measure: clienteValioso {
+    type: count_distinct
+    sql: ${TABLE}.customerEmail ;;
+    filters: [bucket: "Valioso"]
+  }
+
+
   dimension: correo {
     type: string
     sql: ${TABLE}.correo ;;
