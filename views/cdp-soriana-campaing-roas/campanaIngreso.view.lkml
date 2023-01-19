@@ -28,7 +28,7 @@ WHERE
 -- and user_id != '(not set)'
 traffic_source.medium = 'email'
 and (ecommerce.transaction_id != '(not set)' or event_name = 'purchase')
-and traffic_source.name like '%Outlet_%'
+and traffic_source.name like '%recomendacionescdp%'
 and PARSE_DATE("%Y%m%d",event_date) between  PARSE_DATE("%Y%m%d",fecha_inicio) and  PARSE_DATE("%Y%m%d",fecha_final)
 --GROUP BY 1,2,3,4,5,6,7,8,9,10
  ;;
