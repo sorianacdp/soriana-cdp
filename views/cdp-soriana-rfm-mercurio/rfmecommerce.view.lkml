@@ -196,6 +196,12 @@ view: rfmecommerce {
     filters: [bucket: "Valioso"]
   }
 
+  measure: clienteRecuperado {
+    type: count_distinct
+    sql: ${TABLE}.correo ;;
+    filters: [bucket: "Recuperado"]
+  }
+
 
   dimension: correo {
     type: string
