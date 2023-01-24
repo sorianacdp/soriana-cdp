@@ -1,7 +1,7 @@
 view: googleads {
   derived_table: {
     sql: Select
-      Extract(week from current_date) -Extract(week from gcts.Week) as HaceNSemana,
+      Date_diff(current_date,gcts.Week, week) HaceNSemana,
       sum(gcts.Clicks) as clicsGoogleAds,
       sum(gcts.CostPerConversion/1000000.0) as costoPorConversionGoogleAds,
       from
