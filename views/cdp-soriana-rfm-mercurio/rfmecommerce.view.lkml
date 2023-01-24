@@ -1,16 +1,8 @@
 view: rfmecommerce {
   derived_table: {
-    sql: WITH dataset as (
-      SELECT
-      correo,
-      GAUserId,
-      GRClienteId
-      FROM `costumer-data-proyect.customer_data_platform.cdp_synapse_universo_clientes_productivos`
-      )
-
+    sql: -- WITH dataset as (  SELECT correo, GAUserId, GRClienteId FROM `costumer-data-proyect.customer_data_platform.cdp_synapse_universo_clientes_productivos` )
       SELECT * FROM `costumer-data-proyect.calculos_rfm_clc.cdp-soriana-rfm-ecommerce` i
-      left join dataset c
-      on (c.correo =  i.customerEmail)
+      -- left join dataset c on (c.correo =  i.correo)
       ;;
   }
 
@@ -21,7 +13,7 @@ view: rfmecommerce {
 
   dimension: customer_email {
     type: string
-    sql: ${TABLE}.customerEmail ;;
+    sql: ${TABLE}.correo ;;
   }
 
   dimension: rango_inicial_semana {
@@ -158,49 +150,49 @@ view: rfmecommerce {
 
   measure: clientePerdido {
     type: count_distinct
-    sql: ${TABLE}.customerEmail ;;
+    sql: ${TABLE}.correo ;;
     filters: [bucket: "Perdido"]
   }
 
   measure: clienteDormido {
     type: count_distinct
-    sql: ${TABLE}.customerEmail ;;
+    sql: ${TABLE}.correo ;;
     filters: [bucket: "Dormido"]
   }
 
   measure: clienteEnriesgo {
     type: count_distinct
-    sql: ${TABLE}.customerEmail ;;
+    sql: ${TABLE}.correo ;;
     filters: [bucket: "En riesgo"]
   }
 
   measure: clienteNuevos {
     type: count_distinct
-    sql: ${TABLE}.customerEmail ;;
+    sql: ${TABLE}.correo ;;
     filters: [bucket: "Nuevos"]
   }
 
   measure: clienteOcasional {
     type: count_distinct
-    sql: ${TABLE}.customerEmail ;;
+    sql: ${TABLE}.correo ;;
     filters: [bucket: "Ocasional/No comprometido"]
   }
 
   measure: clientePotencial {
     type: count_distinct
-    sql: ${TABLE}.customerEmail ;;
+    sql: ${TABLE}.correo ;;
     filters: [bucket: "Potencial"]
   }
 
   measure: clientePremium {
     type: count_distinct
-    sql: ${TABLE}.customerEmail ;;
+    sql: ${TABLE}.correo ;;
     filters: [bucket: "Premium"]
   }
 
   measure: clienteValioso {
     type: count_distinct
-    sql: ${TABLE}.customerEmail ;;
+    sql: ${TABLE}.correo ;;
     filters: [bucket: "Valioso"]
   }
 

@@ -18,6 +18,6 @@ include:  "/views/cdp-soriana-rfm-mercurio/*.view.lkml"                   # incl
 #     sql_on: ${users.id} = ${orders.user_id} ;;
 #   }
 # }
-explore: cdpsorianarfmclcclientesnofidelizados {}
+#explore: cdpsorianarfmclcclientesnofidelizados {}
 explore: rfmecommerce {}
 explore: topcategoriamercurio {}
