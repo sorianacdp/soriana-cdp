@@ -222,11 +222,11 @@ view: rfmecommerce {
 
   measure: sumaGastoSemana{
     type: sum
-    sql: ${TABLE}.totalGasto8Sem ;;
+    sql: ${TABLE}.gastoSemana;;
   }
   measure: sumaCompraSemana{
     type: sum
-    sql: ${TABLE}.ordenes8Sem ;;
+    sql: ${TABLE}.ordenesSemana;;
     #value_format: "$#,##0"
     #html: <p style="font-size:10px"> {{value}} </p> ;;
   }
