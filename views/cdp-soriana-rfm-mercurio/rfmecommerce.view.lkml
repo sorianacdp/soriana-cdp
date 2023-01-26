@@ -218,20 +218,29 @@ view: rfmecommerce {
     sql: ${TABLE}.GRClienteId ;;
   }
 
+
+
   measure: sumaGastoSemana{
     type: sum
-    sql: ${TABLE}.gastoSemana ;;
+    sql: ${TABLE}.totalGasto8Sem ;;
   }
-
   measure: sumaCompraSemana{
     type: sum
-    sql: ${TABLE}.ordenesSemana ;;
+    sql: ${TABLE}.ordenes8Sem ;;
+    #value_format: "$#,##0"
+    #html: <p style="font-size:10px"> {{value}} </p> ;;
+  }
+  measure: sumaGastoTotal{
+    type: sum
+    sql: ${TABLE}.gastoSemanaTotal ;;
+  }
+  measure: sumaComprasTotal{
+    type: sum
+    sql: ${TABLE}.ordenesSemanaTotal ;;
   }
 
-  measure: diasVida{
-    type: average
-    sql: ${TABLE}.diasDeVida ;;
-  }
+
+
 
   set: detail {
     fields: [
