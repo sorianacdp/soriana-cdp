@@ -1,9 +1,6 @@
 view: rfmecommerce {
   derived_table: {
-    sql: -- WITH dataset as (  SELECT correo, GAUserId, GRClienteId FROM `costumer-data-proyect.customer_data_platform.cdp_synapse_universo_clientes_productivos` )
-      SELECT * FROM `costumer-data-proyect.calculos_rfm_clc.cdp-soriana-rfm-ecommerce` i
-      -- left join dataset c on (c.correo =  i.correo)
-      ;;
+    sql: SELECT * FROM `costumer-data-proyect.calculos_rfm_clc.cdp-soriana-rfm-ecommerce`;;
   }
 
   measure: count {

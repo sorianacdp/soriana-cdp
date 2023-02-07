@@ -8,7 +8,10 @@ view: cdp_soriana_medio_fuente_origen {
     type: count
     drill_fields: [detail*]
   }
-
+  dimension: esta_logueado{
+    type: string
+    sql: ${TABLE}.estaLogueado ;;
+  }
   dimension: fecha_primera_compra{
     type: string
     sql: ${TABLE}.fechaPrimeraCompra ;;
@@ -36,7 +39,7 @@ view: cdp_soriana_medio_fuente_origen {
 
   dimension: advertising_id {
     type: string
-    sql: ${TABLE}.advertising_id ;;
+    sql: ${TABLE}.advertisingId ;;
   }
 
   dimension: media_source_origen {
@@ -89,11 +92,6 @@ view: cdp_soriana_medio_fuente_origen {
     sql: ${TABLE}.phoneMobile ;;
   }
 
-  dimension: frecuencia {
-    type: string
-    sql: ${TABLE}.frecuencia ;;
-  }
-
   dimension: dias_de_vida {
     type: string
     sql: ${TABLE}.dias_de_vida ;;
@@ -107,7 +105,15 @@ view: cdp_soriana_medio_fuente_origen {
     type: string
     sql: ${TABLE}.ticket_promedio ;;
   }
+  dimension: instalaciones_aplicacion {
+    type: string
+    sql: ${TABLE}.instalacionesAplicacion ;;
+  }
 
+  dimension: desinstalaciones_aplicacion {
+    type: string
+    sql: ${TABLE}.desinstalacionesAplicacion ;;
+  }
 
   dimension: compras_8semanas {
     type: string
@@ -140,6 +146,7 @@ view: cdp_soriana_medio_fuente_origen {
 
   set: detail {
     fields: [
+      esta_logueado,
       fecha_primera_compra,
       fecha_ultima_compra,
       plataforma,
@@ -155,7 +162,9 @@ view: cdp_soriana_medio_fuente_origen {
       first_name,
       last_name,
       phone_mobile,
-      frecuencia,
+      instalaciones_aplicacion,
+      desinstalaciones_aplicacion,
+
       dias_de_vida,
       dias_sin_compra,
       ticket_promedio,
