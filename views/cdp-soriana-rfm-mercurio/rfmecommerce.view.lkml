@@ -1,9 +1,6 @@
 view: rfmecommerce {
   derived_table: {
-    sql: -- WITH dataset as (  SELECT correo, GAUserId, GRClienteId FROM `costumer-data-proyect.customer_data_platform.cdp_synapse_universo_clientes_productivos` )
-      SELECT * FROM `costumer-data-proyect.calculos_rfm_clc.cdp-soriana-rfm-ecommerce` i
-      -- left join dataset c on (c.correo =  i.correo)
-      ;;
+    sql: SELECT * FROM `costumer-data-proyect.calculos_rfm_clc.cdp-soriana-rfm-ecommerce`;;
   }
 
   measure: count {
@@ -196,6 +193,12 @@ view: rfmecommerce {
     filters: [bucket: "Valioso"]
   }
 
+  measure: clienteRecuperado {
+    type: count_distinct
+    sql: ${TABLE}.correo ;;
+    filters: [bucket: "Recuperado"]
+  }
+
 
   dimension: correo {
     type: string
@@ -212,20 +215,29 @@ view: rfmecommerce {
     sql: ${TABLE}.GRClienteId ;;
   }
 
+
+
   measure: sumaGastoSemana{
     type: sum
-    sql: ${TABLE}.gastoSemana ;;
+    sql: ${TABLE}.gastoSemana;;
   }
-
   measure: sumaCompraSemana{
     type: sum
-    sql: ${TABLE}.ordenesSemana ;;
+    sql: ${TABLE}.ordenesSemana;;
+    #value_format: "$#,##0"
+    #html: <p style="font-size:10px"> {{value}} </p> ;;
+  }
+  measure: sumaGastoTotal{
+    type: sum
+    sql: ${TABLE}.gastoSemanaTotal ;;
+  }
+  measure: sumaComprasTotal{
+    type: sum
+    sql: ${TABLE}.ordenesSemanaTotal ;;
   }
 
-  measure: diasVida{
-    type: average
-    sql: ${TABLE}.diasDeVida ;;
-  }
+
+
 
   set: detail {
     fields: [
