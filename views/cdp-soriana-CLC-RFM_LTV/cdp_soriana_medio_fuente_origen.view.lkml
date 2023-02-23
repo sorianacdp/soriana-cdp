@@ -69,6 +69,7 @@ view: cdp_soriana_medio_fuente_origen {
 
   dimension: revenue_compras_totales {
     type: number
+    value_format: "#,##0.00"
     sql: ${TABLE}.revenueComprasTotales ;;
   }
 
@@ -93,46 +94,50 @@ view: cdp_soriana_medio_fuente_origen {
   }
 
   dimension: dias_de_vida {
-    type: string
+    type: number
     sql: ${TABLE}.dias_de_vida ;;
   }
 
   dimension: dias_sin_compra {
-    type: string
+    type: number
     sql: ${TABLE}.dias_sin_compra ;;
   }
   dimension: ticket_promedio {
-    type: string
+    type: number
+    value_format: "#,##0.00"
     sql: ${TABLE}.ticket_promedio ;;
   }
   dimension: instalaciones_aplicacion {
-    type: string
+    type: number
     sql: ${TABLE}.instalacionesAplicacion ;;
   }
 
   dimension: desinstalaciones_aplicacion {
-    type: string
+    type: number
     sql: ${TABLE}.desinstalacionesAplicacion ;;
   }
 
   dimension: compras_8semanas {
-    type: string
+    type: number
     sql: ${TABLE}.compras_8semanas ;;
   }
   dimension: revenue_8semanas {
-    type: string
+    type: number
+    value_format: "#,##0.00"
     sql: ${TABLE}.revenue_8semanas ;;
   }
   dimension: ticket_promedio_8semanas {
-    type: string
+    type: number
+    value_format: "#,##0.00"
     sql: ${TABLE}.ticket_promedio_8semanas ;;
   }
   dimension: semanas_con_compras_8semanas {
-    type: string
+    type: number
     sql: ${TABLE}.semanas_con_compras_8semanas ;;
   }
   dimension: frecuencia_8semanas {
-    type: string
+    type: number
+    value_format: "#,##0.00"
     sql: ${TABLE}.frecuencia_8semanas ;;
   }
   dimension: rango_frecuencia_8semanas {
