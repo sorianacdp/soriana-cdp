@@ -5,9 +5,9 @@ view: cdp_soriana_salesforce_retencion_clientes_grafico1 {
       UNION ALL
       SELECT
         0 periodoNacimiento, SUM(totalClientes) totalClientes,macroCanal, AVG(avgDiasVida) avgDiasVida,
-        AVG(mes1) mes1,AVG(mes2) mes2,AVG(mes3) mes3,AVG(mes4) mes4,AVG(mes5) mes5,AVG(mes6) mes6,AVG(mes7) mes7,AVG(mes8) mes8,
+        AVG(mes0) mes0,AVG(mes1) mes1,AVG(mes2) mes2,AVG(mes3) mes3,AVG(mes4) mes4,AVG(mes5) mes5,AVG(mes6) mes6,AVG(mes7) mes7,AVG(mes8) mes8,
         AVG(mes9) mes9,AVG(mes10) mes10,AVG(mes11) mes11,AVG(mes12) mes12,AVG(mes13) mes13,AVG(mes14) mes14,AVG(mes15) mes15,AVG(mes16) mes16,AVG(mes17) mes17,AVG(mes18) mes18,
-        AVG(mes19) mes19,AVG(mes20) mes20,AVG(mes21) mes21,AVG(mes22) mes22,AVG(mes23) mes23,AVG(mes24) mes24,AVG(mes25) mes25,AVG(mes26) mes26,AVG(mes27) mes27,AVG(mes28) mes28
+        AVG(mes19) mes19,AVG(mes20) mes20,AVG(mes21) mes21,AVG(mes22) mes22,AVG(mes23) mes23,AVG(mes24) mes24,AVG(mes25) mes25,AVG(mes26) mes26,AVG(mes27) mes27
       FROM `costumer-data-proyect.PRD_data.PRD_salesforce_metrica_retencion_clientes_mensual` GROUP BY 3
     )ORDER BY periodoNacimiento ASC;;
   }
@@ -32,6 +32,11 @@ view: cdp_soriana_salesforce_retencion_clientes_grafico1 {
     sql: ${TABLE}.totalClientes ;;
   }
 
+  dimension: mes0{
+    type: number
+    value_format: "0\%"
+    sql: ${TABLE}.mes0 ;;
+  }
   dimension: mes1{
     type: number
     value_format: "0\%"
@@ -167,17 +172,13 @@ view: cdp_soriana_salesforce_retencion_clientes_grafico1 {
     value_format: "0\%"
     sql: ${TABLE}.mes27 ;;
   }
-  dimension: mes28{
-    type: number
-    value_format: "0\%"
-    sql: ${TABLE}.mes28 ;;
-  }
 
   set: detail {
     fields: [
       periodo,
       macroCanal,
       totalClientes,
+      mes0,
       mes1,
       mes2,
       mes3,
@@ -204,8 +205,7 @@ view: cdp_soriana_salesforce_retencion_clientes_grafico1 {
       mes24,
       mes25,
       mes26,
-      mes27,
-      mes28
+      mes27
     ]
   }
 }
