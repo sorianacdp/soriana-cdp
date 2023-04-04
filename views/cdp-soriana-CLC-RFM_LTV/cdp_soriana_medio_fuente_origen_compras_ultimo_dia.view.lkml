@@ -38,7 +38,8 @@ view: cdp_soriana_medio_fuente_origen_compras_ultimo_dia {
     sql: ${TABLE}.idTransaccion ;;
   }
   dimension: total_compra {
-    type: string
+    type: number
+    value_format: "#,##0.00"
     sql: ${TABLE}.totalCompra ;;
   }
   dimension: email {
@@ -78,11 +79,12 @@ view: cdp_soriana_medio_fuente_origen_compras_ultimo_dia {
     sql: ${TABLE}.idTransaccionUltimaCompraHistorica ;;
   }
   dimension: conteo_compras_totales_historica {
-    type: string
+    type: number
     sql: ${TABLE}.conteoComprasTotalesHistorica ;;
   }
   dimension: revenue_compras_totales_historica {
-    type: string
+    type: number
+    value_format: "#,##0.00"
     sql: ${TABLE}.revenueComprasTotalesHistorica ;;
   }
 
