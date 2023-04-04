@@ -1,6 +1,6 @@
 view: vista_360_complemento {
   derived_table: {
-    sql: Select * from cdp-soriana-vista-360
+    sql: Select * from cdp_soriana_vista_360
       ;;
   }
 
