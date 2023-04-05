@@ -33,6 +33,7 @@ view: stg_singular_events {
   }
 
   dimension: custom_user_id {
+    primary_key: yes
     type: string
     sql: ${TABLE}.custom_user_id ;;
   }
