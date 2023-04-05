@@ -21,3 +21,4 @@ include:  "/views/cdp-soriana-rfm-mercurio/*.view.lkml"                   # incl
 #explore: cdpsorianarfmclcclientesnofidelizados {}
 explore: rfmecommerce {}
 explore: topcategoriamercurio {}
+explore: stg_mercurio_audiencias_medios_pagados {}
