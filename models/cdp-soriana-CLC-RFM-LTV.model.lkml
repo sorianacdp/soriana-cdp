@@ -22,3 +22,4 @@ explore: cdp_soriana_rfm_clc {}
 explore: cdp_soriana_medio_fuente_origen {}
 explore: cdp_soriana_medio_fuente_origen_compras_ultimo_dia {}
 explore: stg_singular_events {}
+explore: stg_singular_data {}
