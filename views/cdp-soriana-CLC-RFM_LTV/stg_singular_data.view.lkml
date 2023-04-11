@@ -32,14 +32,9 @@ view: stg_singular_data {
     sql: ${TABLE}.campana_primera_compra ;;
   }
 
-  dimension: categorias_mas_compradas {
-    type: string
-    sql: ${TABLE}.categorias_mas_compradas ;;
-  }
-
   dimension: custom_user_id {
-    primary_key: yes
     type: string
+    primary_key: yes
     sql: ${TABLE}.custom_user_id ;;
   }
 
@@ -53,7 +48,7 @@ view: stg_singular_data {
     sql: ${TABLE}.estado ;;
   }
 
-  dimension_group: fecha_orden {
+  dimension_group: fecha_orden_pc {
     type: time
     timeframes: [
       raw,
@@ -65,7 +60,7 @@ view: stg_singular_data {
       year
     ]
     datatype: datetime
-    sql: ${TABLE}.fecha_orden ;;
+    sql: ${TABLE}.fecha_orden_pc ;;
   }
 
   dimension: keyword {
@@ -81,6 +76,11 @@ view: stg_singular_data {
   dimension: partner_primera_compra {
     type: string
     sql: ${TABLE}.partner_primera_compra ;;
+  }
+
+  dimension: producto_mas_comprado {
+    type: string
+    sql: ${TABLE}.producto_mas_comprado ;;
   }
 
   dimension: revenue_compras_totales {
