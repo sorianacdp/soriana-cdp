@@ -15,20 +15,18 @@ view: facebookads {
        ,dataset2 as (
       SELECT
        dateStart,
-       EXTRACT(week from cast(dateStart as datetime)) SemanaInicio,
        dateStop,
-       EXTRACT(week from cast(dateStop as datetime)) SemanaFin,
        totalClicksFacebook,
        totalCostoCampaniasFacebook
       FROM dataset
 ), dataset3 as(
 SELECT
- Date_diff(current_date,cast(dateStart as date), week) HaceNSemanaInicio ,
+ Date_diff(current_date,cast(dateStop as date), week) HaceNSemanaInicio ,
   sum(totalClicksFacebook) totalClicksFacebook,
-  (sum(totalCostoCampaniasFacebook) / Extract(week from current_date)-SemanaInicio)  totalCostoCampaniasFacebook,
+  avg(totalCostoCampaniasFacebook)  totalCostoCampaniasFacebook,
 FROM dataset2
 --where Extract(week from current_date)-SemanaFin != Extract(week from current_date)-SemanaInicio
-group by 1, SemanaInicio
+group by 1
 order by 1
 )
 select
