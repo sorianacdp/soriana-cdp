@@ -1,6 +1,6 @@
 view: rfmecommerce {
   derived_table: {
-    sql: SELECT * FROM `costumer-data-proyect.calculos_rfm_clc.cdp-soriana-rfm-ecommerce`;;
+    sql: SELECT * FROM `costumer-data-proyect.PRD_data.PRD_mercurio_ecommerce_rfm`;;
   }
 
   measure: count {

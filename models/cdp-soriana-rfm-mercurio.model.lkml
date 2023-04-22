@@ -22,3 +22,5 @@ include:  "/views/cdp-soriana-rfm-mercurio/*.view.lkml"                   # incl
 explore: rfmecommerce {}
 explore: topcategoriamercurio {}
 explore: stg_mercurio_audiencias_medios_pagados {}
+explore: prd_mercurio_ecommerce_fillrate_foundrate_mensual {}
+explore: prd_mercurio_ecommerce_fillrate_foundrate_semanal {}

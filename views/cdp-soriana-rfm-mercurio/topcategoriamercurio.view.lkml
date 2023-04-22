@@ -1,6 +1,6 @@
 view: topcategoriamercurio {
   derived_table: {
-    sql: SELECT * FROM `costumer-data-proyect.customer_data_platform. cdp-soriana-mercurio-topCategorias-compradas`
+    sql: SELECT * FROM `costumer-data-proyect.PRD_data.PRD_mercurio_ecommerce_top_categorias_compradas`
       ;;
   }
 
